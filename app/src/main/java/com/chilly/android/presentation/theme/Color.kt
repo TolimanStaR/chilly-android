@@ -1,4 +1,4 @@
-package com.chilly.android.ui.theme
+package com.chilly.android.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 
