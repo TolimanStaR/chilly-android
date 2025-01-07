@@ -10,8 +10,11 @@ activityCompose = "1.9.3"
 composeBom = "2024.12.01"
 navigation = "2.8.5"
 ksp = "2.1.0-1.0.29"
-hilt = "2.54"
+dagger = "2.54"
 kotlinx-seialization = "1.8.0-RC"
+kotea = "1.2.1"
+dataStore = "1.1.1"
+timber = "5.0.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -29,9 +32,13 @@ androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-man
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 compose-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation"}
-dagger-hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt"}
-dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt"}
+dagger = { group = "com.google.dagger", name = "dagger", version.ref = "dagger" }
+dagger-compiler = { group = "com.google.dagger", name = "dagger-compiler", version.ref = "dagger" }
 kotlinx-serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-seialization"}
+kotea-core = { group = "ru.tinkoff.kotea", name = "core", version.ref = "kotea" }
+kotea-android = { group = "ru.tinkoff.kotea", name = "android", version.ref = "kotea" }
+androidx-dataStore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "dataStore" }
+timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 
 
 [plugins]

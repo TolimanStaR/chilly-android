@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Chilly</string>
+    <string name="onboarding1_title">Пoзнакомимся?</string>
+    <string name="onboarding1_text">Привет, я чилли! Я острый перчик который любит отдыхать</string>
+    <string name="onboarding1_next">Погнали дальше</string>
+    <string name="onboarding2_title">Хочешь отдохнуть?</string>
+    <string name="onboarding2_text">Тебе повезло! Я знаю все лучше маршруты в твоем городе</string>
+    <string name="onboarding2_next">А еще я могу</string>
+    <string name="onboarding_skip_text">Пропустить</string>
+    <string name="onboarding3_title">Как найти маршрут?</string>
+    <string name="onboarding3_text">Ответь на несколько вопросов и я подберу идеальный маршрут специально для тебя!</string>
+    <string name="onboarding3_next">Почилили</string>
 </resources>

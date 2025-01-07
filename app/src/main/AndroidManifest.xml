@@ -11,6 +11,7 @@
         android:roundIcon="@drawable/chilly_icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.Chilly"
+        android:name=".ChillyApplication"
         tools:targetApi="31">
         <activity
             android:name=".MainActivity"

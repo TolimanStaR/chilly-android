@@ -8,6 +8,7 @@ import com.chilly.android.presentation.navigation.ChillyNavHost
 import com.chilly.android.presentation.theme.ChillyTheme
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
