@@ -38,6 +38,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -52,9 +53,13 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.compose.navigation)
-    implementation(libs.dagger.hilt)
-    ksp(libs.dagger.hilt.compiler)
+    implementation(libs.dagger)
+    ksp(libs.dagger.compiler)
     implementation(libs.kotlinx.serialization)
+    implementation(libs.kotea.core)
+    implementation(libs.kotea.android)
+    implementation(libs.androidx.dataStore)
+    implementation(libs.timber)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
