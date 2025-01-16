@@ -1,19 +1,18 @@
 package com.chilly.android.di.application
 
 import android.content.Context
-import com.chilly.android.di.repository.RepositoryModule
-import com.chilly.android.presentation.onboarding.OnBoardingViewModel
-import com.chilly.android.presentation.splash.SplashScreenViewModel
+import com.chilly.android.data.remote.api.LoginApi
+import com.chilly.android.domain.repository.PreferencesRepository
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [RepositoryModule::class])
+@Component(modules = [RepositoryModule::class, NetworkModule::class])
 interface ApplicationComponent {
 
-    fun splashScreenViewModelFactory(): SplashScreenViewModel.Factory
-    fun onBoardingViewModelFactory(): OnBoardingViewModel.Factory
+    fun preferencesRepository(): PreferencesRepository
+    fun loginApi(): LoginApi
 
     @Component.Builder
     interface Builder {

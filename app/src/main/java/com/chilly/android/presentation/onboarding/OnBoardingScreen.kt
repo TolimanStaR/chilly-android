@@ -1,5 +1,6 @@
 package com.chilly.android.presentation.onboarding
 
+import android.content.Context
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
@@ -23,7 +24,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -38,7 +38,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.chilly.android.R
 import com.chilly.android.applicationComponent
-import com.chilly.android.presentation.common.lazyViewModel
+import com.chilly.android.di.screens.DaggerOnboardingComponent
+import com.chilly.android.di.screens.OnboardingComponent
+import com.chilly.android.presentation.common.ScreenHolder
 import com.chilly.android.presentation.navigation.Destination
 import com.chilly.android.presentation.navigation.checkClearNavigate
 import com.chilly.android.presentation.theme.Peach10
@@ -47,7 +49,7 @@ import com.chilly.android.presentation.theme.Red50
 
 
 @Composable
-fun OnBoardingScreen(
+private fun OnBoardingScreen(
     onboarding: Destination.OnBoarding,
     onEvent: (OnBoardingEvent) -> Unit
 ) {
@@ -116,7 +118,9 @@ fun OnBoardingScreen(
 }
 
 // maybe should make common component
-@Composable fun RowScope.ChillyButton(
+
+@Composable
+private fun RowScope.ChillyButton(
     backgroundColor: Color,
     textColor: Color,
     @StringRes textRes: Int,
@@ -137,20 +141,23 @@ fun OnBoardingScreen(
 
 fun NavGraphBuilder.onBoardingComposable(navController: NavController) {
     composable<Destination.OnBoarding> { backStack ->
-        val context = LocalContext.current
-        val component = context.applicationComponent
-        val navigationRoute = backStack.toRoute<Destination.OnBoarding>()
-
-        val viewModel by context.lazyViewModel {
-            component.onBoardingViewModelFactory().build(navController::checkClearNavigate)
+        ScreenHolder(
+            viewModelFactory = {
+                buildComponent().viewModelFactory()
+                    .build(navController::checkClearNavigate)
+            }
+        ) {
+            OnBoardingScreen(
+                backStack.toRoute(),
+                ::onEvent
+            )
         }
-
-        OnBoardingScreen(
-            navigationRoute,
-            viewModel::onEvent
-        )
     }
 }
+
+private fun Context.buildComponent(): OnboardingComponent = DaggerOnboardingComponent.builder()
+    .appComponent(applicationComponent)
+    .build()
 
 private class OnboardingUi(
     @DrawableRes val imageId: Int,
@@ -185,18 +192,18 @@ private class OnboardingUi(
 
 @Composable
 @Preview(name = "onboarding 1", showSystemUi = true, showBackground = true)
-fun PreviewOnboarding1() {
+private fun PreviewOnboarding1() {
     OnBoardingScreen(Destination.OnBoarding(0)) { }
 }
 
 @Composable
 @Preview(name = "onboarding 2", showSystemUi = true, showBackground = true)
-fun PreviewOnboarding2() {
+private fun PreviewOnboarding2() {
     OnBoardingScreen(Destination.OnBoarding(1)) { }
 }
 
 @Composable
 @Preview(name = "onboarding 3", showSystemUi = true, showBackground = true)
-fun PreviewOnboarding3() {
+private fun PreviewOnboarding3() {
     OnBoardingScreen(Destination.OnBoarding(2)) { }
 }
