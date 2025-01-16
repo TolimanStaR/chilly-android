@@ -15,6 +15,7 @@ kotlinx-seialization = "1.8.0-RC"
 kotea = "1.2.1"
 dataStore = "1.1.1"
 timber = "5.0.1"
+ktor = "3.0.3"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -39,6 +40,10 @@ kotea-core = { group = "ru.tinkoff.kotea", name = "core", version.ref = "kotea" 
 kotea-android = { group = "ru.tinkoff.kotea", name = "android", version.ref = "kotea" }
 androidx-dataStore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "dataStore" }
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
+ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-client-serialization = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 
 
 [plugins]
