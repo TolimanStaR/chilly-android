@@ -1,4 +1,4 @@
-package com.chilly.android.di.repository
+package com.chilly.android.di.application
 
 import android.content.Context
 import com.chilly.android.data.repository.PreferencesRepositoryImpl

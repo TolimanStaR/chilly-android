@@ -15,6 +15,6 @@ fun ChillyNavHost(navController: NavHostController = rememberNavController()) {
         splashComposable(navController)
         onBoardingComposable(navController)
         mainScreenComposable()
-        logInScreenComposable()
+        logInScreenComposable(navController)
     }
 }
