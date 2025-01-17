@@ -1,4 +1,4 @@
-package com.chilly.android.presentation.common
+package com.chilly.android.presentation.common.structure
 
 import android.content.Context
 import androidx.activity.ComponentActivity

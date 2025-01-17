@@ -40,7 +40,7 @@ import com.chilly.android.R
 import com.chilly.android.applicationComponent
 import com.chilly.android.di.screens.DaggerOnboardingComponent
 import com.chilly.android.di.screens.OnboardingComponent
-import com.chilly.android.presentation.common.ScreenHolder
+import com.chilly.android.presentation.common.structure.ScreenHolder
 import com.chilly.android.presentation.navigation.Destination
 import com.chilly.android.presentation.navigation.checkClearNavigate
 import com.chilly.android.presentation.theme.Peach10
