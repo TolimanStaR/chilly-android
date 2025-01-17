@@ -18,4 +18,5 @@
     <string name="password_label">Пароль</string>
     <string name="username_placeholder">E-mail</string>
     <string name="password_placeholder">Пароль</string>
+    <string name="login_failed_snackbar">Не удалось выполнить вход</string>
 </resources>

@@ -6,6 +6,9 @@ sealed interface LoginEvent {
         class LoginChanged(val newValue: String) : UiEvent
         class PasswordChanged(val newValue: String) : UiEvent
         data object LogInClicked : UiEvent
+        data object SignUpClicked : UiEvent
+        data object ClearClicked : UiEvent
+        data object ShowPasswordToggled : UiEvent
     }
 
     sealed interface CommandEvent : LoginEvent {

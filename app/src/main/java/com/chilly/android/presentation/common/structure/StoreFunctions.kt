@@ -2,12 +2,11 @@ package com.chilly.android.presentation.common.structure
 
 import android.content.Context
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.flowWithLifecycle
 import kotlinx.coroutines.flow.FlowCollector
-import kotlinx.coroutines.launch
 import ru.tinkoff.kotea.core.Store
 
 @Composable
@@ -27,9 +26,9 @@ inline fun <reified S: Store<*, *, *>> ScreenHolder(
 inline fun <reified N: Any, S: Store<*, *, N>> S.NewsCollector(
     collector: FlowCollector<N>
 ) {
-    val scope = rememberCoroutineScope()
     val lifecycle = LocalLifecycleOwner.current.lifecycle
-    scope.launch {
+
+    LaunchedEffect(true) {
         news.flowWithLifecycle(lifecycle)
             .collect(collector)
     }

@@ -1,7 +1,6 @@
 package com.chilly.android.presentation.login
 
 import ru.tinkoff.kotea.core.dsl.DslUpdate
-import timber.log.Timber
 
 class LoginUpdate : DslUpdate<LoginState, LoginEvent, LoginCommand, LoginNews>() {
 
@@ -16,14 +15,26 @@ class LoginUpdate : DslUpdate<LoginState, LoginEvent, LoginCommand, LoginNews>()
         when(event) {
             is LoginEvent.UiEvent.LoginChanged -> state { copy(loginText = event.newValue) }
             is LoginEvent.UiEvent.PasswordChanged -> state { copy(passwordText = event.newValue) }
-            LoginEvent.UiEvent.LogInClicked -> commands(LoginCommand.LogIn(state.loginText, state.passwordText))
+            LoginEvent.UiEvent.LogInClicked -> {
+                state { copy(isLoading = true) }
+                commands(LoginCommand.LogIn(state.loginText, state.passwordText))
+            }
+            LoginEvent.UiEvent.ClearClicked -> state { copy(loginText = "") }
+            LoginEvent.UiEvent.ShowPasswordToggled -> state { copy(passwordShown = !passwordShown) }
+            LoginEvent.UiEvent.SignUpClicked -> news(LoginNews.NavigateSignUp)
         }
     }
 
     private fun NextBuilder.onCommandEvent(event: LoginEvent.CommandEvent) {
         when(event) {
-            LoginEvent.CommandEvent.LoginFail -> Timber.e("login failed")
-            is LoginEvent.CommandEvent.LoginSuccess -> Timber.i("login success token is ${event.accessToken}")
+            LoginEvent.CommandEvent.LoginFail -> {
+                state { copy(isLoading = false) }
+                news(LoginNews.LoginFailed)
+            }
+            is LoginEvent.CommandEvent.LoginSuccess -> {
+                state { copy(isLoading = false) }
+                news(LoginNews.NavigateMain)
+            }
         }
     }
 }

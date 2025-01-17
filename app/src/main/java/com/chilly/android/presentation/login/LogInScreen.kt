@@ -1,6 +1,7 @@
 package com.chilly.android.presentation.login
 
 import android.content.Context
+import android.content.res.Resources
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,10 +13,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -27,10 +31,12 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.ImageShader
 import androidx.compose.ui.graphics.ShaderBrush
 import androidx.compose.ui.graphics.TileMode
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -56,14 +62,21 @@ import com.chilly.android.presentation.theme.Gray20
 import kotlinx.coroutines.flow.FlowCollector
 
 @Composable
-private fun LogInScreen(state: LoginState, onEvent: (UiEvent) -> Unit) {
-    Scaffold { innerPadding ->
+private fun LogInScreen(
+    state: LoginState,
+    onEvent: (UiEvent) -> Unit = {},
+    snackBarHostState: SnackbarHostState = remember { SnackbarHostState() }
+) {
+    Scaffold(
+        snackbarHost = {
+            SnackbarHost(snackBarHostState)
+        }
+    ) { innerPadding ->
         Box(
             contentAlignment = Alignment.Center,
         ) {
             PepperBackground()
             Column(
-                horizontalAlignment = Alignment.End,
                 modifier = Modifier
                     .padding(innerPadding)
                     .padding(16.dp)
@@ -100,30 +113,37 @@ private fun LogInScreen(state: LoginState, onEvent: (UiEvent) -> Unit) {
                     modifier = Modifier.fillMaxWidth()
                 )
                 Spacer(modifier = Modifier.height(4.dp))
+                val passwordTransform = if (state.passwordShown)
+                    VisualTransformation.None
+                else
+                    PasswordVisualTransformation()
                 ChillyTextField(
                     value = state.passwordText,
                     onValueChange = { onEvent(UiEvent.PasswordChanged(it)) },
                     labelTextRes = R.string.password_label,
                     placeholderTextRes = R.string.password_placeholder,
                     trailingIcon = {
-                        if (state.loginText.isNotBlank()) {
-                            IconButton(
-                                onClick = {}
-                            ) {
-                                Icon(
-                                    painter = painterResource(R.drawable.eye_icon),
-                                    contentDescription = null
-                                )
-                            }
+                        IconButton(
+                            onClick = { onEvent(UiEvent.ShowPasswordToggled) }
+                        ) {
+                            val icon = if (state.passwordShown)
+                                R.drawable.eye_crossed_icon
+                            else
+                                R.drawable.eye_icon
+                            Icon(
+                                painter = painterResource(icon),
+                                contentDescription = null
+                            )
                         }
                     },
-                    visualTransformation = PasswordVisualTransformation(),
+                    visualTransformation = passwordTransform,
                     modifier = Modifier.fillMaxWidth()
                 )
                 ChillyButton(
                     textRes = R.string.forgot_password_button,
                     type = ChillyButtonType.Tertiary,
                     onClick = {},
+                    modifier = Modifier.align(Alignment.End)
                 )
                 Spacer(modifier = Modifier.height(36.dp))
                 ChillyButton(
@@ -138,8 +158,14 @@ private fun LogInScreen(state: LoginState, onEvent: (UiEvent) -> Unit) {
                     size = SizeParameter.Medium,
                     type = ChillyButtonType.Secondary,
                     modifier = Modifier.fillMaxWidth(),
-                    onClick = {}
+                    onClick = { onEvent(UiEvent.SignUpClicked) }
                 )
+                if (state.isLoading) {
+                    Spacer(modifier = Modifier.height(12.dp))
+                    CircularProgressIndicator(
+                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                    )
+                }
             }
         }
     }
@@ -168,8 +194,9 @@ fun NavGraphBuilder.logInScreenComposable(navController: NavController) {
             }
         ) {
             val state = state.collectAsStateWithLifecycle()
-            LogInScreen(state.value, ::dispatch)
-            NewsCollector(createNewsCollector(navController))
+            val snackBarHostState = remember { SnackbarHostState() }
+            LogInScreen(state.value, ::dispatch, snackBarHostState)
+            NewsCollector(createNewsCollector(navController, snackBarHostState, LocalContext.current.resources))
         }
     }
 }
@@ -178,9 +205,15 @@ private fun Context.buildComponent(): LoginComponent = DaggerLoginComponent.buil
     .appComponent(applicationComponent)
     .build()
 
-private fun createNewsCollector(navController: NavController) = FlowCollector { news: LoginNews ->
+private fun createNewsCollector(
+    navController: NavController,
+    snackBarHostState: SnackbarHostState,
+    resources: Resources
+) = FlowCollector { news: LoginNews ->
     when(news) {
         LoginNews.NavigateMain -> navController.clearStackAndNavigate(Destination.Main)
+        LoginNews.LoginFailed -> snackBarHostState.showSnackbar(resources.getString(R.string.login_failed_snackbar))
+        LoginNews.NavigateSignUp -> navController.navigate(Destination.Main)
     }
 }
 
@@ -193,7 +226,7 @@ private fun PreviewLoginScreen() {
                 loginText = "login",
                 passwordText = "password"
             )
-        ) { }
+        )
     }
 }
 
