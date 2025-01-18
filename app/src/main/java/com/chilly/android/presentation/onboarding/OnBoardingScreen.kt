@@ -1,5 +1,6 @@
 package com.chilly.android.presentation.onboarding
 
+import android.content.Context
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
@@ -7,47 +8,49 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.chilly.android.R
 import com.chilly.android.applicationComponent
-import com.chilly.android.presentation.common.lazyViewModel
+import com.chilly.android.di.screens.DaggerOnboardingComponent
+import com.chilly.android.di.screens.OnboardingComponent
+import com.chilly.android.presentation.common.components.ChillyButton
+import com.chilly.android.presentation.common.components.ChillyButtonColor
+import com.chilly.android.presentation.common.components.ChillyButtonType
+import com.chilly.android.presentation.common.structure.ScreenHolder
 import com.chilly.android.presentation.navigation.Destination
 import com.chilly.android.presentation.navigation.checkClearNavigate
+import com.chilly.android.presentation.theme.ChillyTheme
 import com.chilly.android.presentation.theme.Peach10
 import com.chilly.android.presentation.theme.Red10
 import com.chilly.android.presentation.theme.Red50
 
 
 @Composable
-fun OnBoardingScreen(
+private fun OnBoardingScreen(
     onboarding: Destination.OnBoarding,
     onEvent: (OnBoardingEvent) -> Unit
 ) {
@@ -81,13 +84,13 @@ fun OnBoardingScreen(
             )
             Text(
                 text = stringResource(onboardingUi.titleId),
-                fontSize = 24.sp,
-                fontWeight = FontWeight.W500
+                style = MaterialTheme.typography.headlineMedium
             )
             Text(
                 text = stringResource(onboardingUi.mainTextId),
-                fontSize = 16.sp,
-                textAlign = TextAlign.Center
+                style = MaterialTheme.typography.bodyMedium,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(vertical = 16.dp)
             )
             Spacer(modifier = Modifier.weight(1f))
             // Buttons
@@ -96,61 +99,47 @@ fun OnBoardingScreen(
             ) {
                 if (onboarding.index != OnboardingUi.onboardings.lastIndex) {
                     ChillyButton(
-                        backgroundColor = Color.Transparent,
-                        textColor = Color.Black,
                         textRes = R.string.onboarding_skip_text,
-                    ) {
-                        onEvent(OnBoardingEvent.Finish)
-                    }
+                        color = ChillyButtonColor.Gray,
+                        type = ChillyButtonType.Tertiary,
+                        modifier = Modifier.weight(1f),
+                        onClick = {
+                            onEvent(OnBoardingEvent.Finish)
+                        }
+                    )
                 }
                 ChillyButton(
-                    backgroundColor = Red50,
-                    textColor = Color.White,
-                    textRes = onboardingUi.nextTextId
-                ) {
-                    onEvent(OnBoardingEvent.NextStep(onboarding.index, OnboardingUi.count))
-                }
+                    textRes = onboardingUi.nextTextId,
+                    modifier = Modifier.weight(1f),
+                    onClick = {
+                        onEvent(OnBoardingEvent.NextStep(onboarding.index, OnboardingUi.count))
+                    }
+                )
             }
         }
     }
 }
 
-// maybe should make common component
-@Composable fun RowScope.ChillyButton(
-    backgroundColor: Color,
-    textColor: Color,
-    @StringRes textRes: Int,
-    onClick: () -> Unit
-) {
-    Button(
-        colors = ButtonDefaults.buttonColors(
-            containerColor = backgroundColor,
-            contentColor = textColor
-        ),
-        shape = RoundedCornerShape(dimensionResource(R.dimen.corners)),
-        onClick = onClick,
-        modifier = Modifier.weight(1f)
-    ) {
-        Text(text = stringResource(textRes))
-    }
-}
 
 fun NavGraphBuilder.onBoardingComposable(navController: NavController) {
     composable<Destination.OnBoarding> { backStack ->
-        val context = LocalContext.current
-        val component = context.applicationComponent
-        val navigationRoute = backStack.toRoute<Destination.OnBoarding>()
-
-        val viewModel by context.lazyViewModel {
-            component.onBoardingViewModelFactory().build(navController::checkClearNavigate)
+        ScreenHolder(
+            viewModelFactory = {
+                buildComponent().viewModelFactory()
+                    .build(navController::checkClearNavigate)
+            }
+        ) {
+            OnBoardingScreen(
+                backStack.toRoute(),
+                ::onEvent
+            )
         }
-
-        OnBoardingScreen(
-            navigationRoute,
-            viewModel::onEvent
-        )
     }
 }
+
+private fun Context.buildComponent(): OnboardingComponent = DaggerOnboardingComponent.builder()
+    .appComponent(applicationComponent)
+    .build()
 
 private class OnboardingUi(
     @DrawableRes val imageId: Int,
@@ -184,19 +173,15 @@ private class OnboardingUi(
 }
 
 @Composable
-@Preview(name = "onboarding 1", showSystemUi = true, showBackground = true)
-fun PreviewOnboarding1() {
-    OnBoardingScreen(Destination.OnBoarding(0)) { }
+@Preview(showSystemUi = true, showBackground = true)
+private fun PreviewOnboarding1(
+    @PreviewParameter(IndexProvider::class) index: Int
+) {
+    ChillyTheme {
+        OnBoardingScreen(Destination.OnBoarding(index)) { }
+    }
 }
 
-@Composable
-@Preview(name = "onboarding 2", showSystemUi = true, showBackground = true)
-fun PreviewOnboarding2() {
-    OnBoardingScreen(Destination.OnBoarding(1)) { }
-}
-
-@Composable
-@Preview(name = "onboarding 3", showSystemUi = true, showBackground = true)
-fun PreviewOnboarding3() {
-    OnBoardingScreen(Destination.OnBoarding(2)) { }
+private class IndexProvider : PreviewParameterProvider<Int> {
+    override val values = (0..2).asSequence()
 }

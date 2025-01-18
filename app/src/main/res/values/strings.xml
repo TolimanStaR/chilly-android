@@ -10,4 +10,13 @@
     <string name="onboarding3_title">Как найти маршрут?</string>
     <string name="onboarding3_text">Ответь на несколько вопросов и я подберу идеальный маршрут специально для тебя!</string>
     <string name="onboarding3_next">Почилили</string>
+    <string name="login_button">Войти</string>
+    <string name="sign_up_button">Зарегистрироваться</string>
+    <string name="forgot_password_button">Забыли пароль?</string>
+    <string name="login_title">Вход</string>
+    <string name="username_label">E-mail или номер телефона</string>
+    <string name="password_label">Пароль</string>
+    <string name="username_placeholder">E-mail</string>
+    <string name="password_placeholder">Пароль</string>
+    <string name="login_failed_snackbar">Не удалось выполнить вход</string>
 </resources>

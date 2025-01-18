@@ -2,14 +2,15 @@ package com.chilly.android.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
-
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
-
-val Red50 = Color(0xFFFB3B42)
-val Peach10 = Color(0xFFFFF2E3)
+val Red5 = Color(0xFFFFEDEA)
 val Red10 = Color(0xFFFFCAC0)
+val Red50 = Color(0xFFFB3B42)
+val Red70 = Color(0xFFC40021)
+
+val Gray10 = Color(0xFFD1D1D1)
+val Gray20 = Color(0xFFB0B0B0)
+val Gray50 = Color(0xFF5D5D5D)
+val Gray70 = Color(0xFF454545)
+val Gray90 = Color(0xFF212121)
+
+val Peach10 = Color(0xFFFFF2E3)
