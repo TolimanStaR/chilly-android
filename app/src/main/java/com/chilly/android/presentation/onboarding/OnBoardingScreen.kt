@@ -40,13 +40,16 @@ import com.chilly.android.di.screens.OnboardingComponent
 import com.chilly.android.presentation.common.components.ChillyButton
 import com.chilly.android.presentation.common.components.ChillyButtonColor
 import com.chilly.android.presentation.common.components.ChillyButtonType
+import com.chilly.android.presentation.common.structure.EffectCollector
 import com.chilly.android.presentation.common.structure.ScreenHolder
 import com.chilly.android.presentation.navigation.Destination
 import com.chilly.android.presentation.navigation.checkClearNavigate
+import com.chilly.android.presentation.navigation.clearStackAndNavigate
 import com.chilly.android.presentation.theme.ChillyTheme
 import com.chilly.android.presentation.theme.Peach10
 import com.chilly.android.presentation.theme.Red10
 import com.chilly.android.presentation.theme.Red50
+import kotlinx.coroutines.flow.FlowCollector
 
 
 @Composable
@@ -125,14 +128,14 @@ fun NavGraphBuilder.onBoardingComposable(navController: NavController) {
     composable<Destination.OnBoarding> { backStack ->
         ScreenHolder(
             viewModelFactory = {
-                buildComponent().viewModelFactory()
-                    .build(navController::checkClearNavigate)
+                buildComponent().viewModelFactory().build()
             }
         ) {
             OnBoardingScreen(
                 backStack.toRoute(),
-                ::onEvent
+                ::dispatch
             )
+            EffectCollector(createEffectCollector(navController))
         }
     }
 }
@@ -140,6 +143,13 @@ fun NavGraphBuilder.onBoardingComposable(navController: NavController) {
 private fun Context.buildComponent(): OnboardingComponent = DaggerOnboardingComponent.builder()
     .appComponent(applicationComponent)
     .build()
+
+private fun createEffectCollector(navController: NavController) = FlowCollector<OnboardingEffect> { effect ->
+    when(effect) {
+        is OnboardingEffect.NavigateOnboardingScreen -> navController.navigate(Destination.OnBoarding(effect.index))
+        OnboardingEffect.OnboardingFinished -> navController.clearStackAndNavigate(Destination.Main)
+    }
+}
 
 private class OnboardingUi(
     @DrawableRes val imageId: Int,

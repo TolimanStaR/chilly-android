@@ -1,21 +1,18 @@
 package com.chilly.android.presentation.onboarding
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chilly.android.domain.repository.PreferencesRepository
-import com.chilly.android.presentation.navigation.Destination
-import dagger.assisted.Assisted
+import com.chilly.android.presentation.common.structure.ViewModelWithEffects
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.launch
 
 
 class OnBoardingViewModel @AssistedInject constructor(
-    private val preferencesRepository: PreferencesRepository,
-    @Assisted private val onNavigate: (Destination, Boolean) -> Unit
-) : ViewModel() {
+    private val preferencesRepository: PreferencesRepository
+) : ViewModelWithEffects<OnboardingEffect, OnBoardingEvent>() {
 
-    fun onEvent(event: OnBoardingEvent) {
+    override fun dispatch(event: OnBoardingEvent) {
         when(event) {
             is OnBoardingEvent.NextStep -> handleNextStep(event)
             OnBoardingEvent.Finish -> handleFinish()
@@ -27,7 +24,7 @@ class OnBoardingViewModel @AssistedInject constructor(
         if (next >= event.count) {
             handleFinish()
         } else {
-            onNavigate(Destination.OnBoarding(next), false)
+            emit(OnboardingEffect.NavigateOnboardingScreen(next))
         }
     }
 
@@ -35,11 +32,11 @@ class OnBoardingViewModel @AssistedInject constructor(
         viewModelScope.launch {
             preferencesRepository.setHasSeenOnboarding(true)
         }
-        onNavigate(Destination.Main, true)
+        emit(OnboardingEffect.OnboardingFinished)
     }
 
     @AssistedFactory
     interface Factory {
-        fun build(onNavigate: (Destination, Boolean) -> Unit): OnBoardingViewModel
+        fun build(): OnBoardingViewModel
     }
 }

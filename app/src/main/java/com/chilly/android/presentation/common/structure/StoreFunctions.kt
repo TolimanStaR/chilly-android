@@ -6,6 +6,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.flowWithLifecycle
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 import ru.tinkoff.kotea.core.Store
 
@@ -23,13 +24,27 @@ inline fun <reified S: Store<*, *, *>> ScreenHolder(
 
 
 @Composable
-inline fun <reified N: Any, S: Store<*, *, N>> S.NewsCollector(
+fun <N: Any, S: Store<*, *, N>> S.NewsCollector(
     collector: FlowCollector<N>
+) {
+    news.Collector(collector)
+}
+
+@Composable
+fun <E: Any, VM: ViewModelWithEffects<E, *>> VM.EffectCollector(
+    collector: FlowCollector<E>
+) {
+    effects.Collector(collector)
+}
+
+@Composable
+private fun <T: Any> Flow<T>.Collector(
+    collector: FlowCollector<T>
 ) {
     val lifecycle = LocalLifecycleOwner.current.lifecycle
 
     LaunchedEffect(true) {
-        news.flowWithLifecycle(lifecycle)
+        flowWithLifecycle(lifecycle)
             .collect(collector)
     }
 }
