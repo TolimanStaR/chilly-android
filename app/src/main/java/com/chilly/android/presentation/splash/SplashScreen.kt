@@ -60,7 +60,7 @@ private fun createEffectsCollector(navController: NavController) = FlowCollector
     when(effect) {
         SplashScreenEffect.NavigateLogin -> navController.clearStackAndNavigate(Destination.LogIn)
         SplashScreenEffect.NavigateMain -> navController.clearStackAndNavigate(Destination.Main)
-        SplashScreenEffect.NavigateOnboarding -> navController.clearStackAndNavigate(Destination.OnBoarding(0))
+        SplashScreenEffect.NavigateOnboarding -> navController.clearStackAndNavigate(Destination.Onboarding(0))
     }
 }
 

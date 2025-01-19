@@ -43,7 +43,6 @@ import com.chilly.android.presentation.common.components.ChillyButtonType
 import com.chilly.android.presentation.common.structure.EffectCollector
 import com.chilly.android.presentation.common.structure.ScreenHolder
 import com.chilly.android.presentation.navigation.Destination
-import com.chilly.android.presentation.navigation.checkClearNavigate
 import com.chilly.android.presentation.navigation.clearStackAndNavigate
 import com.chilly.android.presentation.theme.ChillyTheme
 import com.chilly.android.presentation.theme.Peach10
@@ -53,9 +52,9 @@ import kotlinx.coroutines.flow.FlowCollector
 
 
 @Composable
-private fun OnBoardingScreen(
-    onboarding: Destination.OnBoarding,
-    onEvent: (OnBoardingEvent) -> Unit
+private fun OnboardingScreen(
+    onboarding: Destination.Onboarding,
+    onEvent: (OnboardingEvent) -> Unit
 ) {
     Scaffold(
         containerColor = Peach10
@@ -107,7 +106,7 @@ private fun OnBoardingScreen(
                         type = ChillyButtonType.Tertiary,
                         modifier = Modifier.weight(1f),
                         onClick = {
-                            onEvent(OnBoardingEvent.Finish)
+                            onEvent(OnboardingEvent.Finish)
                         }
                     )
                 }
@@ -115,7 +114,7 @@ private fun OnBoardingScreen(
                     textRes = onboardingUi.nextTextId,
                     modifier = Modifier.weight(1f),
                     onClick = {
-                        onEvent(OnBoardingEvent.NextStep(onboarding.index, OnboardingUi.count))
+                        onEvent(OnboardingEvent.NextStep(onboarding.index, OnboardingUi.count))
                     }
                 )
             }
@@ -124,14 +123,14 @@ private fun OnBoardingScreen(
 }
 
 
-fun NavGraphBuilder.onBoardingComposable(navController: NavController) {
-    composable<Destination.OnBoarding> { backStack ->
+fun NavGraphBuilder.onboardingComposable(navController: NavController) {
+    composable<Destination.Onboarding> { backStack ->
         ScreenHolder(
             viewModelFactory = {
                 buildComponent().viewModelFactory().build()
             }
         ) {
-            OnBoardingScreen(
+            OnboardingScreen(
                 backStack.toRoute(),
                 ::dispatch
             )
@@ -146,7 +145,7 @@ private fun Context.buildComponent(): OnboardingComponent = DaggerOnboardingComp
 
 private fun createEffectCollector(navController: NavController) = FlowCollector<OnboardingEffect> { effect ->
     when(effect) {
-        is OnboardingEffect.NavigateOnboardingScreen -> navController.navigate(Destination.OnBoarding(effect.index))
+        is OnboardingEffect.NavigateOnboardingScreen -> navController.navigate(Destination.Onboarding(effect.index))
         OnboardingEffect.OnboardingFinished -> navController.clearStackAndNavigate(Destination.Main)
     }
 }
@@ -188,7 +187,7 @@ private fun PreviewOnboarding1(
     @PreviewParameter(IndexProvider::class) index: Int
 ) {
     ChillyTheme {
-        OnBoardingScreen(Destination.OnBoarding(index)) { }
+        OnboardingScreen(Destination.Onboarding(index)) { }
     }
 }
 

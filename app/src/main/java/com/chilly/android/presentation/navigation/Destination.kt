@@ -8,7 +8,7 @@ sealed interface Destination {
     data object Splash : Destination
 
     @Serializable
-    data class OnBoarding(val index: Int) : Destination
+    data class Onboarding(val index: Int) : Destination
 
     @Serializable
     data object Main : Destination

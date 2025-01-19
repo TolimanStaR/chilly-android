@@ -1,5 +1,6 @@
 package com.chilly.android.presentation.splash
 
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.viewModelScope
 import com.chilly.android.domain.repository.PreferencesRepository
 import com.chilly.android.domain.useCase.login.TryRefreshTokenUseCase
@@ -8,10 +9,16 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.launch
 
-class SplashScreenViewModel @AssistedInject constructor(
+class SplashScreenViewModel(
     private val preferencesRepository: PreferencesRepository,
-    private val tokenUseCase: TryRefreshTokenUseCase
-): ViewModelWithEffects<SplashScreenEffect, Nothing>() {
+    private val tokenUseCase: TryRefreshTokenUseCase,
+    @VisibleForTesting effectReply: Int
+): ViewModelWithEffects<SplashScreenEffect, Nothing>(effectReply) {
+
+    @AssistedInject constructor(
+        preferencesRepository: PreferencesRepository,
+        tokenUseCase: TryRefreshTokenUseCase,
+    ) : this(preferencesRepository, tokenUseCase, 0)
 
     init {
         viewModelScope.launch {

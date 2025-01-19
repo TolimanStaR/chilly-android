@@ -41,7 +41,7 @@ class SplashScreenViewModelTest {
 
         coEvery { tokenUCMock.invoke() } returns false
 
-        val underTest = SplashScreenViewModel(prefsMock, tokenUCMock)
+        val underTest = SplashScreenViewModel(prefsMock, tokenUCMock, 10)
 
         val effect = underTest.effects.first()
         assertEquals(effect, SplashScreenEffect.NavigateLogin)
@@ -55,7 +55,7 @@ class SplashScreenViewModelTest {
         coEvery { tokenUCMock.invoke() } returns true
         coEvery { prefsMock.hasSeenOnboarding() } returns false
 
-        val underTest = SplashScreenViewModel(prefsMock, tokenUCMock)
+        val underTest = SplashScreenViewModel(prefsMock, tokenUCMock, 10)
 
         val effect = underTest.effects.first()
         assertEquals(effect, SplashScreenEffect.NavigateOnboarding)
@@ -69,7 +69,7 @@ class SplashScreenViewModelTest {
         coEvery { tokenUCMock.invoke() } returns true
         coEvery { prefsMock.hasSeenOnboarding() } returns true
 
-        val underTest = SplashScreenViewModel(prefsMock, tokenUCMock)
+        val underTest = SplashScreenViewModel(prefsMock, tokenUCMock, 10)
 
         val effect = underTest.effects.first()
         assertEquals(effect, SplashScreenEffect.NavigateMain)

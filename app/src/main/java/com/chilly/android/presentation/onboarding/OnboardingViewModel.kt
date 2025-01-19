@@ -1,5 +1,6 @@
 package com.chilly.android.presentation.onboarding
 
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.viewModelScope
 import com.chilly.android.domain.repository.PreferencesRepository
 import com.chilly.android.presentation.common.structure.ViewModelWithEffects
@@ -8,18 +9,23 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.launch
 
 
-class OnBoardingViewModel @AssistedInject constructor(
-    private val preferencesRepository: PreferencesRepository
-) : ViewModelWithEffects<OnboardingEffect, OnBoardingEvent>() {
+class OnboardingViewModel(
+    private val preferencesRepository: PreferencesRepository,
+    @VisibleForTesting effectReply: Int
+) : ViewModelWithEffects<OnboardingEffect, OnboardingEvent>(effectReply) {
 
-    override fun dispatch(event: OnBoardingEvent) {
+    @AssistedInject constructor(
+        preferencesRepository: PreferencesRepository
+    ) : this(preferencesRepository, 0)
+
+    override fun dispatch(event: OnboardingEvent) {
         when(event) {
-            is OnBoardingEvent.NextStep -> handleNextStep(event)
-            OnBoardingEvent.Finish -> handleFinish()
+            is OnboardingEvent.NextStep -> handleNextStep(event)
+            OnboardingEvent.Finish -> handleFinish()
         }
     }
 
-    private fun handleNextStep(event: OnBoardingEvent.NextStep) {
+    private fun handleNextStep(event: OnboardingEvent.NextStep) {
         val next = event.current + 1
         if (next >= event.count) {
             handleFinish()
@@ -37,6 +43,6 @@ class OnBoardingViewModel @AssistedInject constructor(
 
     @AssistedFactory
     interface Factory {
-        fun build(): OnBoardingViewModel
+        fun build(): OnboardingViewModel
     }
 }

@@ -24,7 +24,7 @@ class MainViewModel @AssistedInject constructor(
     fun onShowOnboarding() {
         viewModelScope.launch {
             prefs.setHasSeenOnboarding(false)
-            onNavigate.invoke(Destination.OnBoarding(0))
+            onNavigate.invoke(Destination.Onboarding(0))
         }
     }
 
