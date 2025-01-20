@@ -101,7 +101,7 @@ private fun LogInScreen(
                     trailingIcon = {
                         if (state.loginText.isNotBlank()) {
                             IconButton(
-                                onClick = {}
+                                onClick = { onEvent(UiEvent.ClearClicked) }
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Clear,
