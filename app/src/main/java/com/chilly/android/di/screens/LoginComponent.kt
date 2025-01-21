@@ -1,6 +1,7 @@
 package com.chilly.android.di.screens
 
 import com.chilly.android.di.application.ApplicationComponent
+import com.chilly.android.presentation.login.LoginNewsCollector
 import com.chilly.android.presentation.login.LoginStore
 import dagger.Component
 import javax.inject.Scope
@@ -10,6 +11,7 @@ import javax.inject.Scope
 interface LoginComponent {
 
     fun storeFactory(): LoginStore.Factory
+    fun newsCollectorFactory(): LoginNewsCollector.Factory
 
     @Component.Builder
     interface Builder {

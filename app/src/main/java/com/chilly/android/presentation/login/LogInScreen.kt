@@ -1,7 +1,5 @@
 package com.chilly.android.presentation.login
 
-import android.content.Context
-import android.content.res.Resources
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -40,26 +38,23 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.chilly.android.R
 import com.chilly.android.applicationComponent
 import com.chilly.android.di.screens.DaggerLoginComponent
-import com.chilly.android.di.screens.LoginComponent
 import com.chilly.android.presentation.common.components.ChillyButton
 import com.chilly.android.presentation.common.components.ChillyButtonType
 import com.chilly.android.presentation.common.components.ChillyTextField
 import com.chilly.android.presentation.common.components.SizeParameter
 import com.chilly.android.presentation.common.structure.NewsCollector
 import com.chilly.android.presentation.common.structure.ScreenHolder
+import com.chilly.android.presentation.common.structure.collectState
 import com.chilly.android.presentation.login.LoginEvent.UiEvent
 import com.chilly.android.presentation.navigation.Destination
-import com.chilly.android.presentation.navigation.clearStackAndNavigate
 import com.chilly.android.presentation.theme.ChillyTheme
 import com.chilly.android.presentation.theme.Gray20
-import kotlinx.coroutines.flow.FlowCollector
 
 @Composable
 private fun LogInScreen(
@@ -189,33 +184,25 @@ private fun PepperBackground() {
 fun NavGraphBuilder.logInScreenComposable(navController: NavController) {
     composable<Destination.LogIn> {
         ScreenHolder(
+            componentFactory = {
+                DaggerLoginComponent.builder()
+                    .appComponent(applicationComponent)
+                    .build()
+            },
             storeFactory = {
-                buildComponent().storeFactory().build()
+                storeFactory().build()
             }
         ) {
-            val state = state.collectAsStateWithLifecycle()
+            val state = collectState()
             val snackBarHostState = remember { SnackbarHostState() }
-            LogInScreen(state.value, ::dispatch, snackBarHostState)
-            NewsCollector(createNewsCollector(navController, snackBarHostState, LocalContext.current.resources))
+            LogInScreen(state.value, store::dispatch, snackBarHostState)
+            NewsCollector(
+                component.newsCollectorFactory().build(snackBarHostState, LocalContext.current.resources)
+            )
         }
     }
 }
 
-private fun Context.buildComponent(): LoginComponent = DaggerLoginComponent.builder()
-    .appComponent(applicationComponent)
-    .build()
-
-private fun createNewsCollector(
-    navController: NavController,
-    snackBarHostState: SnackbarHostState,
-    resources: Resources
-) = FlowCollector { news: LoginNews ->
-    when(news) {
-        LoginNews.NavigateMain -> navController.clearStackAndNavigate(Destination.Main)
-        LoginNews.LoginFailed -> snackBarHostState.showSnackbar(resources.getString(R.string.login_failed_snackbar))
-        LoginNews.NavigateSignUp -> navController.navigate(Destination.Main)
-    }
-}
 
 @Composable
 @Preview(name = "login screen", showSystemUi = true, showBackground = true)

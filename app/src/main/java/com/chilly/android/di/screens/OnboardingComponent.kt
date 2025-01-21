@@ -1,6 +1,7 @@
 package com.chilly.android.di.screens
 
 import com.chilly.android.di.application.ApplicationComponent
+import com.chilly.android.presentation.onboarding.OnboardingEffectCollector
 import com.chilly.android.presentation.onboarding.OnboardingViewModel
 import dagger.Component
 import javax.inject.Scope
@@ -10,6 +11,7 @@ import javax.inject.Scope
 interface OnboardingComponent {
 
     fun viewModelFactory(): OnboardingViewModel.Factory
+    fun effectCollector(): OnboardingEffectCollector
 
     @Component.Builder
     interface Builder {

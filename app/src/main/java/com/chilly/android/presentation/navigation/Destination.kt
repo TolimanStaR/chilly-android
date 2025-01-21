@@ -1,9 +1,10 @@
 package com.chilly.android.presentation.navigation
 
+import com.github.terrakok.cicerone.Screen
 import kotlinx.serialization.Serializable
 
 
-sealed interface Destination {
+sealed interface Destination : Screen {
     @Serializable
     data object Splash : Destination
 
