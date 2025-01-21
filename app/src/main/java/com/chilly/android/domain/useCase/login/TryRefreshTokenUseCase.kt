@@ -1,5 +1,6 @@
 package com.chilly.android.domain.useCase.login
 
+import com.chilly.android.data.remote.TokenHolder
 import com.chilly.android.data.remote.api.LoginApi
 import com.chilly.android.data.remote.dto.request.RefreshRequest
 import com.chilly.android.domain.repository.PreferencesRepository
@@ -8,7 +9,8 @@ import javax.inject.Inject
 
 class TryRefreshTokenUseCase @Inject constructor(
     private val preferencesRepository: PreferencesRepository,
-    private val loginApi: LoginApi
+    private val loginApi: LoginApi,
+    private val tokenHolder: TokenHolder
 ) {
 
     // whether operation was successful
@@ -24,6 +26,8 @@ class TryRefreshTokenUseCase @Inject constructor(
             }
 
         preferencesRepository.saveRefreshToken(response.refreshToken)
+        tokenHolder.accessToken = response.accessToken
+
         Timber.i("accessToken = ${response.accessToken}")
         return true
     }
