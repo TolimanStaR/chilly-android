@@ -10,8 +10,10 @@ import javax.inject.Scope
 @Component(dependencies = [ApplicationComponent::class])
 interface LoginComponent {
 
-    fun storeFactory(): LoginStore.Factory
-    fun newsCollectorFactory(): LoginNewsCollector.Factory
+    val appComponent: ApplicationComponent
+
+    fun store(): LoginStore
+    val newsCollector: LoginNewsCollector
 
     @Component.Builder
     interface Builder {

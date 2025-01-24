@@ -11,8 +11,8 @@ import javax.inject.Scope
 @Component(dependencies = [ApplicationComponent::class])
 interface SplashScreenComponent {
 
-    fun viewModelFactory(): SplashScreenViewModel.Factory
-    fun effectCollector(): SplashScreenEffectCollector
+    fun viewModel(): SplashScreenViewModel
+    val effectCollector: SplashScreenEffectCollector
 
     @Component.Builder
     interface Builder {

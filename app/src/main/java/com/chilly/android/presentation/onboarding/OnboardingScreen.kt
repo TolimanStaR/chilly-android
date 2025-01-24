@@ -126,15 +126,13 @@ fun NavGraphBuilder.onboardingComposable() {
                     .appComponent(applicationComponent)
                     .build()
             },
-            viewModelFactory = {
-                viewModelFactory().build()
-            }
+            viewModelFactory = { viewModel() }
         ) {
             OnboardingScreen(
                 backStack.toRoute(),
                 viewModel::dispatch
             )
-            EffectCollector(component.effectCollector())
+            EffectCollector(component.effectCollector)
         }
     }
 }

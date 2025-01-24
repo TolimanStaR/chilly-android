@@ -29,7 +29,6 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.ImageShader
 import androidx.compose.ui.graphics.ShaderBrush
 import androidx.compose.ui.graphics.TileMode
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -38,12 +37,12 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.chilly.android.R
 import com.chilly.android.applicationComponent
 import com.chilly.android.di.screens.DaggerLoginComponent
+import com.chilly.android.di.screens.LoginComponent
 import com.chilly.android.presentation.common.components.ChillyButton
 import com.chilly.android.presentation.common.components.ChillyButtonType
 import com.chilly.android.presentation.common.components.ChillyTextField
@@ -181,7 +180,7 @@ private fun PepperBackground() {
     )
 }
 
-fun NavGraphBuilder.logInScreenComposable(navController: NavController) {
+fun NavGraphBuilder.installLoginComposable() {
     composable<Destination.LogIn> {
         ScreenHolder(
             componentFactory = {
@@ -189,16 +188,11 @@ fun NavGraphBuilder.logInScreenComposable(navController: NavController) {
                     .appComponent(applicationComponent)
                     .build()
             },
-            storeFactory = {
-                storeFactory().build()
-            }
+            storeFactory = LoginComponent::store
         ) {
             val state = collectState()
-            val snackBarHostState = remember { SnackbarHostState() }
-            LogInScreen(state.value, store::dispatch, snackBarHostState)
-            NewsCollector(
-                component.newsCollectorFactory().build(snackBarHostState, LocalContext.current.resources)
-            )
+            LogInScreen(state.value, store::dispatch, component.appComponent.snackbarHostState)
+            NewsCollector(component.newsCollector)
         }
     }
 }

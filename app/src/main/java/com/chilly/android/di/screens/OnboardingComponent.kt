@@ -10,8 +10,8 @@ import javax.inject.Scope
 @Component(dependencies = [ApplicationComponent::class])
 interface OnboardingComponent {
 
-    fun viewModelFactory(): OnboardingViewModel.Factory
-    fun effectCollector(): OnboardingEffectCollector
+    fun viewModel(): OnboardingViewModel
+    val effectCollector: OnboardingEffectCollector
 
     @Component.Builder
     interface Builder {

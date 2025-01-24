@@ -11,11 +11,17 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        applicationComponent.resourceHolder.set(resources)
         enableEdgeToEdge()
         setContent {
             ChillyTheme {
                 ChillyNavHost()
             }
         }
+    }
+
+    override fun onDestroy() {
+        applicationComponent.resourceHolder.release()
+        super.onDestroy()
     }
 }

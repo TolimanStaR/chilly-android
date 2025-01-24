@@ -8,7 +8,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.chilly.android.applicationComponent
-import com.chilly.android.presentation.login.logInScreenComposable
+import com.chilly.android.presentation.login.installLoginComposable
 import com.chilly.android.presentation.main.mainScreenComposable
 import com.chilly.android.presentation.onboarding.onboardingComposable
 import com.chilly.android.presentation.splash.splashComposable
@@ -22,10 +22,10 @@ fun ChillyNavHost(navController: NavHostController = rememberNavController()) {
     val component = LocalContext.current.applicationComponent
 
     LifecycleResumeEffect(navigator) {
-        component.navigatorHolder().setNavigator(navigator)
+        component.navigatorHolder.setNavigator(navigator)
 
         onPauseOrDispose {
-            component.navigatorHolder().removeNavigator()
+            component.navigatorHolder.removeNavigator()
         }
     }
 
@@ -33,6 +33,6 @@ fun ChillyNavHost(navController: NavHostController = rememberNavController()) {
         splashComposable()
         onboardingComposable()
         mainScreenComposable(navController)
-        logInScreenComposable(navController)
+        installLoginComposable()
     }
 }

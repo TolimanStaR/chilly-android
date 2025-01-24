@@ -1,5 +1,6 @@
 package com.chilly.android.di.application
 
+import androidx.compose.material3.SnackbarHostState
 import com.github.terrakok.cicerone.Cicerone
 import com.github.terrakok.cicerone.NavigatorHolder
 import com.github.terrakok.cicerone.Router
@@ -23,4 +24,8 @@ class NavigationModule {
     @Singleton
     fun provideRouter(cicerone: Cicerone<Router>): Router =
         cicerone.router
+
+    @Provides
+    @Singleton
+    fun provideSnackbarHostState(): SnackbarHostState = SnackbarHostState()
 }

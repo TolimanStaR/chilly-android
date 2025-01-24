@@ -5,9 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.chilly.android.domain.repository.PreferencesRepository
 import com.chilly.android.domain.useCase.login.TryRefreshTokenUseCase
 import com.chilly.android.presentation.common.structure.ViewModelWithEffects
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 class SplashScreenViewModel(
     private val preferencesRepository: PreferencesRepository,
@@ -15,7 +14,8 @@ class SplashScreenViewModel(
     @VisibleForTesting effectReply: Int
 ): ViewModelWithEffects<SplashScreenEffect, Nothing>(effectReply) {
 
-    @AssistedInject constructor(
+    @Inject
+    constructor(
         preferencesRepository: PreferencesRepository,
         tokenUseCase: TryRefreshTokenUseCase,
     ) : this(preferencesRepository, tokenUseCase, 0)
@@ -37,11 +37,6 @@ class SplashScreenViewModel(
         } else {
             emit(SplashScreenEffect.NavigateOnboarding)
         }
-    }
-
-    @AssistedFactory
-    interface Factory {
-        fun build(): SplashScreenViewModel
     }
 
     override fun dispatch(event: Nothing) = Unit

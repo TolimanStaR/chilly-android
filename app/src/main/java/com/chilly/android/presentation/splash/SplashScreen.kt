@@ -42,12 +42,10 @@ fun NavGraphBuilder.splashComposable() {
                     .appComponent(applicationComponent)
                     .build()
             },
-            viewModelFactory = {
-                viewModelFactory().build()
-            }
+            viewModelFactory = { viewModel() }
         ) {
             SplashScreen()
-            EffectCollector(component.effectCollector())
+            EffectCollector(component.effectCollector)
         }
     }
 }

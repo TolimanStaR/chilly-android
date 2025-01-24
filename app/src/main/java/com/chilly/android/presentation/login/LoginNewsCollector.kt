@@ -1,31 +1,29 @@
 package com.chilly.android.presentation.login
 
-import android.content.res.Resources
+import androidx.annotation.StringRes
 import androidx.compose.material3.SnackbarHostState
 import com.chilly.android.R
+import com.chilly.android.di.screens.LoginScope
+import com.chilly.android.presentation.common.structure.ResourcesHolder
 import com.chilly.android.presentation.navigation.Destination
 import com.github.terrakok.cicerone.Router
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.FlowCollector
+import javax.inject.Inject
 
-class LoginNewsCollector @AssistedInject constructor(
+@LoginScope
+class LoginNewsCollector @Inject constructor(
     private val router: Router,
-    @Assisted private val snackBarHostState: SnackbarHostState,
-    @Assisted private val resources: Resources
+    private val snackBarHostState: SnackbarHostState,
+    private val resourcesHolder: ResourcesHolder
 ) : FlowCollector<LoginNews> {
 
     override suspend fun emit(value: LoginNews) {
         when(value) {
             LoginNews.NavigateMain -> router.newRootScreen(Destination.Main)
-            LoginNews.LoginFailed -> snackBarHostState.showSnackbar(resources.getString(R.string.login_failed_snackbar))
+            LoginNews.LoginFailed -> snackBarHostState.showSnackbar(getString(R.string.login_failed_snackbar))
             LoginNews.NavigateSignUp -> router.navigateTo(Destination.Main)
         }
     }
 
-    @AssistedFactory
-    interface Factory {
-        fun build(snackBarHostState: SnackbarHostState, resources: Resources): LoginNewsCollector
-    }
+    private fun getString(@StringRes id: Int): String = resourcesHolder.get().getString(id)
 }
