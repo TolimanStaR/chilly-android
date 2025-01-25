@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,14 +18,13 @@ import com.chilly.android.di.screens.DaggerSplashScreenComponent
 import com.chilly.android.presentation.common.structure.EffectCollector
 import com.chilly.android.presentation.common.structure.ScreenHolder
 import com.chilly.android.presentation.navigation.Destination
-import com.chilly.android.presentation.theme.Red50
 
 @Composable
 private fun SplashScreen() {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
-            .background(color = Red50)
+            .background(color = MaterialTheme.colorScheme.primary)
             .fillMaxSize()
     ) {
         Image(
@@ -34,7 +34,7 @@ private fun SplashScreen() {
     }
 }
 
-fun NavGraphBuilder.splashComposable() {
+fun NavGraphBuilder.installSplashComposable() {
     composable<Destination.Splash> {
         ScreenHolder(
             componentFactory = {

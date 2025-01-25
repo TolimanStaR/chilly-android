@@ -50,8 +50,8 @@ fun ChillyTextField(
             unfocusedBorderColor = MaterialTheme.colorScheme.outline,
             focusedBorderColor = MaterialTheme.colorScheme.primary,
             disabledBorderColor = MaterialTheme.colorScheme.outlineVariant,
-            unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
-            focusedTextColor = MaterialTheme.colorScheme.onBackground,
+            unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+            focusedTextColor = MaterialTheme.colorScheme.onSurface,
         ),
         placeholder = placeholderTextRes?.let {
             {

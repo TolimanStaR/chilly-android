@@ -10,8 +10,8 @@ import androidx.navigation.compose.rememberNavController
 import com.chilly.android.applicationComponent
 import com.chilly.android.presentation.login.installLoginComposable
 import com.chilly.android.presentation.main.mainScreenComposable
-import com.chilly.android.presentation.onboarding.onboardingComposable
-import com.chilly.android.presentation.splash.splashComposable
+import com.chilly.android.presentation.onboarding.installOnboardingComposable
+import com.chilly.android.presentation.splash.installSplashComposable
 
 @Composable
 fun ChillyNavHost(navController: NavHostController = rememberNavController()) {
@@ -30,8 +30,8 @@ fun ChillyNavHost(navController: NavHostController = rememberNavController()) {
     }
 
     NavHost(navController, Destination.Splash) {
-        splashComposable()
-        onboardingComposable()
+        installSplashComposable()
+        installOnboardingComposable()
         mainScreenComposable(navController)
         installLoginComposable()
     }

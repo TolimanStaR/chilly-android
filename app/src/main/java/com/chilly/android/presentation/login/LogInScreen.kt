@@ -24,7 +24,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.ImageShader
 import androidx.compose.ui.graphics.ShaderBrush
@@ -36,6 +35,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -53,7 +53,6 @@ import com.chilly.android.presentation.common.structure.collectState
 import com.chilly.android.presentation.login.LoginEvent.UiEvent
 import com.chilly.android.presentation.navigation.Destination
 import com.chilly.android.presentation.theme.ChillyTheme
-import com.chilly.android.presentation.theme.Gray20
 
 @Composable
 private fun LogInScreen(
@@ -75,7 +74,7 @@ private fun LogInScreen(
                     .padding(innerPadding)
                     .padding(16.dp)
                     .background(
-                        color = Color.White,
+                        color = MaterialTheme.colorScheme.surface,
                         shape = RoundedCornerShape(24.dp)
                     )
                     .padding(horizontal = 24.dp, vertical = 32.dp)
@@ -168,13 +167,13 @@ private fun LogInScreen(
 @Composable
 private fun PepperBackground() {
     val backgroundImage = ImageBitmap.imageResource(R.drawable.pappers)
-    val shaderBrush = remember(backgroundImage) {
+    val shaderBrush = remember {
         ShaderBrush(ImageShader(backgroundImage, TileMode.Repeated, TileMode.Repeated))
     }
     Box(
         modifier = Modifier
             .blur(3.dp)
-            .background(color = Gray20)
+            .background(color = MaterialTheme.colorScheme.surfaceContainer)
             .background(shaderBrush)
             .fillMaxSize()
     )
@@ -199,6 +198,7 @@ fun NavGraphBuilder.installLoginComposable() {
 
 
 @Composable
+@PreviewLightDark
 @Preview(name = "login screen", showSystemUi = true, showBackground = true)
 private fun PreviewLoginScreen() {
     ChillyTheme {
