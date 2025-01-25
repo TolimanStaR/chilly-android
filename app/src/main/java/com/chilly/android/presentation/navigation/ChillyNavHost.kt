@@ -11,6 +11,7 @@ import com.chilly.android.applicationComponent
 import com.chilly.android.presentation.login.installLoginComposable
 import com.chilly.android.presentation.main.mainScreenComposable
 import com.chilly.android.presentation.onboarding.installOnboardingComposable
+import com.chilly.android.presentation.sign_up.installSignUpComposable
 import com.chilly.android.presentation.splash.installSplashComposable
 
 @Composable
@@ -34,5 +35,6 @@ fun ChillyNavHost(navController: NavHostController = rememberNavController()) {
         installOnboardingComposable()
         mainScreenComposable(navController)
         installLoginComposable()
+        installSignUpComposable()
     }
 }

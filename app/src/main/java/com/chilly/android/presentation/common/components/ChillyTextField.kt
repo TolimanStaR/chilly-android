@@ -11,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -46,13 +45,15 @@ fun ChillyTextField(
         },
         shape = RoundedCornerShape(8.dp),
         textStyle = size.toTextStyle(),
-        colors = OutlinedTextFieldDefaults.colors(
-            unfocusedBorderColor = MaterialTheme.colorScheme.outline,
-            focusedBorderColor = MaterialTheme.colorScheme.primary,
-            disabledBorderColor = MaterialTheme.colorScheme.outlineVariant,
-            unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
-            focusedTextColor = MaterialTheme.colorScheme.onSurface,
-        ),
+        colors = with(MaterialTheme.colorScheme) {
+            OutlinedTextFieldDefaults.colors(
+                unfocusedBorderColor = outline,
+                focusedBorderColor = primary,
+                disabledBorderColor = outlineVariant,
+                unfocusedTextColor = onSurface,
+                focusedTextColor = onSurface,
+            )
+        },
         placeholder = placeholderTextRes?.let {
             {
                 Text(

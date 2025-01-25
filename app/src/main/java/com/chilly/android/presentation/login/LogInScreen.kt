@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -23,12 +22,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.ImageShader
-import androidx.compose.ui.graphics.ShaderBrush
-import androidx.compose.ui.graphics.TileMode
-import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -46,6 +39,7 @@ import com.chilly.android.di.screens.LoginComponent
 import com.chilly.android.presentation.common.components.ChillyButton
 import com.chilly.android.presentation.common.components.ChillyButtonType
 import com.chilly.android.presentation.common.components.ChillyTextField
+import com.chilly.android.presentation.common.components.PeppersBackground
 import com.chilly.android.presentation.common.components.SizeParameter
 import com.chilly.android.presentation.common.structure.NewsCollector
 import com.chilly.android.presentation.common.structure.ScreenHolder
@@ -68,7 +62,7 @@ private fun LogInScreen(
         Box(
             contentAlignment = Alignment.Center,
         ) {
-            PepperBackground()
+            PeppersBackground()
             Column(
                 modifier = Modifier
                     .padding(innerPadding)
@@ -164,21 +158,6 @@ private fun LogInScreen(
     }
 }
 
-@Composable
-private fun PepperBackground() {
-    val backgroundImage = ImageBitmap.imageResource(R.drawable.pappers)
-    val shaderBrush = remember {
-        ShaderBrush(ImageShader(backgroundImage, TileMode.Repeated, TileMode.Repeated))
-    }
-    Box(
-        modifier = Modifier
-            .blur(3.dp)
-            .background(color = MaterialTheme.colorScheme.surfaceContainer)
-            .background(shaderBrush)
-            .fillMaxSize()
-    )
-}
-
 fun NavGraphBuilder.installLoginComposable() {
     composable<Destination.LogIn> {
         ScreenHolder(
@@ -190,7 +169,7 @@ fun NavGraphBuilder.installLoginComposable() {
             storeFactory = LoginComponent::store
         ) {
             val state = collectState()
-            LogInScreen(state.value, store::dispatch, component.appComponent.snackbarHostState)
+            LogInScreen(state.value, store::dispatch, component.snackbarHostState)
             NewsCollector(component.newsCollector)
         }
     }

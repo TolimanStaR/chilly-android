@@ -2,26 +2,25 @@ package com.chilly.android.di.screens
 
 import androidx.compose.material3.SnackbarHostState
 import com.chilly.android.di.application.ApplicationComponent
-import com.chilly.android.presentation.login.LoginNewsCollector
-import com.chilly.android.presentation.login.LoginStore
+import com.chilly.android.presentation.sign_up.SignUpNewsCollector
+import com.chilly.android.presentation.sign_up.SignUpStore
 import dagger.Component
 import javax.inject.Scope
 
-@LoginScope
+@SignUpScope
 @Component(dependencies = [ApplicationComponent::class])
-interface LoginComponent {
+interface SignUpComponent {
 
+    fun store(): SignUpStore
+    val newsCollector: SignUpNewsCollector
     val snackbarHostState: SnackbarHostState
-
-    fun store(): LoginStore
-    val newsCollector: LoginNewsCollector
 
     @Component.Builder
     interface Builder {
-        fun appComponent(appComponent: ApplicationComponent): Builder
-        fun build(): LoginComponent
+        fun appComponent(component: ApplicationComponent): Builder
+        fun build(): SignUpComponent
     }
 }
 
 @Scope
-annotation class LoginScope
+annotation class SignUpScope
