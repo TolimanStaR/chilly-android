@@ -4,9 +4,8 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.viewModelScope
 import com.chilly.android.domain.repository.PreferencesRepository
 import com.chilly.android.presentation.common.structure.ViewModelWithEffects
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
 class OnboardingViewModel(
@@ -14,7 +13,8 @@ class OnboardingViewModel(
     @VisibleForTesting effectReply: Int
 ) : ViewModelWithEffects<OnboardingEffect, OnboardingEvent>(effectReply) {
 
-    @AssistedInject constructor(
+    @Inject
+    constructor(
         preferencesRepository: PreferencesRepository
     ) : this(preferencesRepository, 0)
 
@@ -41,8 +41,4 @@ class OnboardingViewModel(
         emit(OnboardingEffect.OnboardingFinished)
     }
 
-    @AssistedFactory
-    interface Factory {
-        fun build(): OnboardingViewModel
-    }
 }

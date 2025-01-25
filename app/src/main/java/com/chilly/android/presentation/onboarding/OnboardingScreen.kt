@@ -1,6 +1,5 @@
 package com.chilly.android.presentation.onboarding
 
-import android.content.Context
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
@@ -29,26 +28,22 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.chilly.android.R
 import com.chilly.android.applicationComponent
 import com.chilly.android.di.screens.DaggerOnboardingComponent
-import com.chilly.android.di.screens.OnboardingComponent
 import com.chilly.android.presentation.common.components.ChillyButton
 import com.chilly.android.presentation.common.components.ChillyButtonColor
 import com.chilly.android.presentation.common.components.ChillyButtonType
 import com.chilly.android.presentation.common.structure.EffectCollector
 import com.chilly.android.presentation.common.structure.ScreenHolder
 import com.chilly.android.presentation.navigation.Destination
-import com.chilly.android.presentation.navigation.clearStackAndNavigate
 import com.chilly.android.presentation.theme.ChillyTheme
 import com.chilly.android.presentation.theme.Peach10
 import com.chilly.android.presentation.theme.Red10
 import com.chilly.android.presentation.theme.Red50
-import kotlinx.coroutines.flow.FlowCollector
 
 
 @Composable
@@ -123,32 +118,25 @@ private fun OnboardingScreen(
 }
 
 
-fun NavGraphBuilder.onboardingComposable(navController: NavController) {
+fun NavGraphBuilder.onboardingComposable() {
     composable<Destination.Onboarding> { backStack ->
         ScreenHolder(
-            viewModelFactory = {
-                buildComponent().viewModelFactory().build()
-            }
+            componentFactory = {
+                DaggerOnboardingComponent.builder()
+                    .appComponent(applicationComponent)
+                    .build()
+            },
+            viewModelFactory = { viewModel() }
         ) {
             OnboardingScreen(
                 backStack.toRoute(),
-                ::dispatch
+                viewModel::dispatch
             )
-            EffectCollector(createEffectCollector(navController))
+            EffectCollector(component.effectCollector)
         }
     }
 }
 
-private fun Context.buildComponent(): OnboardingComponent = DaggerOnboardingComponent.builder()
-    .appComponent(applicationComponent)
-    .build()
-
-private fun createEffectCollector(navController: NavController) = FlowCollector<OnboardingEffect> { effect ->
-    when(effect) {
-        is OnboardingEffect.NavigateOnboardingScreen -> navController.navigate(Destination.Onboarding(effect.index))
-        OnboardingEffect.OnboardingFinished -> navController.clearStackAndNavigate(Destination.Main)
-    }
-}
 
 private class OnboardingUi(
     @DrawableRes val imageId: Int,

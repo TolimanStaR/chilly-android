@@ -1,19 +1,31 @@
 package com.chilly.android.di.application
 
 import android.content.Context
+import androidx.compose.material3.SnackbarHostState
+import com.chilly.android.data.remote.TokenHolder
 import com.chilly.android.data.remote.api.LoginApi
 import com.chilly.android.domain.repository.PreferencesRepository
+import com.chilly.android.presentation.common.structure.ResourcesHolder
 import com.chilly.android.presentation.main.MainViewModel
+import com.github.terrakok.cicerone.NavigatorHolder
+import com.github.terrakok.cicerone.Router
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [RepositoryModule::class, NetworkModule::class])
+@Component(modules = [RepositoryModule::class, NetworkModule::class, NavigationModule::class])
 interface ApplicationComponent {
 
-    fun preferencesRepository(): PreferencesRepository
-    fun loginApi(): LoginApi
+    val preferencesRepository: PreferencesRepository
+    val loginApi: LoginApi
+
+    val navigatorHolder: NavigatorHolder
+    val router: Router
+    val snackbarHostState: SnackbarHostState
+
+    val tokenHolder: TokenHolder
+    val resourceHolder: ResourcesHolder
 
     fun mainViewModelFactory(): MainViewModel.Factory
 
