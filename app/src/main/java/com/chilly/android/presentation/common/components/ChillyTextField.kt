@@ -52,6 +52,7 @@ fun ChillyTextField(
                 disabledBorderColor = outlineVariant,
                 unfocusedTextColor = onSurface,
                 focusedTextColor = onSurface,
+                errorBorderColor = onErrorContainer
             )
         },
         placeholder = placeholderTextRes?.let {
