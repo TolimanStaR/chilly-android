@@ -30,18 +30,11 @@ inline fun <reified VM : ViewModel, C: Any> ScreenHolder(
 
     val viewModel by context.lazyViewModel { component.viewModelFactory(it) }
 
-    val scope = remember(viewModel, component) { ScreenHolderViewModelScope.of(viewModel, component) }
+    val scope = remember(viewModel, component) { ScreenHolderViewModelScope(viewModel, component) }
     scope.content()
 }
 
-interface ScreenHolderViewModelScope<VM : ViewModel, C :  Any> {
+class ScreenHolderViewModelScope<VM : ViewModel, C :  Any>(
+    val viewModel : VM,
     val component : C
-    val viewModel : VM
-
-    companion object  {
-        fun <VM : ViewModel, C : Any> of(viewModel: VM, component: C) = object : ScreenHolderViewModelScope<VM, C> {
-            override val viewModel = viewModel
-            override val component = component
-        }
-    }
-}
+)

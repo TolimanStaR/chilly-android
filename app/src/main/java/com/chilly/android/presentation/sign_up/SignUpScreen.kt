@@ -23,6 +23,7 @@ import androidx.navigation.compose.composable
 import com.chilly.android.R
 import com.chilly.android.applicationComponent
 import com.chilly.android.di.screens.DaggerSignUpComponent
+import com.chilly.android.di.screens.SignUpComponent
 import com.chilly.android.presentation.common.components.CancellableTextField
 import com.chilly.android.presentation.common.components.ChillyButton
 import com.chilly.android.presentation.common.components.ChillyButtonType
@@ -52,27 +53,29 @@ private fun SignUpScreen(
         Spacer(modifier = Modifier.height(16.dp))
         Column(
             verticalArrangement = Arrangement.spacedBy(4.dp)
-        ) { 
+        ) {
             CancellableTextField(
                 text = state.nameText,
                 onValueChange = { onEvent(UiEvent.NameTextChanged(it)) },
                 onClear = { onEvent(UiEvent.ClearNameClicked) },
                 labelTextRes = R.string.sign_up_name_label,
-                placeholderTextRes = R.string.sign_up_name_label
+                placeholderTextRes = R.string.sign_up_name_label,
             )
             CancellableTextField(
                 text = state.emailText,
                 onValueChange = { onEvent(UiEvent.EmailTextChanged(it)) },
                 onClear = { onEvent(UiEvent.ClearEmailClicked) },
                 labelTextRes = R.string.sign_up_email_label,
-                placeholderTextRes = R.string.sign_up_email_label
+                placeholderTextRes = R.string.sign_up_email_label,
+                errorText = state.emailErrorRedId?.let { stringResource(it) }
             )
             CancellableTextField(
                 text = state.phoneText,
                 onValueChange = { onEvent(UiEvent.PhoneTextChanged(it)) },
                 onClear = { onEvent(UiEvent.ClearPhoneClicked) },
                 labelTextRes = R.string.sign_up_phone_label,
-                placeholderTextRes = R.string.sign_up_phone_label
+                placeholderTextRes = R.string.sign_up_phone_label,
+                errorText = state.phoneErrorRedId?.let { stringResource(it) }
             )
             PasswordTextField(
                 text = state.passwordText,
@@ -80,15 +83,17 @@ private fun SignUpScreen(
                 onValueChange = { onEvent(UiEvent.PasswordTextChanged(it)) },
                 labelTextRes = R.string.sign_up_password_label,
                 placeholderTextRes = R.string.sign_up_password_label,
-                onVisibilityToggle = { onEvent(UiEvent.PasswordVisibilityToggled) }
+                onVisibilityToggle = { onEvent(UiEvent.PasswordVisibilityToggled) },
+                errorText = state.passwordErrorRedId?.let { stringResource(it) }
             )
             PasswordTextField(
-                text = state.passwordText,
-                passwordShown = state.passwordShown,
+                text = state.passwordRepeatText,
+                passwordShown = state.passwordRepeatShown,
                 onValueChange = { onEvent(UiEvent.PasswordRepeatChanged(it)) },
                 labelTextRes = R.string.sign_up_password_repeat_label,
                 placeholderTextRes = R.string.sign_up_password_repeat_label,
-                onVisibilityToggle = { onEvent(UiEvent.PasswordRepeatVisibilityToggled) }
+                onVisibilityToggle = { onEvent(UiEvent.PasswordRepeatVisibilityToggled) },
+                errorText = state.repeatPasswordErrorRedId?.let { stringResource(it) }
             )
         }
         Spacer(modifier = Modifier.height(36.dp))
@@ -96,7 +101,8 @@ private fun SignUpScreen(
             textRes = R.string.sign_up_button,
             size = SizeParameter.Medium,
             modifier = Modifier.fillMaxWidth(),
-            onClick = { onEvent(UiEvent.SignUpClicked) }
+            onClick = { onEvent(UiEvent.SignUpClicked) },
+            enabled = state.signUpEnabled
         )
         Spacer(modifier = Modifier.height(12.dp))
         ChillyButton(
@@ -123,7 +129,7 @@ fun NavGraphBuilder.installSignUpComposable() {
                     .appComponent(applicationComponent)
                     .build()
             },
-            storeFactory = { store() }
+            storeFactory = SignUpComponent::store
         ) {
             val state = collectState()
             SignUpScreen(state.value, store::dispatch, component.snackbarHostState)
@@ -138,7 +144,9 @@ fun NavGraphBuilder.installSignUpComposable() {
 private fun PreviewLoginScreen() {
     ChillyTheme {
         SignUpScreen(
-            SignUpState()
+            SignUpState(
+                emailErrorRedId = R.string.app_name
+            )
         )
     }
 }

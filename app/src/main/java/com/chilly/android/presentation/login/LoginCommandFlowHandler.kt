@@ -1,9 +1,7 @@
 package com.chilly.android.presentation.login
 
-import com.chilly.android.data.remote.TokenHolder
-import com.chilly.android.data.remote.api.LoginApi
 import com.chilly.android.data.remote.dto.request.LoginRequest
-import com.chilly.android.domain.repository.PreferencesRepository
+import com.chilly.android.domain.useCase.login.LogInUseCase
 import com.chilly.android.presentation.login.LoginEvent.CommandEvent
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -13,9 +11,7 @@ import ru.tinkoff.kotea.core.CommandsFlowHandler
 import javax.inject.Inject
 
 class LoginCommandFlowHandler @Inject constructor(
-    private val loginApi: LoginApi,
-    private val preferencesRepo: PreferencesRepository,
-    private val tokenHolder: TokenHolder
+    private val logInUseCase: LogInUseCase
 ) : CommandsFlowHandler<LoginCommand, CommandEvent> {
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -28,15 +24,14 @@ class LoginCommandFlowHandler @Inject constructor(
     }
 
     private fun handleLogIn(command: LoginCommand.LogIn): Flow<CommandEvent> = flow {
-        val response = loginApi.login(LoginRequest(command.username, command.password))
-            .getOrElse {
+        logInUseCase.invoke(
+            LoginRequest(command.username, command.password),
+            onFailure = {
                 emit(CommandEvent.LoginFail)
-                return@flow
+            },
+            onSuccess = {
+                emit(CommandEvent.LoginSuccess(it.refreshToken, it.accessToken))
             }
-
-        preferencesRepo.saveRefreshToken(response.refreshToken)
-        tokenHolder.accessToken = response.accessToken
-
-        emit(CommandEvent.LoginSuccess(response.refreshToken, response.accessToken))
+        )
     }
 }

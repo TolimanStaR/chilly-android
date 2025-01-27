@@ -7,7 +7,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.Icon
@@ -20,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -43,6 +47,7 @@ fun FormSurface(
             PeppersBackground()
             Column(
                 modifier = Modifier
+                    .verticalScroll(rememberScrollState())
                     .padding(innerPadding)
                     .padding(16.dp)
                     .background(
@@ -50,6 +55,11 @@ fun FormSurface(
                         shape = RoundedCornerShape(24.dp)
                     )
                     .padding(horizontal = 24.dp, vertical = 32.dp)
+                    .widthIn(
+                        max = with(LocalConfiguration.current) {
+                            minOf(screenWidthDp, screenHeightDp).dp
+                        }
+                    )
             ) {
                 content()
             }
@@ -64,6 +74,7 @@ fun CancellableTextField(
     @StringRes placeholderTextRes: Int,
     onValueChange: (String) -> Unit,
     onClear: () -> Unit,
+    errorText: String? = null,
     modifier: Modifier = Modifier
 ) {
     ChillyTextField(
@@ -83,6 +94,7 @@ fun CancellableTextField(
                 }
             }
         },
+        errorText = errorText,
         modifier = modifier.fillMaxWidth()
     )
 }
@@ -95,6 +107,7 @@ fun PasswordTextField(
     @StringRes placeholderTextRes: Int,
     onValueChange: (String) -> Unit,
     onVisibilityToggle: () -> Unit,
+    errorText: String? = null,
     modifier: Modifier = Modifier
 ) {
     val passwordTransform = remember(passwordShown) {
@@ -119,6 +132,7 @@ fun PasswordTextField(
                 )
             }
         },
+        errorText = errorText,
         visualTransformation = passwordTransform,
         modifier = modifier.fillMaxWidth()
     )

@@ -25,8 +25,16 @@
     <string name="sign_up_name_label">Имя</string>
     <string name="sign_up_email_label">E-mail</string>
     <string name="sign_up_phone_label">Телефон</string>
-    <string name="sign_up_password_label">Пафроль</string>
+    <string name="sign_up_password_label">Пароль</string>
     <string name="sign_up_password_repeat_label">Повтор пароля</string>
     <string name="sign_up_title">Регистрация</string>
     <string name="sign_up_have_account_button">У меня уже есть аккаунт</string>
+
+    <string name="email_invalid">Неправильный формат e-mail</string>
+    <string name="phone_invalid">Неправильно введен номер телефона</string>
+    <string name="weak_password">Слабый пароль. Пароль должен состоять хотя бы из 6 символов, содержать только латиницу, цифры или знаки препинания</string>
+    <string name="passwords_differ">Пароли не совпадают</string>
+    <string name="sign_up_fail_default">Произошла ошибка при попытке регистрации</string>
+    <string name="username_taken_error">E-mail или номер телефона уже заняты</string>
+
 </resources>

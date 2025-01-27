@@ -1,14 +1,22 @@
 package com.chilly.android.presentation.sign_up
 
+import androidx.annotation.StringRes
+import com.chilly.android.R
+
 data class SignUpState(
     val nameText: String = "",
     val emailText: String = "",
+    val emailErrorRedId: Int? = null,
     val phoneText: String = "",
+    val phoneErrorRedId: Int? = null,
     val passwordText: String = "",
+    val passwordErrorRedId: Int? = null,
     val passwordShown: Boolean = false,
     val passwordRepeatText: String = "",
+    val repeatPasswordErrorRedId: Int? = null,
     val passwordRepeatShown: Boolean = false,
-    val isLoading: Boolean = false
+    val isLoading: Boolean = false,
+    val signUpEnabled: Boolean = false
 )
 
 sealed interface SignUpEvent {
@@ -28,15 +36,24 @@ sealed interface SignUpEvent {
     }
 
     sealed interface CommandEvent : SignUpEvent {
-        data object SignUpSuccess : CommandEvent
-        data object SignUpFailed : CommandEvent
+        data class SignUpSuccess(
+            val username: String,
+            val password: String
+        ) : CommandEvent
+        data object LoginSuccess : CommandEvent
+        data object LoginFailure : CommandEvent
+        data class SignUpReasonedFail(
+            @StringRes val messageRes: Int = R.string.sign_up_fail_default
+        ) : CommandEvent
     }
 }
 
 sealed interface SignUpNews {
     data object NavigateMain : SignUpNews
     data object NavigateToLogin : SignUpNews
-    data object ShowFailedSnackbar : SignUpNews
+    data class ShowFailedSnackbar(
+        @StringRes val messageRes: Int = R.string.sign_up_fail_default
+    ) : SignUpNews
 }
 
 sealed interface SignUpCommand {
@@ -46,4 +63,5 @@ sealed interface SignUpCommand {
         val phoneText: String,
         val passwordText: String
     ) : SignUpCommand
+    data class LogIn(val username: String, val password: String) : SignUpCommand
 }

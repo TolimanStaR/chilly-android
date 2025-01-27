@@ -75,6 +75,7 @@ private fun LogInScreen(
         ChillyButton(
             textRes = R.string.login_button,
             size = SizeParameter.Medium,
+            enabled = state.loginButtonEnabled,
             modifier = Modifier.fillMaxWidth(),
             onClick = { onEvent(UiEvent.LogInClicked) }
         )

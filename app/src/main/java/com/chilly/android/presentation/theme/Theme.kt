@@ -28,7 +28,10 @@ private val LightColorScheme = lightColorScheme(
     surfaceContainer = Gray10,
     onSurfaceVariant = Gray70,
     surfaceBright = Color.White,
-    surfaceDim = Gray10
+    surfaceDim = Gray10,
+
+    error = Red70,
+    errorContainer = Red5
 )
 
 private val DarkColorScheme = darkColorScheme(
@@ -48,7 +51,10 @@ private val DarkColorScheme = darkColorScheme(
     surfaceContainer = Gray70,
     onSurfaceVariant = Gray20,
     surfaceBright = Gray70,
-    surfaceDim = Gray90
+    surfaceDim = Gray90,
+
+    error = Red70,
+    errorContainer = Color.Transparent
 )
 
 @Composable

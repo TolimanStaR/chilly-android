@@ -2,8 +2,10 @@ package com.chilly.android.data.remote.api.impl
 
 import com.chilly.android.data.remote.api.LoginApi
 import com.chilly.android.data.remote.api.postWithResult
+import com.chilly.android.data.remote.api.wrappedPost
 import com.chilly.android.data.remote.dto.request.RefreshRequest
 import com.chilly.android.data.remote.dto.request.LoginRequest
+import com.chilly.android.data.remote.dto.request.SignUpRequest
 import com.chilly.android.data.remote.dto.response.LoginResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.request.setBody
@@ -22,4 +24,9 @@ class LoginApiImpl(private val client: HttpClient) : LoginApi {
         }
     }
 
+    override suspend fun signUp(request: SignUpRequest): Result<Unit> {
+        return client.wrappedPost("api/auth/register") {
+            setBody(request)
+        }
+    }
 }

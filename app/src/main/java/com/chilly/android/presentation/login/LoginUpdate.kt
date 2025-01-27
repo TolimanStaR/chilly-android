@@ -13,13 +13,19 @@ class LoginUpdate : DslUpdate<LoginState, LoginEvent, LoginCommand, LoginNews>()
 
     private fun NextBuilder.onUiEvent(event: LoginEvent.UiEvent) {
         when(event) {
-            is LoginEvent.UiEvent.LoginChanged -> state { copy(loginText = event.newValue) }
-            is LoginEvent.UiEvent.PasswordChanged -> state { copy(passwordText = event.newValue) }
+            is LoginEvent.UiEvent.LoginChanged -> {
+                state { copy(loginText = event.newValue) }
+                checkLoginEnabled()
+            }
+            is LoginEvent.UiEvent.PasswordChanged -> {
+                state { copy(passwordText = event.newValue) }
+                checkLoginEnabled()
+            }
             LoginEvent.UiEvent.LogInClicked -> {
                 state { copy(isLoading = true) }
                 commands(LoginCommand.LogIn(state.loginText, state.passwordText))
             }
-            LoginEvent.UiEvent.ClearClicked -> state { copy(loginText = "") }
+            LoginEvent.UiEvent.ClearClicked -> state { copy(loginText = "", loginButtonEnabled = false) }
             LoginEvent.UiEvent.ShowPasswordToggled -> state { copy(passwordShown = !passwordShown) }
             LoginEvent.UiEvent.SignUpClicked -> news(LoginNews.NavigateSignUp)
         }
@@ -37,4 +43,9 @@ class LoginUpdate : DslUpdate<LoginState, LoginEvent, LoginCommand, LoginNews>()
             }
         }
     }
+
+    private fun NextBuilder.checkLoginEnabled() {
+        state { copy(loginButtonEnabled = loginText.isNotBlank() && passwordText.isNotBlank()) }
+    }
+
 }

@@ -5,6 +5,7 @@ import androidx.compose.material3.SnackbarHostState
 import com.chilly.android.R
 import com.chilly.android.di.screens.LoginScope
 import com.chilly.android.presentation.common.structure.ResourcesHolder
+import com.chilly.android.presentation.common.structure.getString
 import com.chilly.android.presentation.navigation.Destination
 import com.github.terrakok.cicerone.Router
 import kotlinx.coroutines.flow.FlowCollector
@@ -21,9 +22,9 @@ class LoginNewsCollector @Inject constructor(
         when(value) {
             LoginNews.NavigateMain -> router.newRootScreen(Destination.Main)
             LoginNews.LoginFailed -> snackBarHostState.showSnackbar(getString(R.string.login_failed_snackbar))
-            LoginNews.NavigateSignUp -> router.navigateTo(Destination.Main)
+            LoginNews.NavigateSignUp -> router.navigateTo(Destination.SignUp)
         }
     }
 
-    private fun getString(@StringRes id: Int): String = resourcesHolder.get().getString(id)
+    private fun getString(@StringRes id: Int): String = resourcesHolder.getString(id)
 }

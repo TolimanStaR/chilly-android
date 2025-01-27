@@ -6,9 +6,10 @@ import ru.tinkoff.kotea.core.Store
 
 
 class SignUpStore @Inject constructor(
-    commandFlowHandler: SignUpCommandFlowHandler
-) : Store<SignUpState, SignUpEvent.UiEvent, SignUpNews> by KoteaStore<SignUpState, SignUpEvent, SignUpEvent.UiEvent, SignUpCommand, SignUpNews>(
+    commandFlowHandler: SignUpCommandFlowHandler,
+    update: SignUpUpdate,
+) : Store<SignUpState, SignUpEvent.UiEvent, SignUpNews> by KoteaStore(
     initialState = SignUpState(),
     commandsFlowHandlers = listOf(commandFlowHandler),
-    update = SignUpUpdate()
+    update = update
 )

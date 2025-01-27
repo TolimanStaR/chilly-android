@@ -30,6 +30,7 @@ fun ChillyTextField(
     onValueChange: (String) -> Unit,
     @StringRes labelTextRes: Int? = null,
     @StringRes placeholderTextRes: Int? = null,
+    errorText: String? = null,
     size: SizeParameter = SizeParameter.Small,
     singleLine: Boolean = false,
     visualTransformation: VisualTransformation = VisualTransformation.None,
@@ -43,6 +44,7 @@ fun ChillyTextField(
             text = it
             onValueChange(it)
         },
+        isError = errorText != null,
         shape = RoundedCornerShape(8.dp),
         textStyle = size.toTextStyle(),
         colors = with(MaterialTheme.colorScheme) {
@@ -52,7 +54,8 @@ fun ChillyTextField(
                 disabledBorderColor = outlineVariant,
                 unfocusedTextColor = onSurface,
                 focusedTextColor = onSurface,
-                errorBorderColor = onErrorContainer
+                errorBorderColor = error,
+                errorContainerColor = errorContainer
             )
         },
         placeholder = placeholderTextRes?.let {
@@ -72,6 +75,14 @@ fun ChillyTextField(
                 )
             }
         },
+        supportingText = if (!errorText.isNullOrBlank()) {
+            {
+                Text(
+                    text = errorText,
+                    style = MaterialTheme.typography.labelSmall
+                )
+            }
+        } else null,
         singleLine = singleLine,
         trailingIcon = trailingIcon,
         visualTransformation = visualTransformation,
