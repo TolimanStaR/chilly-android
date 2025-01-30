@@ -16,19 +16,13 @@ class LogInUseCase @Inject constructor(
 
     suspend operator fun invoke(
         request: LoginRequest,
-        onSuccess: suspend (LoginResponse) -> Unit,
-        onFailure: suspend (Throwable) -> Unit
-    ) {
-        Timber.i("trying to login...")
+    ): Result<LoginResponse> =
         loginApi.login(request)
             .onFailure { exception ->
                 Timber.e(exception)
-                onFailure(exception)
             }
             .onSuccess { response ->
                 preferencesRepository.saveRefreshToken(response.refreshToken)
                 tokenHolder.accessToken = response.accessToken
-                onSuccess(response)
             }
-    }
 }

@@ -1,6 +1,5 @@
 package com.chilly.android.presentation.sign_up
 
-import com.chilly.android.R
 import com.chilly.android.data.remote.HandledException
 import com.chilly.android.data.remote.api.LoginApi
 import com.chilly.android.data.remote.dto.request.LoginRequest
@@ -36,7 +35,7 @@ class SignUpCommandFlowHandler @Inject constructor(
             emit(CommandEvent.SignUpSuccess(command.emailText, command.passwordText))
         }.onFailure { exception ->
             val event = when {
-                exception.becauseOfTakenUsername() -> CommandEvent.SignUpReasonedFail(R.string.username_taken_error)
+                exception.becauseOfTakenUsername() -> CommandEvent.SignUpReasonedFail(FailReason.DataConflict)
                 else -> CommandEvent.SignUpReasonedFail()
             }
             emit(event)
@@ -44,15 +43,13 @@ class SignUpCommandFlowHandler @Inject constructor(
     }
 
     private fun handleLogIn(command: SignUpCommand.LogIn): Flow<CommandEvent> = flow {
-        loginUseCase.invoke(
-            LoginRequest(command.username, command.password),
-            onSuccess = {
+        loginUseCase.invoke(LoginRequest(command.username, command.password))
+            .onSuccess {
                 emit(CommandEvent.LoginSuccess)
-            },
-            onFailure = {
+            }
+            .onFailure {
                 emit(CommandEvent.LoginFailure)
             }
-        )
     }
 
     private fun Throwable.becauseOfTakenUsername(): Boolean =

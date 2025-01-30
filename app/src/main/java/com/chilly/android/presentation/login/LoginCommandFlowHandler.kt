@@ -24,14 +24,12 @@ class LoginCommandFlowHandler @Inject constructor(
     }
 
     private fun handleLogIn(command: LoginCommand.LogIn): Flow<CommandEvent> = flow {
-        logInUseCase.invoke(
-            LoginRequest(command.username, command.password),
-            onFailure = {
+        logInUseCase.invoke(LoginRequest(command.username, command.password))
+            .onFailure {
                 emit(CommandEvent.LoginFail)
-            },
-            onSuccess = {
+            }
+            .onSuccess {
                 emit(CommandEvent.LoginSuccess(it.refreshToken, it.accessToken))
             }
-        )
     }
 }

@@ -68,7 +68,7 @@ class SignUpUpdate @Inject constructor(
             }
             is CommandEvent.SignUpReasonedFail -> {
                 state { copy(isLoading = false) }
-                news(SignUpNews.ShowFailedSnackbar(event.messageRes))
+                news(SignUpNews.ShowFailedSnackbar(event.reason))
             }
             CommandEvent.LoginFailure -> {
                 state { copy(isLoading = false) }

@@ -18,18 +18,24 @@ inline fun <
     event: E,
     expectedStateProducer: StateAndEvent<S, E>.() -> S = { initialState },
     expectedCommandsProducer: StateAndEvent<S, E>.() -> List<C> = { emptyList() },
-    expectedNewsProducer: StateAndEvent<S, E>.() -> List<N> = { emptyList() }
+    expectedNewsProducer: StateAndEvent<S, E>.() -> List<N> = { emptyList() },
+    configuration: () -> Unit = {},
+    verification: () -> Unit = {}
 ) {
     val stateAndEvent = StateAndEvent(initialState, event)
     val expectedState = stateAndEvent.expectedStateProducer()
     val expectedCommands = stateAndEvent.expectedCommandsProducer()
     val expectedNews = stateAndEvent.expectedNewsProducer()
 
+    configuration.invoke()
+
     val next = update(initialState, event)
 
     assertEquals(next.state, expectedState)
     assertEquals(next.commands, expectedCommands)
     assertEquals(next.news, expectedNews)
+
+    verification.invoke()
 }
 
 class StateAndEvent<S: Any, E: Any> (

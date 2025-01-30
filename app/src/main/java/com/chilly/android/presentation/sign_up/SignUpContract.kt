@@ -1,8 +1,5 @@
 package com.chilly.android.presentation.sign_up
 
-import androidx.annotation.StringRes
-import com.chilly.android.R
-
 data class SignUpState(
     val nameText: String = "",
     val emailText: String = "",
@@ -42,18 +39,14 @@ sealed interface SignUpEvent {
         ) : CommandEvent
         data object LoginSuccess : CommandEvent
         data object LoginFailure : CommandEvent
-        data class SignUpReasonedFail(
-            @StringRes val messageRes: Int = R.string.sign_up_fail_default
-        ) : CommandEvent
+        data class SignUpReasonedFail(val reason: FailReason = FailReason.GeneralFail) : CommandEvent
     }
 }
 
 sealed interface SignUpNews {
     data object NavigateMain : SignUpNews
     data object NavigateToLogin : SignUpNews
-    data class ShowFailedSnackbar(
-        @StringRes val messageRes: Int = R.string.sign_up_fail_default
-    ) : SignUpNews
+    data class ShowFailedSnackbar(val reason: FailReason = FailReason.GeneralFail) : SignUpNews
 }
 
 sealed interface SignUpCommand {
@@ -64,4 +57,9 @@ sealed interface SignUpCommand {
         val passwordText: String
     ) : SignUpCommand
     data class LogIn(val username: String, val password: String) : SignUpCommand
+}
+
+sealed interface FailReason {
+    data object GeneralFail : FailReason
+    data object DataConflict : FailReason
 }

@@ -1,6 +1,8 @@
 package com.chilly.android.presentation.sign_up
 
+import androidx.annotation.StringRes
 import androidx.compose.material3.SnackbarHostState
+import com.chilly.android.R
 import com.chilly.android.di.screens.SignUpScope
 import com.chilly.android.presentation.common.structure.ResourcesHolder
 import com.chilly.android.presentation.common.structure.getString
@@ -20,7 +22,15 @@ class SignUpNewsCollector @Inject constructor(
         when(value) {
             SignUpNews.NavigateMain -> router.navigateTo(Destination.Main)
             SignUpNews.NavigateToLogin -> router.backTo(Destination.LogIn)
-            is SignUpNews.ShowFailedSnackbar -> snackbarHostState.showSnackbar(resourcesHolder.getString(value.messageRes))
+            is SignUpNews.ShowFailedSnackbar -> snackbarHostState.showSnackbar(
+                resourcesHolder.getString(value.reason.toMessageRes())
+            )
         }
+    }
+
+    @StringRes
+    private fun FailReason.toMessageRes(): Int = when(this) {
+        FailReason.DataConflict -> R.string.username_taken_error
+        FailReason.GeneralFail -> R.string.sign_up_fail_default
     }
 }
