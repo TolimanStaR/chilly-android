@@ -18,6 +18,7 @@ import com.chilly.android.di.screens.DaggerSplashScreenComponent
 import com.chilly.android.presentation.common.structure.EffectCollector
 import com.chilly.android.presentation.common.structure.ScreenHolder
 import com.chilly.android.presentation.navigation.Destination
+import com.chilly.android.presentation.theme.ChillyTheme
 
 @Composable
 private fun SplashScreen() {
@@ -54,5 +55,7 @@ fun NavGraphBuilder.installSplashComposable() {
 @Composable
 @Preview(name = "splash screen", showSystemUi = true, showBackground = true)
 private fun PreviewSplashScreen() {
-    SplashScreen()
+    ChillyTheme {
+        SplashScreen()
+    }
 }

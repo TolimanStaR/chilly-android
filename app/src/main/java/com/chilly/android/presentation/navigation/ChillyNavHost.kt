@@ -1,5 +1,8 @@
 package com.chilly.android.presentation.navigation
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
@@ -30,11 +33,18 @@ fun ChillyNavHost(navController: NavHostController = rememberNavController()) {
         }
     }
 
-    NavHost(navController, Destination.Splash) {
-        installSplashComposable()
-        installOnboardingComposable()
-        mainScreenComposable(navController)
-        installLoginComposable()
-        installSignUpComposable()
+    Surface {
+        NavHost(
+            navController = navController,
+            startDestination = Destination.Splash,
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None }
+        ) {
+            installSplashComposable()
+            installOnboardingComposable()
+            mainScreenComposable(navController)
+            installLoginComposable()
+            installSignUpComposable()
+        }
     }
 }
