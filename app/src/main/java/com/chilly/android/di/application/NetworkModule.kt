@@ -2,10 +2,15 @@ package com.chilly.android.di.application
 
 import com.chilly.android.data.remote.api.impl.LoginApiImpl
 import com.chilly.android.data.remote.api.LoginApi
+import com.chilly.android.data.remote.dto.response.ErrorResponse
+import com.chilly.android.data.remote.HandledException
 import dagger.Module
 import dagger.Provides
 import io.ktor.client.HttpClient
+import io.ktor.client.call.body
 import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.HttpResponseValidator
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.http.ContentType
@@ -21,6 +26,17 @@ class NetworkModule {
     @Singleton
     fun provideHttpClient(): HttpClient = HttpClient(OkHttp) {
         expectSuccess = true
+
+        HttpResponseValidator {
+            handleResponseExceptionWithRequest { cause, _ ->
+                when(cause) {
+                    is ClientRequestException -> {
+                        val response = cause.response.body<ErrorResponse>()
+                        throw HandledException(response)
+                    }
+                }
+            }
+        }
 
         install(ContentNegotiation) {
             json()

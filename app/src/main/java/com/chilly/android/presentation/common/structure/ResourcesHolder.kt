@@ -1,6 +1,7 @@
 package com.chilly.android.presentation.common.structure
 
 import android.content.res.Resources
+import androidx.annotation.StringRes
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -18,3 +19,5 @@ class ResourcesHolder @Inject constructor() {
 
     fun get() = _resources ?: throw IllegalStateException()
 }
+
+fun ResourcesHolder.getString(@StringRes id: Int) = get().getString(id)

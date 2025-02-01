@@ -1,5 +1,8 @@
 package com.chilly.android.presentation.navigation
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
@@ -10,8 +13,9 @@ import androidx.navigation.compose.rememberNavController
 import com.chilly.android.applicationComponent
 import com.chilly.android.presentation.login.installLoginComposable
 import com.chilly.android.presentation.main.mainScreenComposable
-import com.chilly.android.presentation.onboarding.onboardingComposable
-import com.chilly.android.presentation.splash.splashComposable
+import com.chilly.android.presentation.onboarding.installOnboardingComposable
+import com.chilly.android.presentation.sign_up.installSignUpComposable
+import com.chilly.android.presentation.splash.installSplashComposable
 
 @Composable
 fun ChillyNavHost(navController: NavHostController = rememberNavController()) {
@@ -29,10 +33,18 @@ fun ChillyNavHost(navController: NavHostController = rememberNavController()) {
         }
     }
 
-    NavHost(navController, Destination.Splash) {
-        splashComposable()
-        onboardingComposable()
-        mainScreenComposable(navController)
-        installLoginComposable()
+    Surface {
+        NavHost(
+            navController = navController,
+            startDestination = Destination.Splash,
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None }
+        ) {
+            installSplashComposable()
+            installOnboardingComposable()
+            mainScreenComposable(navController)
+            installLoginComposable()
+            installSignUpComposable()
+        }
     }
 }

@@ -54,34 +54,36 @@ fun ChillyButton(
 }
 
 @Composable
-private fun buttonColors(type: ChillyButtonType, color: ChillyButtonColor): ButtonColors = when {
-    type is ChillyButtonType.Primary && color is ChillyButtonColor.Primary ->
-        ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.onPrimary,
-            disabledContainerColor = MaterialTheme.colorScheme.inverseSurface,
-            disabledContentColor = MaterialTheme.colorScheme.inverseOnSurface
-        )
-    type is ChillyButtonType.Primary && color is ChillyButtonColor.Gray ->
-        ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-            contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
-            disabledContainerColor = MaterialTheme.colorScheme.inverseSurface,
-            disabledContentColor = MaterialTheme.colorScheme.inverseOnSurface
-        )
-    color is ChillyButtonColor.Primary -> ButtonDefaults.buttonColors(
-        containerColor = Color.Transparent,
-        contentColor = MaterialTheme.colorScheme.primary,
-        disabledContainerColor = Color.Transparent,
-        disabledContentColor = MaterialTheme.colorScheme.inverseSurface
+private fun buttonColors(type: ChillyButtonType, color: ChillyButtonColor): ButtonColors = with(MaterialTheme.colorScheme) {
+    val primaryBase = ButtonDefaults.buttonColors(
+        disabledContainerColor = secondaryContainer,
+        disabledContentColor = onSecondaryContainer
     )
-    color is ChillyButtonColor.Gray -> ButtonDefaults.buttonColors(
-        containerColor = Color.Transparent,
-        contentColor = MaterialTheme.colorScheme.secondaryContainer,
+    val otherBase = ButtonDefaults.buttonColors(
         disabledContainerColor = Color.Transparent,
-        disabledContentColor = MaterialTheme.colorScheme.inverseSurface
+        disabledContentColor = secondaryContainer
     )
-    else -> throw IllegalArgumentException()
+    return when {
+        type is ChillyButtonType.Primary && color is ChillyButtonColor.Primary ->
+            primaryBase.copy(
+                containerColor = primary,
+                contentColor = onPrimary,
+            )
+        type is ChillyButtonType.Primary && color is ChillyButtonColor.Gray ->
+            primaryBase.copy(
+                containerColor = secondary,
+                contentColor = onSecondary,
+            )
+        color is ChillyButtonColor.Primary -> otherBase.copy(
+            containerColor = Color.Transparent,
+            contentColor = primary,
+        )
+        color is ChillyButtonColor.Gray -> otherBase.copy(
+            containerColor = Color.Transparent,
+            contentColor = secondary
+        )
+        else -> throw IllegalArgumentException()
+    }
 }
 
 private fun SizeParameter.toPaddingValues(): PaddingValues = when(this) {

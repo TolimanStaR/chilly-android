@@ -42,8 +42,6 @@ import com.chilly.android.presentation.common.structure.ScreenHolder
 import com.chilly.android.presentation.navigation.Destination
 import com.chilly.android.presentation.theme.ChillyTheme
 import com.chilly.android.presentation.theme.Peach10
-import com.chilly.android.presentation.theme.Red10
-import com.chilly.android.presentation.theme.Red50
 
 
 @Composable
@@ -65,7 +63,9 @@ private fun OnboardingScreen(
             // stepper
             Row {
                 repeat(OnboardingUi.count) { item ->
-                    val color = if (item == onboarding.index) Red50 else Red10
+                    val color = with(MaterialTheme.colorScheme) {
+                        if (item == onboarding.index) primary else primaryContainer
+                    }
                     Box(
                         modifier = Modifier
                             .padding(2.dp)
@@ -118,7 +118,7 @@ private fun OnboardingScreen(
 }
 
 
-fun NavGraphBuilder.onboardingComposable() {
+fun NavGraphBuilder.installOnboardingComposable() {
     composable<Destination.Onboarding> { backStack ->
         ScreenHolder(
             componentFactory = {

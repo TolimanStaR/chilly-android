@@ -11,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -31,6 +30,7 @@ fun ChillyTextField(
     onValueChange: (String) -> Unit,
     @StringRes labelTextRes: Int? = null,
     @StringRes placeholderTextRes: Int? = null,
+    errorText: String? = null,
     size: SizeParameter = SizeParameter.Small,
     singleLine: Boolean = false,
     visualTransformation: VisualTransformation = VisualTransformation.None,
@@ -44,15 +44,20 @@ fun ChillyTextField(
             text = it
             onValueChange(it)
         },
+        isError = errorText != null,
         shape = RoundedCornerShape(8.dp),
         textStyle = size.toTextStyle(),
-        colors = OutlinedTextFieldDefaults.colors(
-            unfocusedBorderColor = MaterialTheme.colorScheme.outline,
-            focusedBorderColor = MaterialTheme.colorScheme.primary,
-            disabledBorderColor = MaterialTheme.colorScheme.outlineVariant,
-            unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
-            focusedTextColor = MaterialTheme.colorScheme.onBackground,
-        ),
+        colors = with(MaterialTheme.colorScheme) {
+            OutlinedTextFieldDefaults.colors(
+                unfocusedBorderColor = outline,
+                focusedBorderColor = primary,
+                disabledBorderColor = outlineVariant,
+                unfocusedTextColor = onSurface,
+                focusedTextColor = onSurface,
+                errorBorderColor = error,
+                errorContainerColor = errorContainer
+            )
+        },
         placeholder = placeholderTextRes?.let {
             {
                 Text(
@@ -70,6 +75,14 @@ fun ChillyTextField(
                 )
             }
         },
+        supportingText = if (!errorText.isNullOrBlank()) {
+            {
+                Text(
+                    text = errorText,
+                    style = MaterialTheme.typography.labelSmall
+                )
+            }
+        } else null,
         singleLine = singleLine,
         trailingIcon = trailingIcon,
         visualTransformation = visualTransformation,

@@ -15,3 +15,8 @@ suspend inline fun <reified T> HttpClient.postWithResult(
     url: String,
     block: HttpRequestBuilder.() -> Unit
 ): Result<T> = runCatching { post(url, block).body() }
+
+suspend inline fun HttpClient.wrappedPost(
+    url: String,
+    block: HttpRequestBuilder.() -> Unit
+): Result<Unit> = runCatching { post(url, block) }

@@ -1,41 +1,29 @@
 package com.chilly.android.presentation.login
 
-import com.chilly.android.data.remote.TokenHolder
-import com.chilly.android.data.remote.api.LoginApi
 import com.chilly.android.data.remote.dto.response.LoginResponse
-import com.chilly.android.domain.repository.PreferencesRepository
+import com.chilly.android.domain.useCase.login.LogInUseCase
 import com.chilly.android.presentation.login.LoginEvent.CommandEvent
 import com.chilly.android.utils.testCommandFlow
-import io.mockk.Runs
 import io.mockk.clearMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
-import io.mockk.every
-import io.mockk.just
 import io.mockk.mockk
-import io.mockk.verify
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 
 
 class LoginCommandFlowHandlerTest {
 
-    private val loginApiMock: LoginApi = mockk()
-    private val tokenHolderMock: TokenHolder = mockk()
-    private val preferencesRepositoryMock: PreferencesRepository = mockk()
+    private val loginUseCaseMock: LogInUseCase = mockk()
 
     private var underTest: LoginCommandFlowHandler = LoginCommandFlowHandler(
-        loginApiMock,
-        preferencesRepositoryMock,
-        tokenHolderMock
+        loginUseCaseMock
     )
 
     @AfterEach
     fun tearDown() {
         clearMocks(
-            loginApiMock,
-            preferencesRepositoryMock,
-            tokenHolderMock
+            loginUseCaseMock
         )
     }
 
@@ -50,13 +38,10 @@ class LoginCommandFlowHandlerTest {
                 listOf(CommandEvent.LoginSuccess(response.refreshToken, response.accessToken))
             },
             configuration = {
-                coEvery { loginApiMock.login(any()) } returns Result.success(response)
-                coEvery { preferencesRepositoryMock.saveRefreshToken(any()) } just Runs
-                every { tokenHolderMock.accessToken = any() } just Runs
+                coEvery { loginUseCaseMock.invoke(any()) } returns Result.success(response)
             },
             assertions = {
-                coVerify { preferencesRepositoryMock.saveRefreshToken(any()) }
-                verify { tokenHolderMock.accessToken = any() }
+                coVerify { loginUseCaseMock.invoke(any()) }
             }
         )
     }
@@ -72,7 +57,7 @@ class LoginCommandFlowHandlerTest {
                 listOf(CommandEvent.LoginFail)
             },
             configuration = {
-                coEvery { loginApiMock.login(any()) } returns Result.failure(Throwable())
+                coEvery { loginUseCaseMock.invoke(any()) } returns Result.failure(Throwable())
             }
         )
     }

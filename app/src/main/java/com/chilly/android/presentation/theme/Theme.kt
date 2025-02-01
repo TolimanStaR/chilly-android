@@ -11,35 +11,50 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
-private val DarkColorScheme = darkColorScheme(
-    primary = Red50,
-    secondary = Red70,
+private val LightColorScheme = lightColorScheme(
+    primary = Red50, // red buttons
     onPrimary = Color.White,
+    primaryContainer = Red10,
+    onPrimaryContainer = Red70,
+    secondary = Gray50, // gray buttons
     onSecondary = Color.White,
-    inverseSurface = Gray20, // disabled
-    inverseOnSurface = Color.White, // on disabled
-    tertiaryContainer = Gray50,
-    onTertiaryContainer = Color.White,
-    secondaryContainer = Gray70,
-    background = Gray70,
-    onBackground = Color.White,
+    secondaryContainer = Gray20, // disabled elements
+    onSecondaryContainer = Color.White,
     outline = Gray20,
-    outlineVariant = Gray10
+    outlineVariant = Gray10,
+
+    surface = Color.White,
+    onSurface = Gray90,
+    surfaceContainer = Gray10,
+    onSurfaceVariant = Gray70,
+    surfaceBright = Color.White,
+    surfaceDim = Gray10,
+
+    error = Red70,
+    errorContainer = Red5
 )
 
-private val LightColorScheme = lightColorScheme(
-    primary = Red50,
-    secondary = Red70,
+private val DarkColorScheme = darkColorScheme(
+    primary = Red50, // buttons
     onPrimary = Color.White,
-    inverseSurface = Gray20, // disabled
-    inverseOnSurface = Color.White, // on disabled
-    tertiaryContainer = Gray50,
-    onTertiaryContainer = Color.White,
-    secondaryContainer = Gray70, // darker than tertiary
-    background = Color.White,
-    onBackground = Gray90,
+    primaryContainer = Red10,
+    onPrimaryContainer = Red70,
+    secondary = Gray50, // gray buttons
+    onSecondary = Color.White,
+    secondaryContainer = Gray20, // disabled elements
+    onSecondaryContainer = Color.White,
     outline = Gray20,
-    outlineVariant = Gray10
+    outlineVariant = Gray10,
+
+    surface = Gray90,
+    onSurface = Color.White,
+    surfaceContainer = Gray70,
+    onSurfaceVariant = Gray20,
+    surfaceBright = Gray70,
+    surfaceDim = Gray90,
+
+    error = Red70,
+    errorContainer = Color.Transparent
 )
 
 @Composable
