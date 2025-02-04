@@ -1,4 +1,4 @@
-package com.chilly.android.presentation.sign_up
+package com.chilly.android.presentation.common.logic
 
 import androidx.annotation.StringRes
 import com.chilly.android.R

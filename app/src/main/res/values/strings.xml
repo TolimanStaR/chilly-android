@@ -32,9 +32,23 @@
 
     <string name="email_invalid">Неправильный формат e-mail</string>
     <string name="phone_invalid">Неправильно введен номер телефона</string>
-    <string name="weak_password">Слабый пароль. Пароль должен состоять хотя бы из 6 символов, содержать только латиницу, цифры или знаки препинания</string>
+    <string name="weak_password">Слабый пароль. Пароль должен состоять хотя бы из 8 символов, содержать только латиницу, цифры или символы _.!@#$%^&amp;*?</string>
     <string name="passwords_differ">Пароли не совпадают</string>
     <string name="sign_up_fail_default">Произошла ошибка при попытке регистрации</string>
     <string name="username_taken_error">E-mail или номер телефона уже заняты</string>
+
+    <string name="password_recovery_title">Восстановление пароля</string>
+    <string name="main_button_1_text">Получить код</string>
+    <string name="main_button_2_text">Подтвердить код</string>
+    <string name="main_button_3_text">Сменить пароль</string>
+    <string name="code_placeholder">Код из письма (6 цифр)</string>
+    <string name="recovery_email_label">E-mail</string>
+    <string name="used_email_template">Письмо отправлено на почту: %s</string>
+
+    <string name="genera_fail_message">Произошла ошибка, попробуйте еще раз.</string>
+    <string name="password_changed">Пароль успешно изменен.</string>
+    <string name="wrong_email">Введенный e-mail не найден.</string>
+    <string name="wrong_code">Введен неверный код.</string>
+    <string name="recovery_step_title">Шаг %d из %d</string>
 
 </resources>

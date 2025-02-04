@@ -13,6 +13,7 @@ sealed interface LoginEvent {
         data object SignUpClicked : UiEvent
         data object ClearClicked : UiEvent
         data object ShowPasswordToggled : UiEvent
+        data object ForgotPasswordClicked : UiEvent
     }
 
     sealed interface CommandEvent : LoginEvent {
@@ -25,6 +26,7 @@ sealed interface LoginNews {
     data object NavigateMain : LoginNews
     data object NavigateSignUp : LoginNews
     data object LoginFailed : LoginNews
+    data object NavigateForgotPassword : LoginNews
 }
 
 data class LoginState(

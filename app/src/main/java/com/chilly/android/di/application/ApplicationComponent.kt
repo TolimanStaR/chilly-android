@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.compose.material3.SnackbarHostState
 import com.chilly.android.data.remote.TokenHolder
 import com.chilly.android.data.remote.api.LoginApi
+import com.chilly.android.data.remote.api.PasswordRecoveryApi
 import com.chilly.android.domain.repository.PreferencesRepository
 import com.chilly.android.presentation.common.structure.ResourcesHolder
 import com.chilly.android.presentation.main.MainViewModel
@@ -19,6 +20,7 @@ interface ApplicationComponent {
 
     val preferencesRepository: PreferencesRepository
     val loginApi: LoginApi
+    val recoveryApi: PasswordRecoveryApi
 
     val navigatorHolder: NavigatorHolder
     val router: Router

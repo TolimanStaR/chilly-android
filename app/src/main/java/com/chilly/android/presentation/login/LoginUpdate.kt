@@ -28,6 +28,7 @@ class LoginUpdate : DslUpdate<LoginState, LoginEvent, LoginCommand, LoginNews>()
             LoginEvent.UiEvent.ClearClicked -> state { copy(loginText = "", loginButtonEnabled = false) }
             LoginEvent.UiEvent.ShowPasswordToggled -> state { copy(passwordShown = !passwordShown) }
             LoginEvent.UiEvent.SignUpClicked -> news(LoginNews.NavigateSignUp)
+            LoginEvent.UiEvent.ForgotPasswordClicked -> news(LoginNews.NavigateForgotPassword)
         }
     }
 

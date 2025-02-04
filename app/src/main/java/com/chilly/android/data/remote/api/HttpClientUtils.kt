@@ -1,10 +1,13 @@
 package com.chilly.android.data.remote.api
 
+import com.chilly.android.data.remote.TokenHolder
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.HttpRequestBuilder
+import io.ktor.client.request.bearerAuth
 import io.ktor.client.request.get
 import io.ktor.client.request.post
+import io.ktor.client.request.put
 
 suspend inline fun <reified T> HttpClient.getResult(
     url: String,
@@ -20,3 +23,14 @@ suspend inline fun HttpClient.wrappedPost(
     url: String,
     block: HttpRequestBuilder.() -> Unit
 ): Result<Unit> = runCatching { post(url, block) }
+
+suspend inline fun HttpClient.wrappedPut(
+    url: String,
+    block: HttpRequestBuilder.() -> Unit
+): Result<Unit> = runCatching { put(url, block) }
+
+fun HttpRequestBuilder.setAuthorization(holder: TokenHolder) {
+    holder.accessToken?.let {
+        bearerAuth(it)
+    }
+}

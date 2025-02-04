@@ -1,9 +1,11 @@
 package com.chilly.android.di.application
 
-import com.chilly.android.data.remote.api.impl.LoginApiImpl
-import com.chilly.android.data.remote.api.LoginApi
-import com.chilly.android.data.remote.dto.response.ErrorResponse
 import com.chilly.android.data.remote.HandledException
+import com.chilly.android.data.remote.api.LoginApi
+import com.chilly.android.data.remote.api.PasswordRecoveryApi
+import com.chilly.android.data.remote.api.impl.LoginApiImpl
+import com.chilly.android.data.remote.api.impl.PasswordRecoveryApiImpl
+import com.chilly.android.data.remote.dto.response.ErrorResponse
 import dagger.Module
 import dagger.Provides
 import io.ktor.client.HttpClient
@@ -51,4 +53,9 @@ class NetworkModule {
     @Provides
     @Singleton
     fun provideLoginApi(client: HttpClient): LoginApi = LoginApiImpl(client)
+
+    @Provides
+    @Singleton
+    fun provideRecoveryApi(client: HttpClient): PasswordRecoveryApi =
+        PasswordRecoveryApiImpl(client)
 }

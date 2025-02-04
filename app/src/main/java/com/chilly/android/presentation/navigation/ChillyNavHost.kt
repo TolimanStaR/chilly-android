@@ -11,6 +11,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.chilly.android.applicationComponent
+import com.chilly.android.presentation.forgot_password.installForgotPasswordScreen
 import com.chilly.android.presentation.login.installLoginComposable
 import com.chilly.android.presentation.main.mainScreenComposable
 import com.chilly.android.presentation.onboarding.installOnboardingComposable
@@ -45,6 +46,7 @@ fun ChillyNavHost(navController: NavHostController = rememberNavController()) {
             mainScreenComposable(navController)
             installLoginComposable()
             installSignUpComposable()
+            installForgotPasswordScreen()
         }
     }
 }

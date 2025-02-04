@@ -1,5 +1,6 @@
 package com.chilly.android.presentation.sign_up
 
+import com.chilly.android.presentation.common.logic.FieldValidator
 import com.chilly.android.utils.testUpdate
 import io.mockk.clearMocks
 import io.mockk.every
