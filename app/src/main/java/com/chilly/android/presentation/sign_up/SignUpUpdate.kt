@@ -1,6 +1,8 @@
 package com.chilly.android.presentation.sign_up
 
 import com.chilly.android.R
+import com.chilly.android.presentation.common.logic.FieldValidator
+import com.chilly.android.presentation.common.logic.ValidationType
 import com.chilly.android.presentation.sign_up.SignUpEvent.CommandEvent
 import com.chilly.android.presentation.sign_up.SignUpEvent.UiEvent
 import ru.tinkoff.kotea.core.dsl.DslUpdate

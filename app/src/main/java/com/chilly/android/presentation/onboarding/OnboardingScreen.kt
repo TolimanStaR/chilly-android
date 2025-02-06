@@ -41,6 +41,7 @@ import com.chilly.android.presentation.common.structure.EffectCollector
 import com.chilly.android.presentation.common.structure.ScreenHolder
 import com.chilly.android.presentation.navigation.Destination
 import com.chilly.android.presentation.theme.ChillyTheme
+import com.chilly.android.presentation.theme.Gray90
 import com.chilly.android.presentation.theme.Peach10
 
 
@@ -50,7 +51,8 @@ private fun OnboardingScreen(
     onEvent: (OnboardingEvent) -> Unit
 ) {
     Scaffold(
-        containerColor = Peach10
+        containerColor = Peach10,
+        contentColor = Gray90
     ) { innerPadding ->
         val onboardingUi = OnboardingUi.onboardings[onboarding.index]
         Column(
@@ -60,21 +62,7 @@ private fun OnboardingScreen(
                 .padding(innerPadding)
                 .padding(dimensionResource(R.dimen.main_padding))
         ) {
-            // stepper
-            Row {
-                repeat(OnboardingUi.count) { item ->
-                    val color = with(MaterialTheme.colorScheme) {
-                        if (item == onboarding.index) primary else primaryContainer
-                    }
-                    Box(
-                        modifier = Modifier
-                            .padding(2.dp)
-                            .clip(RoundedCornerShape(4.dp))
-                            .background(color)
-                            .size(24.dp, 4.dp)
-                    )
-                }
-            }
+            Stepper(onboarding.index)
             Image(
                 painterResource(onboardingUi.imageId),
                 contentDescription = null
@@ -113,6 +101,24 @@ private fun OnboardingScreen(
                     }
                 )
             }
+        }
+    }
+}
+
+@Composable
+private fun Stepper(index: Int) {
+    Row {
+        repeat(OnboardingUi.count) { item ->
+            val color = with(MaterialTheme.colorScheme) {
+                if (item == index) primary else primaryContainer
+            }
+            Box(
+                modifier = Modifier
+                    .padding(2.dp)
+                    .clip(RoundedCornerShape(4.dp))
+                    .background(color)
+                    .size(24.dp, 4.dp)
+            )
         }
     }
 }

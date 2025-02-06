@@ -68,7 +68,7 @@ private fun LogInScreen(
         ChillyButton(
             textRes = R.string.forgot_password_button,
             type = ChillyButtonType.Tertiary,
-            onClick = {},
+            onClick = { onEvent(UiEvent.ForgotPasswordClicked) },
             modifier = Modifier.align(Alignment.End)
         )
         Spacer(modifier = Modifier.height(36.dp))

@@ -23,6 +23,7 @@ class LoginNewsCollector @Inject constructor(
             LoginNews.NavigateMain -> router.newRootScreen(Destination.Main)
             LoginNews.LoginFailed -> snackBarHostState.showSnackbar(getString(R.string.login_failed_snackbar))
             LoginNews.NavigateSignUp -> router.navigateTo(Destination.SignUp)
+            LoginNews.NavigateForgotPassword -> router.navigateTo(Destination.ForgotPassword)
         }
     }
 

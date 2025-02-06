@@ -70,8 +70,8 @@ fun FormSurface(
 @Composable
 fun CancellableTextField(
     text: String,
-    @StringRes labelTextRes: Int,
-    @StringRes placeholderTextRes: Int,
+    @StringRes labelTextRes: Int? = null,
+    @StringRes placeholderTextRes: Int? = null,
     onValueChange: (String) -> Unit,
     onClear: () -> Unit,
     errorText: String? = null,

@@ -19,4 +19,7 @@ sealed interface Destination : Screen {
 
     @Serializable
     data object SignUp : Destination
+
+    @Serializable
+    data object ForgotPassword : Destination
 }
