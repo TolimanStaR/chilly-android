@@ -75,12 +75,6 @@ class ForgotPasswordUpdate @Inject constructor(
             CommandEvent.CommandFail -> {
                 state { copy(isLoading = false) }
                 news(ForgotPasswordNews.FailedRequest)
-                // todo get rid of it
-                if (state.step == RecoveryStep.NEW_PASSWORD) {
-                    news(ForgotPasswordNews.NavigateLogin)
-                } else {
-                    state { copy(step = RecoveryStep.entries[step.ordinal + 1]) }
-                }
             }
             CommandEvent.PasswordChanged -> {
                 state { copy(isLoading = false) }

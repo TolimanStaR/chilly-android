@@ -21,6 +21,8 @@ import io.ktor.serialization.kotlinx.json.json
 import io.ktor.util.appendIfNameAbsent
 import javax.inject.Singleton
 
+private const val DEFAULT_URL = "http://188.120.236.240:8085/"
+
 @Module
 class NetworkModule {
 
@@ -45,7 +47,7 @@ class NetworkModule {
         }
 
         defaultRequest {
-            url("http://10.0.2.2:8085/")
+            url(DEFAULT_URL)
             headers.appendIfNameAbsent(HttpHeaders.ContentType, ContentType.Application.Json.toString())
         }
     }
