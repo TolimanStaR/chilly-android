@@ -2,8 +2,8 @@ package com.chilly.android.di.screens
 
 import androidx.compose.material3.SnackbarHostState
 import com.chilly.android.di.application.ApplicationComponent
-import com.chilly.android.presentation.login.LoginNewsCollector
-import com.chilly.android.presentation.login.LoginStore
+import com.chilly.android.presentation.screens.login.LoginNewsCollector
+import com.chilly.android.presentation.screens.login.LoginStore
 import dagger.Component
 import javax.inject.Scope
 
