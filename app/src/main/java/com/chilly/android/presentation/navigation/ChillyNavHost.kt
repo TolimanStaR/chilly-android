@@ -11,12 +11,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.chilly.android.applicationComponent
-import com.chilly.android.presentation.forgot_password.installForgotPasswordScreen
-import com.chilly.android.presentation.login.installLoginComposable
-import com.chilly.android.presentation.main.mainScreenComposable
-import com.chilly.android.presentation.onboarding.installOnboardingComposable
-import com.chilly.android.presentation.sign_up.installSignUpComposable
-import com.chilly.android.presentation.splash.installSplashComposable
+import com.chilly.android.presentation.screens.forgot_password.installForgotPasswordScreen
+import com.chilly.android.presentation.screens.login.installLoginComposable
+import com.chilly.android.presentation.screens.main.mainScreenComposable
+import com.chilly.android.presentation.screens.onboarding.installOnboardingComposable
+import com.chilly.android.presentation.screens.sign_up.installSignUpComposable
+import com.chilly.android.presentation.screens.splash.installSplashComposable
 
 @Composable
 fun ChillyNavHost(navController: NavHostController = rememberNavController()) {

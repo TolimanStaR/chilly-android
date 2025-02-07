@@ -1,8 +1,8 @@
 package com.chilly.android.di.screens
 
 import com.chilly.android.di.application.ApplicationComponent
-import com.chilly.android.presentation.onboarding.OnboardingEffectCollector
-import com.chilly.android.presentation.onboarding.OnboardingViewModel
+import com.chilly.android.presentation.screens.onboarding.OnboardingEffectCollector
+import com.chilly.android.presentation.screens.onboarding.OnboardingViewModel
 import dagger.Component
 import javax.inject.Scope
 
