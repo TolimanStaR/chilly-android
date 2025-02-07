@@ -1,54 +1,54 @@
 <resources>
     <string name="app_name">Chilly</string>
 
-    <string name="onboarding1_title">Пoзнакомимся?</string>
-    <string name="onboarding1_text">Привет, я чилли! Я острый перчик который любит отдыхать</string>
-    <string name="onboarding1_next">Погнали дальше</string>
-    <string name="onboarding2_title">Хочешь отдохнуть?</string>
-    <string name="onboarding2_text">Тебе повезло! Я знаю все лучше маршруты в твоем городе</string>
-    <string name="onboarding2_next">А еще я могу</string>
-    <string name="onboarding_skip_text">Пропустить</string>
-    <string name="onboarding3_title">Как найти маршрут?</string>
-    <string name="onboarding3_text">Ответь на несколько вопросов и я подберу идеальный маршрут специально для тебя!</string>
-    <string name="onboarding3_next">Почилили</string>
+    <string name="onboarding1_title">Let\'s get started</string>
+    <string name="onboarding1_text">Hey, I\'m Chilly - A hot pepper-guy that likes to chill</string>
+    <string name="onboarding1_next">Move on</string>
+    <string name="onboarding2_title">Wanna chill?</string>
+    <string name="onboarding2_text">You\'re a lucky one! I know all the best places here</string>
+    <string name="onboarding2_next">What\'s more</string>
+    <string name="onboarding_skip_text">Skip</string>
+    <string name="onboarding3_title">How to find your way?</string>
+    <string name="onboarding3_text">Answer a coupe of my questions, and I\'ll find the perfect place to chill today just for you!</string>
+    <string name="onboarding3_next">Let\'s chill</string>
 
-    <string name="login_button">Войти</string>
-    <string name="sign_up_button">Зарегистрироваться</string>
-    <string name="forgot_password_button">Забыли пароль?</string>
-    <string name="login_title">Вход</string>
-    <string name="username_label">E-mail или номер телефона</string>
-    <string name="password_label">Пароль</string>
+    <string name="login_button">Sign In</string>
+    <string name="sign_up_button">Sign Up</string>
+    <string name="forgot_password_button">Forgot password?</string>
+    <string name="login_title">Sign In</string>
+    <string name="username_label">E-mail or phone number</string>
+    <string name="password_label">Password</string>
     <string name="username_placeholder">E-mail</string>
-    <string name="password_placeholder">Пароль</string>
-    <string name="login_failed_snackbar">Не удалось выполнить вход</string>
+    <string name="password_placeholder">Password</string>
+    <string name="login_failed_snackbar">Unable to sign in</string>
 
-    <string name="sign_up_name_label">Имя</string>
+    <string name="sign_up_name_label">Name</string>
     <string name="sign_up_email_label">E-mail</string>
-    <string name="sign_up_phone_label">Телефон</string>
-    <string name="sign_up_password_label">Пароль</string>
-    <string name="sign_up_password_repeat_label">Повтор пароля</string>
-    <string name="sign_up_title">Регистрация</string>
-    <string name="sign_up_have_account_button">У меня уже есть аккаунт</string>
+    <string name="sign_up_phone_label">Phone</string>
+    <string name="sign_up_password_label">Password</string>
+    <string name="sign_up_password_repeat_label">Repeat your password</string>
+    <string name="sign_up_title">Sign Up</string>
+    <string name="sign_up_have_account_button">I already have an account</string>
 
-    <string name="email_invalid">Неправильный формат e-mail</string>
-    <string name="phone_invalid">Неправильно введен номер телефона</string>
-    <string name="weak_password">Слабый пароль. Пароль должен состоять хотя бы из 8 символов, содержать только латиницу, цифры или символы _.!@#$%^&amp;*?</string>
-    <string name="passwords_differ">Пароли не совпадают</string>
-    <string name="sign_up_fail_default">Произошла ошибка при попытке регистрации</string>
-    <string name="username_taken_error">E-mail или номер телефона уже заняты</string>
+    <string name="email_invalid">Wrong e-mail format</string>
+    <string name="phone_invalid">Wrong phone number</string>
+    <string name="weak_password">Weak password. Password should have at least 8 digits, and contain only latin letters, number or characters: _.!@#$%^&amp;*?</string>
+    <string name="passwords_differ">Password doesn\'t match</string>
+    <string name="sign_up_fail_default">An error occurred during sign up</string>
+    <string name="username_taken_error">E-mail or phone already taken</string>
 
-    <string name="password_recovery_title">Восстановление пароля</string>
-    <string name="main_button_1_text">Получить код</string>
-    <string name="main_button_2_text">Подтвердить код</string>
-    <string name="main_button_3_text">Сменить пароль</string>
-    <string name="code_placeholder">Код из письма (6 цифр)</string>
+    <string name="password_recovery_title">Password recovery</string>
+    <string name="main_button_1_text">Get the code</string>
+    <string name="main_button_2_text">Verify the code</string>
+    <string name="main_button_3_text">Change the password</string>
+    <string name="code_placeholder">Code from e-mail (6 digits)</string>
     <string name="recovery_email_label">E-mail</string>
-    <string name="used_email_template">Письмо отправлено на почту: %s</string>
+    <string name="used_email_template">E-mail is sent to: %s</string>
 
-    <string name="genera_fail_message">Произошла ошибка, попробуйте еще раз.</string>
-    <string name="password_changed">Пароль успешно изменен.</string>
-    <string name="wrong_email">Введенный e-mail не найден.</string>
-    <string name="wrong_code">Введен неверный код.</string>
-    <string name="recovery_step_title">Шаг %d из %d</string>
+    <string name="genera_fail_message">An Error occurred, try again</string>
+    <string name="password_changed">Password successfully changed!</string>
+    <string name="wrong_email">Entered e-mail doesn\'t exist</string>
+    <string name="wrong_code">Entered wrong code</string>
+    <string name="recovery_step_title">Step %d of %d</string>
 
 </resources>
