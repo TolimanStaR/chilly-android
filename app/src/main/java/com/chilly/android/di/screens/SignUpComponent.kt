@@ -13,7 +13,6 @@ interface SignUpComponent {
 
     fun store(): SignUpStore
     val newsCollector: SignUpNewsCollector
-    val snackbarHostState: SnackbarHostState
 
     @Component.Builder
     interface Builder {

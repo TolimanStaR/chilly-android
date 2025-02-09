@@ -1,14 +1,13 @@
 package com.chilly.android.presentation.screens.login
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -31,17 +30,17 @@ import com.chilly.android.presentation.common.components.SizeParameter
 import com.chilly.android.presentation.common.structure.NewsCollector
 import com.chilly.android.presentation.common.structure.ScreenHolder
 import com.chilly.android.presentation.common.structure.collectState
-import com.chilly.android.presentation.screens.login.LoginEvent.UiEvent
 import com.chilly.android.presentation.navigation.Destination
+import com.chilly.android.presentation.screens.login.LoginEvent.UiEvent
 import com.chilly.android.presentation.theme.ChillyTheme
 
 @Composable
 private fun LogInScreen(
     state: LoginState,
+    scaffoldPadding: PaddingValues,
     onEvent: (UiEvent) -> Unit = {},
-    snackBarHostState: SnackbarHostState = remember { SnackbarHostState() }
 ) {
-    FormSurface(snackBarHostState) {
+    FormSurface(scaffoldPadding) {
         Text(
             text = stringResource(R.string.login_title),
             style = MaterialTheme.typography.headlineLarge,
@@ -96,7 +95,7 @@ private fun LogInScreen(
     }
 }
 
-fun NavGraphBuilder.installLoginComposable() {
+fun NavGraphBuilder.installLoginComposable(padding: PaddingValues) {
     composable<Destination.LogIn> {
         ScreenHolder(
             componentFactory = {
@@ -107,7 +106,7 @@ fun NavGraphBuilder.installLoginComposable() {
             storeFactory = LoginComponent::store
         ) {
             val state = collectState()
-            LogInScreen(state.value, store::dispatch, component.snackbarHostState)
+            LogInScreen(state.value, padding, store::dispatch)
             NewsCollector(component.newsCollector)
         }
     }
@@ -123,7 +122,8 @@ private fun PreviewLoginScreen() {
             LoginState(
                 loginText = "login",
                 passwordText = "password"
-            )
+            ),
+            PaddingValues()
         )
     }
 }

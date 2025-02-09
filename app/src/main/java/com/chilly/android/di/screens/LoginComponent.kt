@@ -11,8 +11,6 @@ import javax.inject.Scope
 @Component(dependencies = [ApplicationComponent::class])
 interface LoginComponent {
 
-    val snackbarHostState: SnackbarHostState
-
     fun store(): LoginStore
     val newsCollector: LoginNewsCollector
 

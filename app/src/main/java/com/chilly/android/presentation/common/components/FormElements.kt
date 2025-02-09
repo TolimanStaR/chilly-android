@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
@@ -33,36 +34,30 @@ import com.chilly.android.R
 
 @Composable
 fun FormSurface(
-    snackBarHostState: SnackbarHostState,
+    innerPadding: PaddingValues,
     content: @Composable ColumnScope.() -> Unit
 ) {
-    Scaffold(
-        snackbarHost = {
-            SnackbarHost(snackBarHostState)
-        }
-    ) { innerPadding ->
-        Box(
-            contentAlignment = Alignment.Center,
+    Box(
+        contentAlignment = Alignment.Center,
+    ) {
+        PeppersBackground()
+        Column(
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .padding(innerPadding)
+                .padding(16.dp)
+                .background(
+                    color = MaterialTheme.colorScheme.surface,
+                    shape = RoundedCornerShape(24.dp)
+                )
+                .padding(horizontal = 24.dp, vertical = 32.dp)
+                .widthIn(
+                    max = with(LocalConfiguration.current) {
+                        minOf(screenWidthDp, screenHeightDp).dp
+                    }
+                )
         ) {
-            PeppersBackground()
-            Column(
-                modifier = Modifier
-                    .verticalScroll(rememberScrollState())
-                    .padding(innerPadding)
-                    .padding(16.dp)
-                    .background(
-                        color = MaterialTheme.colorScheme.surface,
-                        shape = RoundedCornerShape(24.dp)
-                    )
-                    .padding(horizontal = 24.dp, vertical = 32.dp)
-                    .widthIn(
-                        max = with(LocalConfiguration.current) {
-                            minOf(screenWidthDp, screenHeightDp).dp
-                        }
-                    )
-            ) {
-                content()
-            }
+            content()
         }
     }
 }

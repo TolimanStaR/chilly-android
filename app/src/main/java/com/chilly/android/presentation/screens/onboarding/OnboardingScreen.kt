@@ -6,6 +6,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -48,18 +50,19 @@ import com.chilly.android.presentation.theme.Peach10
 @Composable
 private fun OnboardingScreen(
     onboarding: Destination.Onboarding,
-    onEvent: (OnboardingEvent) -> Unit
+    onEvent: (OnboardingEvent) -> Unit,
+    scaffoldPadding: PaddingValues
 ) {
-    Scaffold(
-        containerColor = Peach10,
-        contentColor = Gray90
-    ) { innerPadding ->
+    Surface(
+        contentColor = Gray90,
+        color = Peach10
+    ) {
         val onboardingUi = OnboardingUi.onboardings[onboarding.index]
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
+                .padding(scaffoldPadding)
                 .padding(dimensionResource(R.dimen.main_padding))
         ) {
             Stepper(onboarding.index)
@@ -124,7 +127,7 @@ private fun Stepper(index: Int) {
 }
 
 
-fun NavGraphBuilder.installOnboardingComposable() {
+fun NavGraphBuilder.installOnboardingComposable(padding: PaddingValues) {
     composable<Destination.Onboarding> { backStack ->
         ScreenHolder(
             componentFactory = {
@@ -136,7 +139,8 @@ fun NavGraphBuilder.installOnboardingComposable() {
         ) {
             OnboardingScreen(
                 backStack.toRoute(),
-                viewModel::dispatch
+                viewModel::dispatch,
+                padding
             )
             EffectCollector(component.effectCollector)
         }
@@ -181,7 +185,7 @@ private fun PreviewOnboarding1(
     @PreviewParameter(IndexProvider::class) index: Int
 ) {
     ChillyTheme {
-        OnboardingScreen(Destination.Onboarding(index)) { }
+        OnboardingScreen(Destination.Onboarding(index), { }, PaddingValues())
     }
 }
 

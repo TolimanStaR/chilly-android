@@ -2,6 +2,7 @@ package com.chilly.android.presentation.screens.sign_up
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -40,10 +41,10 @@ import com.chilly.android.presentation.theme.ChillyTheme
 @Composable
 private fun SignUpScreen(
     state: SignUpState,
-    onEvent: (UiEvent) -> Unit = {},
-    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
+    scaffoldPadding: PaddingValues,
+    onEvent: (UiEvent) -> Unit = {}
 ) {
-    FormSurface(snackbarHostState) {
+    FormSurface(scaffoldPadding) {
         Text(
             text = stringResource(R.string.sign_up_title),
             style = MaterialTheme.typography.headlineLarge,
@@ -121,7 +122,7 @@ private fun SignUpScreen(
     }
 }
 
-fun NavGraphBuilder.installSignUpComposable() {
+fun NavGraphBuilder.installSignUpComposable(padding: PaddingValues) {
     composable<Destination.SignUp> {
         ScreenHolder(
             componentFactory = {
@@ -132,7 +133,7 @@ fun NavGraphBuilder.installSignUpComposable() {
             storeFactory = SignUpComponent::store
         ) {
             val state = collectState()
-            SignUpScreen(state.value, store::dispatch, component.snackbarHostState)
+            SignUpScreen(state.value, padding, store::dispatch)
             NewsCollector(component.newsCollector)
         }
     }
@@ -146,7 +147,8 @@ private fun PreviewLoginScreen() {
         SignUpScreen(
             SignUpState(
                 emailErrorRedId = R.string.app_name
-            )
+            ),
+            PaddingValues()
         )
     }
 }

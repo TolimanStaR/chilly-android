@@ -4,6 +4,7 @@ import androidx.activity.compose.BackHandler
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -49,11 +50,11 @@ import com.chilly.android.presentation.theme.ChillyTheme
 @Composable
 private fun ForgotPasswordScreen(
     state: ForgotPasswordState,
-    snackbarHostState: SnackbarHostState,
+    scaffoldPadding: PaddingValues,
     onEvent: (UiEvent) -> Unit
 ) {
     BackHandler { onEvent(UiEvent.BackPressed) }
-    FormSurface(snackbarHostState) {
+    FormSurface(scaffoldPadding) {
         Row(
             verticalAlignment = Alignment.Top
         ) {
@@ -174,7 +175,7 @@ private fun RecoveryStep.toMainButtonTextRes() = when(this) {
     RecoveryStep.NEW_PASSWORD -> R.string.main_button_3_text
 }
 
-fun NavGraphBuilder.installForgotPasswordScreen() {
+fun NavGraphBuilder.installForgotPasswordScreen(padding: PaddingValues) {
     composable<Destination.ForgotPassword> {
         ScreenHolder(
             componentFactory = {
@@ -186,7 +187,7 @@ fun NavGraphBuilder.installForgotPasswordScreen() {
         ) {
             val state = collectState()
             NewsCollector(component.newsCollector)
-            ForgotPasswordScreen(state.value, component.snackbarHostState, store::dispatch)
+            ForgotPasswordScreen(state.value, padding, store::dispatch)
         }
     }
 }
@@ -202,7 +203,7 @@ private fun PreviewLoginScreen(
             state = ForgotPasswordState(
                 step = step
             ),
-            SnackbarHostState()
+            PaddingValues()
         ) { }
     }
 }

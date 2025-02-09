@@ -11,8 +11,6 @@ import javax.inject.Scope
 @Component(dependencies = [ApplicationComponent::class])
 interface ForgotPasswordComponent {
 
-    val snackbarHostState: SnackbarHostState
-
     fun store(): ForgotPasswordStore
     val newsCollector: ForgotPasswordNewsCollector
 
