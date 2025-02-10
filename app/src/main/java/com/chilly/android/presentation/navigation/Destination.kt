@@ -9,7 +9,7 @@ sealed interface Destination : Screen {
     data object Splash : Destination
 
     @Serializable
-    data class Onboarding(val index: Int) : Destination
+    data class Onboarding(val index: Int = 0) : Destination
 
     @Serializable
     data object Main : Destination

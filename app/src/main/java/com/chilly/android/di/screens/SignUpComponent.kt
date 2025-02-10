@@ -1,6 +1,5 @@
 package com.chilly.android.di.screens
 
-import androidx.compose.material3.SnackbarHostState
 import com.chilly.android.di.application.ApplicationComponent
 import com.chilly.android.presentation.screens.sign_up.SignUpNewsCollector
 import com.chilly.android.presentation.screens.sign_up.SignUpStore

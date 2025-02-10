@@ -9,18 +9,24 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.chilly.android.applicationComponent
+import com.chilly.android.presentation.common.structure.NewsCollector
 import com.chilly.android.presentation.common.structure.ScreenHolder
+import com.chilly.android.presentation.common.structure.collectState
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.unit.dp
+import com.chilly.android.applicationComponent
+import com.chilly.android.di.screens.DaggerMainComponent
+import com.chilly.android.di.screens.MainComponent
+import com.chilly.android.presentation.theme.ChillyTheme
 import com.chilly.android.presentation.navigation.Destination
 
 @Composable
-fun MainScreen(
-    onExit: () -> Unit = {},
-    onOnboarding: () -> Unit = {}
+private fun MainScreen(
+    state: MainState,
+    onEvent: (MainEvent.UiEvent) -> Unit
 ) {
     Column (
         verticalArrangement = Arrangement.spacedBy(10.dp),
@@ -29,26 +35,44 @@ fun MainScreen(
     ) {
         Text("Main screen")
         Button(
-            onClick = onExit
+            onClick = { onEvent(MainEvent.UiEvent.SignOutClicked) }
         ) {
             Text("sign out")
         }
         Button(
-            onClick = onOnboarding
+            onClick = { onEvent(MainEvent.UiEvent.ToOnboardingClicked ) }
         ) {
             Text("to onboarding")
         }
     }
 }
 
-fun NavGraphBuilder.mainScreenComposable(navController: NavController) {
+fun NavGraphBuilder.installMainScreen() {
     composable<Destination.Main> {
-        ScreenHolder(
-            viewModelFactory = {
-                applicationComponent.mainViewModelFactory().build(navController::navigate)
-            }
+        ScreenHolder<MainStore, MainComponent>(
+            componentFactory = {
+                DaggerMainComponent.builder()
+                    .appComponent(applicationComponent)
+                    .build()
+            },
+            storeFactory = { store() }
         ) {
-            MainScreen(::onExitClicked, ::onShowOnboarding)
+            val state = collectState()
+            NewsCollector(component.newsCollector)
+            MainScreen(state.value, store::dispatch)
         }
     }
 }
+
+@Composable
+@PreviewLightDark
+@Preview(name = "MainScreen", showSystemUi = true, showBackground = true)
+private fun PreviewMainScreen() {
+    ChillyTheme {
+        MainScreen(
+            state = MainState(),
+            onEvent = {}
+        )
+    }
+}
+

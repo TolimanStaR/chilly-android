@@ -16,7 +16,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -43,8 +42,8 @@ import com.chilly.android.presentation.common.components.SizeParameter
 import com.chilly.android.presentation.common.structure.NewsCollector
 import com.chilly.android.presentation.common.structure.ScreenHolder
 import com.chilly.android.presentation.common.structure.collectState
-import com.chilly.android.presentation.screens.forgot_password.ForgotPasswordEvent.UiEvent
 import com.chilly.android.presentation.navigation.Destination
+import com.chilly.android.presentation.screens.forgot_password.ForgotPasswordEvent.UiEvent
 import com.chilly.android.presentation.theme.ChillyTheme
 
 @Composable

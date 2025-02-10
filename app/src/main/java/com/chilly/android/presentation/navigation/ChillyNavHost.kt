@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -18,15 +17,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.toRoute
 import com.chilly.android.applicationComponent
 import com.chilly.android.presentation.screens.forgot_password.installForgotPasswordScreen
 import com.chilly.android.presentation.screens.login.installLoginComposable
-import com.chilly.android.presentation.screens.main.mainScreenComposable
+import com.chilly.android.presentation.screens.main.installMainScreen
 import com.chilly.android.presentation.screens.onboarding.installOnboardingComposable
 import com.chilly.android.presentation.screens.sign_up.installSignUpComposable
 import com.chilly.android.presentation.screens.splash.installSplashComposable
-import kotlin.reflect.KClass
 
 @Composable
 fun ChillyNavHost(navController: NavHostController = rememberNavController()) {
@@ -56,7 +53,7 @@ fun ChillyNavHost(navController: NavHostController = rememberNavController()) {
         ) {
             installSplashComposable()
             installOnboardingComposable(innerPadding)
-            mainScreenComposable(navController)
+            installMainScreen()
             installLoginComposable(innerPadding)
             installSignUpComposable(innerPadding)
             installForgotPasswordScreen(innerPadding)

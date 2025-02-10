@@ -1,6 +1,5 @@
 package com.chilly.android.di.screens
 
-import androidx.compose.material3.SnackbarHostState
 import com.chilly.android.di.application.ApplicationComponent
 import com.chilly.android.presentation.screens.forgot_password.ForgotPasswordNewsCollector
 import com.chilly.android.presentation.screens.forgot_password.ForgotPasswordStore
