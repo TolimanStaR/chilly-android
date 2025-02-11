@@ -8,16 +8,22 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemColors
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavBackStackEntry
@@ -46,6 +52,9 @@ fun ChillyTopBar(
         title = {
             Text(text = stringResource(state.titleRes))
         },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
         navigationIcon = {
             if (state.showBackButton) {
                 IconButton(
@@ -97,7 +106,7 @@ val bottomNavigationRoutes = listOf(
         titleRes = R.string.favorites_screen_title,
         route = Destination.Favorites,
         activeIcon = Icons.Filled.Favorite,
-        inactiveIcon = Icons.Outlined.Favorite
+        inactiveIcon = Icons.Outlined.FavoriteBorder
     )
 )
 
@@ -106,10 +115,19 @@ fun ChillyBottomBar(
     backStackEntry: NavBackStackEntry?,
     onNavigation: (Destination) -> Unit,
 ) {
-    NavigationBar {
+    NavigationBar(
+        containerColor = MaterialTheme.colorScheme.surface
+    ) {
         bottomNavigationRoutes.forEach { item ->
             val selected = backStackEntry?.destination?.hasRoute(item.route::class) ?: false
             NavigationBarItem(
+                colors = with(MaterialTheme.colorScheme) {
+                    NavigationBarItemDefaults.colors(
+                        selectedIconColor = primary,
+                        unselectedIconColor = onSurface,
+                        indicatorColor = Color.Transparent
+                    )
+                },
                 selected = selected,
                 onClick = {
                     Timber.i("clicked on item with route: ${item.route}")
