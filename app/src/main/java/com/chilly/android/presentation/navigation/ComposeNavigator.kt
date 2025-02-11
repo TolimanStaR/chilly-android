@@ -1,12 +1,14 @@
 package com.chilly.android.presentation.navigation
 
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination.Companion.hasRoute
 import com.github.terrakok.cicerone.Back
 import com.github.terrakok.cicerone.BackTo
 import com.github.terrakok.cicerone.Command
 import com.github.terrakok.cicerone.Forward
 import com.github.terrakok.cicerone.Navigator
 import com.github.terrakok.cicerone.Replace
+import timber.log.Timber
 
 class ComposeNavigator(
     private val navController: NavController
@@ -36,7 +38,13 @@ class ComposeNavigator(
             null -> {
                 navigateToRoot()
             }
-            is Destination -> navController.popBackStack(screen, inclusive = false)
+            is Destination -> {
+                val popped = navController.popBackStack(screen, inclusive = false)
+                Timber.i("popped: $popped, currentDestination is $screen == ${navController.currentDestination?.hasRoute(screen::class)} ")
+                if (!popped || navController.currentDestination?.hasRoute(screen::class) != true) {
+                    navController.navigate(screen)
+                }
+            }
         }
     }
 
@@ -62,6 +70,5 @@ class ComposeNavigator(
     private fun navigateToRoot() {
         navController.popBackStack(navController.graph.startDestinationId, inclusive = false)
     }
-
 
 }

@@ -22,4 +22,14 @@ sealed interface Destination : Screen {
 
     @Serializable
     data object ForgotPassword : Destination
+
+    @Serializable
+    data object Profile : Destination
+
+    @Serializable
+    data object History : Destination
+
+    @Serializable
+    data object Favorites : Destination
+
 }

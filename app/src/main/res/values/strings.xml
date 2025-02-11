@@ -51,4 +51,9 @@
     <string name="wrong_code">Entered wrong code</string>
     <string name="recovery_step_title">Step %d of %d</string>
 
+    <string name="main_screen_title">Home</string>
+    <string name="history_screen_title">History</string>
+    <string name="profile_screen_title">My Profile</string>
+    <string name="favorites_screen_title">Favorites</string>
+
 </resources>
