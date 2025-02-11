@@ -55,5 +55,6 @@
     <string name="history_screen_title">History</string>
     <string name="profile_screen_title">My Profile</string>
     <string name="favorites_screen_title">Favorites</string>
+    <string name="main_pepper_dialog_text">What about some new\nplace?</string>
 
 </resources>

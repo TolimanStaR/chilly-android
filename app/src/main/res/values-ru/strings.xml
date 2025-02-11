@@ -55,4 +55,5 @@
     <string name="history_screen_title">"История "</string>
     <string name="profile_screen_title">Мой Профиль</string>
     <string name="favorites_screen_title">"Избранное "</string>
+    <string name="main_pepper_dialog_text">Что на счёт еще одной\nпрогулки?</string>
 </resources>
