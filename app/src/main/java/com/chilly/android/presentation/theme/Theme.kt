@@ -25,6 +25,8 @@ private val LightColorScheme = lightColorScheme(
 
     surface = Color.White,
     onSurface = Gray90,
+    background = Color.White,
+    onBackground = Gray90,
     surfaceContainer = Gray10,
     onSurfaceVariant = Gray70,
     surfaceBright = Color.White,
@@ -48,6 +50,8 @@ private val DarkColorScheme = darkColorScheme(
 
     surface = Gray90,
     onSurface = Color.White,
+    background = Gray90,
+    onBackground = Color.White,
     surfaceContainer = Gray70,
     onSurfaceVariant = Gray20,
     surfaceBright = Gray70,

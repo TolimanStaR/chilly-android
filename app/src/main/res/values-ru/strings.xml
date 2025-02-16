@@ -51,4 +51,9 @@
     <string name="wrong_email">Введенный e-mail не найден.</string>
     <string name="wrong_code">Введен неверный код.</string>
     <string name="recovery_step_title">Шаг %d из %d</string>
+    <string name="main_screen_title">Главная страница</string>
+    <string name="history_screen_title">"История "</string>
+    <string name="profile_screen_title">Мой Профиль</string>
+    <string name="favorites_screen_title">"Избранное "</string>
+    <string name="main_pepper_dialog_text">Что на счёт еще одной\nпрогулки?</string>
 </resources>

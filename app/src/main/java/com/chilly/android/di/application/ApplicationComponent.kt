@@ -7,7 +7,6 @@ import com.chilly.android.data.remote.api.LoginApi
 import com.chilly.android.data.remote.api.PasswordRecoveryApi
 import com.chilly.android.domain.repository.PreferencesRepository
 import com.chilly.android.presentation.common.structure.ResourcesHolder
-import com.chilly.android.presentation.screens.main.MainViewModel
 import com.github.terrakok.cicerone.NavigatorHolder
 import com.github.terrakok.cicerone.Router
 import dagger.BindsInstance
@@ -29,14 +28,10 @@ interface ApplicationComponent {
     val tokenHolder: TokenHolder
     val resourceHolder: ResourcesHolder
 
-    fun mainViewModelFactory(): MainViewModel.Factory
-
     @Component.Builder
     interface Builder {
-
         @BindsInstance
         fun application(context: Context): Builder
-
         fun build(): ApplicationComponent
     }
 }
