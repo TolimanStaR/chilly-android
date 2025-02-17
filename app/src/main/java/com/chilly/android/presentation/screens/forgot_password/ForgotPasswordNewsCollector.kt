@@ -20,7 +20,7 @@ class ForgotPasswordNewsCollector @Inject constructor(
         when(value) {
             ForgotPasswordNews.NavigateLogin -> router.backTo(Destination.LogIn)
             ForgotPasswordNews.NavigateSignUp -> router.replaceScreen(Destination.SignUp)
-            ForgotPasswordNews.FailedRequest -> showSnackbar(R.string.genera_fail_message)
+            ForgotPasswordNews.FailedRequest -> showSnackbar(R.string.general_fail_message)
             ForgotPasswordNews.PasswordChanged -> showSnackbar(R.string.password_changed)
             ForgotPasswordNews.WrongCode -> showSnackbar(R.string.wrong_code)
             ForgotPasswordNews.WrongEmail -> showSnackbar(R.string.wrong_code)

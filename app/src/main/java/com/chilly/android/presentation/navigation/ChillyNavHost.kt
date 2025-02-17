@@ -69,7 +69,7 @@ fun ChillyNavHost(navController: NavHostController = rememberNavController()) {
             installLoginComposable(innerPadding)
             installSignUpComposable(innerPadding)
             installForgotPasswordScreen(innerPadding)
-            installProfileScreen()
+            installProfileScreen(innerPadding)
             installQuizScreen()
 
             // TODO() replace when implemented

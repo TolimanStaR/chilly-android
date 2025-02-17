@@ -51,12 +51,13 @@ class ComposeNavigator(
     private fun replace(command: Replace) {
         when(val screen = command.screen) {
             is Destination -> {
+                val currentId = navController.currentDestination?.id ?: return
                 navController.navigate(screen) {
-                    val currentId = navController.currentDestination?.id ?: return@navigate
                     popUpTo(currentId) {
                         inclusive = true
                     }
                 }
+                Timber.i("current startDestination: ${navController.graph.startDestinationRoute}")
             }
         }
     }

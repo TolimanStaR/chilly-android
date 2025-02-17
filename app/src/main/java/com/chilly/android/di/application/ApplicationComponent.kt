@@ -5,7 +5,9 @@ import androidx.compose.material3.SnackbarHostState
 import com.chilly.android.data.remote.TokenHolder
 import com.chilly.android.data.remote.api.LoginApi
 import com.chilly.android.data.remote.api.PasswordRecoveryApi
+import com.chilly.android.data.remote.api.UserApi
 import com.chilly.android.domain.repository.PreferencesRepository
+import com.chilly.android.domain.repository.UserRepository
 import com.chilly.android.presentation.common.structure.ResourcesHolder
 import com.github.terrakok.cicerone.NavigatorHolder
 import com.github.terrakok.cicerone.Router
@@ -18,8 +20,11 @@ import javax.inject.Singleton
 interface ApplicationComponent {
 
     val preferencesRepository: PreferencesRepository
+    val userRepository: UserRepository
+
     val loginApi: LoginApi
     val recoveryApi: PasswordRecoveryApi
+    val userApi: UserApi
 
     val navigatorHolder: NavigatorHolder
     val router: Router
