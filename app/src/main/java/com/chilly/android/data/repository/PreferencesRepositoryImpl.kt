@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.firstOrNull
 
 private val SEEN_ONBOARDING_KEY = booleanPreferencesKey("SEEN_ONBOARDING")
 private val REFRESH_TOKEN_KEY = stringPreferencesKey("REFRESH_TOKEN")
+private val COMPLETED_MAIN_QUIZ = booleanPreferencesKey("COMPLETED_MAIN_QUIZ")
 
 class PreferencesRepositoryImpl(
     private val context: Context,
@@ -42,6 +43,15 @@ class PreferencesRepositoryImpl(
         } else {
             updatePref(REFRESH_TOKEN_KEY, token)
         }
+    }
+
+    override suspend fun hasCompletedMainQuiz(): Boolean {
+        val prefs = getPrefs() ?: return false
+        return prefs[COMPLETED_MAIN_QUIZ] ?: false
+    }
+
+    override suspend fun setHasCompletedMainQuiz(value: Boolean) {
+        updatePref(COMPLETED_MAIN_QUIZ, value)
     }
 
     private suspend fun getPrefs(): Preferences?

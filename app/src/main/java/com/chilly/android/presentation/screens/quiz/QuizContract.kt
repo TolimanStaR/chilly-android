@@ -1,5 +1,7 @@
 package com.chilly.android.presentation.screens.quiz
 
+import kotlinx.serialization.Serializable
+
 class QuizState(
     val questions: List<Int> = emptyList()
 )
@@ -13,6 +15,11 @@ sealed interface QuizEvent {
         data object Success : CommandEvent
         data object Fail : CommandEvent
     }
+}
+
+@Serializable
+enum class QuizType {
+    MAIN, SHORT
 }
 
 sealed interface QuizCommand {
