@@ -32,4 +32,7 @@ sealed interface Destination : Screen {
     @Serializable
     data object Favorites : Destination
 
+    @Serializable
+    data object Quiz : Destination
+
 }

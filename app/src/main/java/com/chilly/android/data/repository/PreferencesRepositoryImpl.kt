@@ -36,8 +36,12 @@ class PreferencesRepositoryImpl(
         return prefs[REFRESH_TOKEN_KEY]
     }
 
-    override suspend fun saveRefreshToken(token: String) {
-        updatePref(REFRESH_TOKEN_KEY, token)
+    override suspend fun saveRefreshToken(token: String?) {
+        if (token == null) {
+            removePref(REFRESH_TOKEN_KEY)
+        } else {
+            updatePref(REFRESH_TOKEN_KEY, token)
+        }
     }
 
     private suspend fun getPrefs(): Preferences?
@@ -46,6 +50,12 @@ class PreferencesRepositoryImpl(
     private suspend fun <T> updatePref(key: Preferences.Key<T>, value: T) {
         context.dataStore.edit { prefs ->
             prefs[key] = value
+        }
+    }
+
+    private suspend fun removePref(key: Preferences.Key<*>) {
+        context.dataStore.edit { prefs ->
+            prefs.remove(key)
         }
     }
 

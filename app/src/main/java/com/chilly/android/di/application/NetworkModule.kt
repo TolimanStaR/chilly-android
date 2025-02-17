@@ -1,10 +1,13 @@
 package com.chilly.android.di.application
 
 import com.chilly.android.data.remote.HandledException
+import com.chilly.android.data.remote.TokenHolder
 import com.chilly.android.data.remote.api.LoginApi
 import com.chilly.android.data.remote.api.PasswordRecoveryApi
+import com.chilly.android.data.remote.api.UserApi
 import com.chilly.android.data.remote.api.impl.LoginApiImpl
 import com.chilly.android.data.remote.api.impl.PasswordRecoveryApiImpl
+import com.chilly.android.data.remote.api.impl.UserApiImpl
 import com.chilly.android.data.remote.dto.response.ErrorResponse
 import dagger.Module
 import dagger.Provides
@@ -19,6 +22,7 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.util.appendIfNameAbsent
+import kotlinx.serialization.json.Json
 import javax.inject.Singleton
 
 private const val DEFAULT_URL = "http://188.120.236.240:8085/"
@@ -43,7 +47,12 @@ class NetworkModule {
         }
 
         install(ContentNegotiation) {
-            json()
+            json(
+                json = Json {
+                    ignoreUnknownKeys = true
+                    prettyPrint = true
+                }
+            )
         }
 
         defaultRequest {
@@ -60,4 +69,9 @@ class NetworkModule {
     @Singleton
     fun provideRecoveryApi(client: HttpClient): PasswordRecoveryApi =
         PasswordRecoveryApiImpl(client)
+
+    @Provides
+    @Singleton
+    fun provideUserApi(client: HttpClient, tokenHolder: TokenHolder): UserApi =
+        UserApiImpl(client, tokenHolder)
 }

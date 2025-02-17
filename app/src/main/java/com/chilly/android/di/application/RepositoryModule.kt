@@ -1,8 +1,11 @@
 package com.chilly.android.di.application
 
 import android.content.Context
+import com.chilly.android.data.remote.api.UserApi
 import com.chilly.android.data.repository.PreferencesRepositoryImpl
+import com.chilly.android.data.repository.UserRepositoryImpl
 import com.chilly.android.domain.repository.PreferencesRepository
+import com.chilly.android.domain.repository.UserRepository
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -17,6 +20,12 @@ class RepositoryModule {
     ): PreferencesRepository {
         return PreferencesRepositoryImpl(applicationContext)
     }
+
+    @Provides
+    @Singleton
+    fun provideUserRepository(
+        userApi: UserApi
+    ): UserRepository = UserRepositoryImpl(userApi)
 
 
 }

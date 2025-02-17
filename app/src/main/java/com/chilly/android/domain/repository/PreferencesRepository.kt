@@ -8,5 +8,5 @@ interface PreferencesRepository {
 
     suspend fun getSavedRefreshToken(): String?
 
-    suspend fun saveRefreshToken(token: String)
+    suspend fun saveRefreshToken(token: String?)
 }

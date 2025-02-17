@@ -45,7 +45,7 @@
     <string name="recovery_email_label">E-mail</string>
     <string name="used_email_template">E-mail is sent to: %s</string>
 
-    <string name="genera_fail_message">An Error occurred, try again</string>
+    <string name="general_fail_message">An Error occurred, try again</string>
     <string name="password_changed">Password successfully changed!</string>
     <string name="wrong_email">Entered e-mail doesn\'t exist</string>
     <string name="wrong_code">Entered wrong code</string>
@@ -56,5 +56,14 @@
     <string name="profile_screen_title">My Profile</string>
     <string name="favorites_screen_title">Favorites</string>
     <string name="main_pepper_dialog_text">What about some new\nplace?</string>
+
+    <string name="change_info_button">Change data</string>
+    <string name="change_passowrd_button">Save password</string>
+    <string name="old_password_label">Old password</string>
+    <string name="new_password_label">New password</string>
+    <string name="repeat_password_label">Repeat password</string>
+    <string name="redo_onboarding_button">Show onboarding again</string>
+    <string name="log_out_button">Sign out</string>
+    <string name="user_loading">Your profile is loading…</string>
 
 </resources>

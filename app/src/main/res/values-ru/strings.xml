@@ -46,7 +46,7 @@
     <string name="recovery_email_label">E-mail</string>
     <string name="used_email_template">Письмо отправлено на почту: %s</string>
 
-    <string name="genera_fail_message">Произошла ошибка, попробуйте еще раз.</string>
+    <string name="general_fail_message">Произошла ошибка, попробуйте еще раз.</string>
     <string name="password_changed">Пароль успешно изменен.</string>
     <string name="wrong_email">Введенный e-mail не найден.</string>
     <string name="wrong_code">Введен неверный код.</string>
@@ -56,4 +56,13 @@
     <string name="profile_screen_title">Мой Профиль</string>
     <string name="favorites_screen_title">"Избранное "</string>
     <string name="main_pepper_dialog_text">Что на счёт еще одной\nпрогулки?</string>
+
+    <string name="change_info_button">Изменить данные</string>
+    <string name="change_passowrd_button">Сохранить пароль</string>
+    <string name="old_password_label">Старый пароль</string>
+    <string name="new_password_label">Новый пароль</string>
+    <string name="repeat_password_label">Повтор пароля</string>
+    <string name="redo_onboarding_button">Заново познакомиться</string>
+    <string name="log_out_button">Выйти из аккаунта</string>
+    <string name="user_loading">Загружаем ваш профиль…</string>
 </resources>

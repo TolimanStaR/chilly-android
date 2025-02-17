@@ -31,6 +31,8 @@ import com.chilly.android.presentation.screens.forgot_password.installForgotPass
 import com.chilly.android.presentation.screens.login.installLoginComposable
 import com.chilly.android.presentation.screens.main.installMainScreen
 import com.chilly.android.presentation.screens.onboarding.installOnboardingComposable
+import com.chilly.android.presentation.screens.profile.installProfileScreen
+import com.chilly.android.presentation.screens.quiz.installQuizScreen
 import com.chilly.android.presentation.screens.sign_up.installSignUpComposable
 import com.chilly.android.presentation.screens.splash.installSplashComposable
 import com.github.terrakok.cicerone.Router
@@ -67,9 +69,10 @@ fun ChillyNavHost(navController: NavHostController = rememberNavController()) {
             installLoginComposable(innerPadding)
             installSignUpComposable(innerPadding)
             installForgotPasswordScreen(innerPadding)
+            installProfileScreen(innerPadding)
+            installQuizScreen()
 
             // TODO() replace when implemented
-            installStubScreen<Destination.Profile>("profile", innerPadding)
             installStubScreen<Destination.Favorites>("favorites", innerPadding)
             installStubScreen<Destination.History>("history", innerPadding)
         }
