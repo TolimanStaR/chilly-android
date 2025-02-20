@@ -27,7 +27,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination.Companion.hasRoute
 import com.chilly.android.R
-import timber.log.Timber
 
 data class TopBarState(
     @StringRes val titleRes: Int,
@@ -128,7 +127,6 @@ fun ChillyBottomBar(
                 },
                 selected = selected,
                 onClick = {
-                    Timber.i("clicked on item with route: ${item.route}")
                     onNavigation(item.route)
                 },
                 icon = {

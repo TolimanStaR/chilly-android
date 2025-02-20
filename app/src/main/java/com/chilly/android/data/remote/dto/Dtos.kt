@@ -14,3 +14,34 @@ class UserDto(
     @SerialName("lastname")
     val lastname: String?
 )
+
+@Serializable
+enum class QuizType {
+    BASE, SHORT
+}
+
+@Serializable
+class QuestionDto(
+    @SerialName("id")
+    val id: Int,
+    @SerialName("body")
+    val body: String,
+    @SerialName("answers")
+    val answers: List<AnswerDto>
+)
+
+@Serializable
+class AnswerDto(
+    @SerialName("id")
+    val id: Int,
+    @SerialName("body")
+    val body: String
+)
+
+@Serializable
+class QuizAnswerDto(
+    @SerialName("questionId")
+    val questionId: Int,
+    @SerialName("answerId")
+     val answerId: Int
+)

@@ -1,6 +1,6 @@
 package com.chilly.android.presentation.navigation
 
-import com.chilly.android.presentation.screens.quiz.QuizType
+import com.chilly.android.data.remote.dto.QuizType
 import com.github.terrakok.cicerone.Screen
 import kotlinx.serialization.Serializable
 

@@ -65,5 +65,14 @@
     <string name="redo_onboarding_button">Show onboarding again</string>
     <string name="log_out_button">Sign out</string>
     <string name="user_loading">Your profile is loading…</string>
+    <string name="main_chily_button">Let\'s Chill!</string>
+    <string name="interests_cleared_snackbar">Your interests has been cleared</string>
+    <string name="clear_intersts_button">Clear My Interests</string>
+    <string name="loading_questions_text">loading questions</string>
+    <string name="try_again_button">Try Again</string>
+    <string name="quiz_progress_title">Question %1$s of %2$s</string>
+    <string name="error_occurred_during_loading">Error occurred during loading</string>
+    <string name="finish_quiz_button">Finish Quiz</string>
+    <string name="quiz_screen_title">Quiz</string>
 
 </resources>
