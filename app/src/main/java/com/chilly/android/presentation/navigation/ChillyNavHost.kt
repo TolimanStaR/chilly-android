@@ -71,12 +71,11 @@ fun ChillyNavHost(navController: NavHostController = rememberNavController()) {
             installSignUpComposable(innerPadding)
             installForgotPasswordScreen(innerPadding)
             installProfileScreen(innerPadding)
-            installQuizScreen()
+            installQuizScreen(innerPadding)
 
             // TODO() replace when implemented
             installStubScreen<Destination.Favorites>("favorites", innerPadding)
             installStubScreen<Destination.History>("history", innerPadding)
-            installStubScreen<Destination.Quiz>(innerPadding) {"quiz: ${it.type.name}"}
         }
     }
 }

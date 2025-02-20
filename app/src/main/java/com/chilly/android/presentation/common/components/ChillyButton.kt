@@ -34,6 +34,27 @@ fun ChillyButton(
     type: ChillyButtonType = ChillyButtonType.Primary,
     modifier: Modifier = Modifier
 ) {
+    ChillyButton(
+        text = stringResource(textRes),
+        onClick = onClick,
+        enabled = enabled,
+        color = color,
+        size = size,
+        type = type,
+        modifier = modifier
+    )
+}
+
+@Composable
+fun ChillyButton(
+    text: String,
+    onClick: () -> Unit,
+    enabled: Boolean = true,
+    color: ChillyButtonColor = ChillyButtonColor.Primary,
+    size: SizeParameter = SizeParameter.Small,
+    type: ChillyButtonType = ChillyButtonType.Primary,
+    modifier: Modifier = Modifier
+) {
     val colors = buttonColors(type, color)
     Button(
         enabled = enabled,
@@ -45,7 +66,7 @@ fun ChillyButton(
         modifier = modifier
     ) {
         Text(
-            text = stringResource(textRes),
+            text = text,
             style = size.toTextStyle(),
             fontWeight = FontWeight.Medium,
             textAlign = TextAlign.Center

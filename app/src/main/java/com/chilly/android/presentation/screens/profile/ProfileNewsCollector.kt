@@ -18,6 +18,7 @@ class ProfileNewsCollector @Inject constructor(
             ProfileNews.NavigateSignIn -> router.newRootScreen(Destination.LogIn)
             ProfileNews.NavigateBack -> router.exit()
             ProfileNews.NavigateOnboarding -> router.navigateTo(Destination.Onboarding())
+            ProfileNews.InterestsCleared -> snackbarShower.show(R.string.interests_cleared_snackbar)
         }
     }
 

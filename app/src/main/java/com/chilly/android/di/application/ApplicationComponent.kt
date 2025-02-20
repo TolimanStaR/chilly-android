@@ -5,8 +5,10 @@ import androidx.compose.material3.SnackbarHostState
 import com.chilly.android.data.remote.TokenHolder
 import com.chilly.android.data.remote.api.LoginApi
 import com.chilly.android.data.remote.api.PasswordRecoveryApi
+import com.chilly.android.data.remote.api.QuizApi
 import com.chilly.android.data.remote.api.UserApi
 import com.chilly.android.domain.repository.PreferencesRepository
+import com.chilly.android.domain.repository.QuizRepository
 import com.chilly.android.domain.repository.UserRepository
 import com.chilly.android.presentation.common.structure.ResourcesHolder
 import com.github.terrakok.cicerone.NavigatorHolder
@@ -21,10 +23,12 @@ interface ApplicationComponent {
 
     val preferencesRepository: PreferencesRepository
     val userRepository: UserRepository
+    val quizRepository: QuizRepository
 
     val loginApi: LoginApi
     val recoveryApi: PasswordRecoveryApi
     val userApi: UserApi
+    val quizApi: QuizApi
 
     val navigatorHolder: NavigatorHolder
     val router: Router

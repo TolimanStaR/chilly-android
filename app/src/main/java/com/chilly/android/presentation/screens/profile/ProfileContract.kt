@@ -34,16 +34,19 @@ sealed interface ProfileEvent {
         data object ChangeDataClicked : UiEvent
         data object ChangePasswordClicked : UiEvent
         data object ShownLoadingScreen : UiEvent
+        data object ClearInterestsClicked : UiEvent
     }
 
     sealed interface CommandEvent : ProfileEvent {
         data class UserLoaded(val user: UserDto) : CommandEvent
         data object Fail : CommandEvent
+        data object InterestsCleared : CommandEvent
     }
 }
 
 sealed interface ProfileCommand {
     data object LoadLoggedUser : ProfileCommand
+    data object ClearInterests : ProfileCommand
     data object LogOut : ProfileCommand
 }
 
@@ -52,4 +55,5 @@ sealed interface ProfileNews {
     data object NavigateSignIn : ProfileNews
     data object NavigateOnboarding : ProfileNews
     data object NavigateBack : ProfileNews
+    data object InterestsCleared : ProfileNews
 }

@@ -22,11 +22,17 @@ class ProfileCommandFlowHandler @Inject constructor(
             when (it) {
                 is ProfileCommand.LoadLoggedUser -> handleUserLoad()
                 ProfileCommand.LogOut -> handleLogOut()
+                ProfileCommand.ClearInterests -> handleClearInterests()
             }
         }
 
     private fun handleLogOut(): Flow<CommandEvent> = flow {
         preferencesRepository.saveRefreshToken(null)
+    }
+
+    private fun handleClearInterests(): Flow<CommandEvent> = flow {
+        preferencesRepository.setHasCompletedMainQuiz(false)
+        emit(CommandEvent.InterestsCleared)
     }
 
     private fun handleUserLoad(): Flow<CommandEvent> = flow {

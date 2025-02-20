@@ -61,6 +61,10 @@ class ProfileUpdate @Inject constructor(
             ProfileEvent.UiEvent.ShownLoadingScreen -> {
                 commands(ProfileCommand.LoadLoggedUser)
             }
+
+            ProfileEvent.UiEvent.ClearInterestsClicked -> {
+                commands(ProfileCommand.ClearInterests)
+            }
         }
     }
 
@@ -102,6 +106,9 @@ class ProfileUpdate @Inject constructor(
                         )
                     }
                 }
+            }
+            CommandEvent.InterestsCleared -> {
+                news(ProfileNews.InterestsCleared)
             }
         }
     }
