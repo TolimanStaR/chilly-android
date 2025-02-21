@@ -18,16 +18,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.chilly.android.R
 import com.chilly.android.presentation.theme.ChillyTheme
-import com.chilly.android.presentation.theme.Gray90
 
 @Composable
 fun TextInDialogWindow(
     text: String,
     fromLeft: Boolean = false,
-    verticalPaddingScale: Float = 1f,
-    horizontalPaddingScale: Float = 1f
+    verticalPaddingScale: Float = 2f,
+    horizontalPaddingScale: Float = 2f,
+    modifier: Modifier = Modifier
 ) {
-    Box {
+    Box(
+        modifier = modifier
+    ) {
         val imageRes = if (isSystemInDarkTheme())
             R.drawable.dialog_window_right_dark
         else

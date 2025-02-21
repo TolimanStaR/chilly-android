@@ -1,11 +1,9 @@
 package com.chilly.android.presentation.screens.profile
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
@@ -13,14 +11,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
@@ -37,6 +31,7 @@ import com.chilly.android.presentation.common.components.ChillyButton
 import com.chilly.android.presentation.common.components.ChillyButtonColor
 import com.chilly.android.presentation.common.components.ChillyButtonType
 import com.chilly.android.presentation.common.components.ChillyTextField
+import com.chilly.android.presentation.common.components.LoadingPlaceholder
 import com.chilly.android.presentation.common.components.PasswordTextField
 import com.chilly.android.presentation.common.structure.NewsCollector
 import com.chilly.android.presentation.common.structure.ScreenHolder
@@ -52,19 +47,8 @@ private fun ProfileScreen(
     onEvent: (UiEvent) -> Unit
 ) {
     if (state.user == null) {
-        LaunchedEffect(Unit) {
+        LoadingPlaceholder(stringResource(R.string.user_loading)) {
             onEvent(UiEvent.ShownLoadingScreen)
-        }
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier.fillMaxSize()
-        ) {
-            Column(verticalArrangement = Arrangement.Center) {
-                CircularProgressIndicator()
-                Text(
-                    text = stringResource(R.string.user_loading)
-                )
-            }
         }
         return
     }
@@ -140,6 +124,12 @@ private fun ProfileScreen(
             textRes = R.string.redo_onboarding_button,
             type = ChillyButtonType.Secondary,
             onClick = { onEvent(UiEvent.ShowOnboardingClicked) },
+            modifier = Modifier.fillMaxWidth()
+        )
+        ChillyButton(
+            textRes = R.string.clear_intersts_button,
+            type = ChillyButtonType.Secondary,
+            onClick = { onEvent(UiEvent.ClearInterestsClicked) },
             modifier = Modifier.fillMaxWidth()
         )
         ChillyButton(

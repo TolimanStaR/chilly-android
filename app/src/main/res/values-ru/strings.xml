@@ -65,4 +65,13 @@
     <string name="redo_onboarding_button">Заново познакомиться</string>
     <string name="log_out_button">Выйти из аккаунта</string>
     <string name="user_loading">Загружаем ваш профиль…</string>
+    <string name="main_chily_button">Почиллили!</string>
+    <string name="interests_cleared_snackbar">Ваши интересы сброшены</string>
+    <string name="clear_intersts_button">Сбросить мои интересы</string>
+    <string name="loading_questions_text">Загрузка вопросов</string>
+    <string name="try_again_button">Попробуйте снова</string>
+    <string name="quiz_progress_title">Вопрос %1$s из %2$s</string>
+    <string name="error_occurred_during_loading">Ошибка при загрузке</string>
+    <string name="finish_quiz_button">Завершить квиз</string>
+    <string name="quiz_screen_title">Квиз</string>
 </resources>

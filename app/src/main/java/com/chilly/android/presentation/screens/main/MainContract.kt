@@ -6,16 +6,17 @@ sealed interface MainEvent {
     }
 
     sealed interface CommandEvent : MainEvent {
-        data object Success : CommandEvent
-        data object Fail : CommandEvent
+        data class CheckQuizResult(val hasBeenCompleted: Boolean) : CommandEvent
     }
 }
 
 sealed interface MainCommand {
-    data object Load : MainCommand
+    data object CheckMainQuiz : MainCommand
 }
 
 sealed interface MainNews {
     data object NavigateLogin : MainNews
     data object NavigateOnboarding : MainNews
+    data object NavigateMainQuiz : MainNews
+    data object NavigateShortQuiz : MainNews
 }

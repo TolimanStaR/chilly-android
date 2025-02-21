@@ -9,4 +9,8 @@ interface PreferencesRepository {
     suspend fun getSavedRefreshToken(): String?
 
     suspend fun saveRefreshToken(token: String?)
+
+    suspend fun hasCompletedMainQuiz(): Boolean
+
+    suspend fun setHasCompletedMainQuiz(value: Boolean)
 }

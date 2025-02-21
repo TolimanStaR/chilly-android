@@ -60,7 +60,7 @@ private fun MainScreen(
         )
         Spacer(modifier = Modifier.height(16.dp))
         ChillyButton(
-            textRes = R.string.app_name,
+            text = stringResource(R.string.main_chily_button),
             onClick = { onEvent(UiEvent.GetRecommendationClicked) },
             size = SizeParameter.Medium,
             modifier = Modifier.fillMaxWidth()

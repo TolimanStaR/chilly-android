@@ -1,5 +1,6 @@
 package com.chilly.android.presentation.navigation
 
+import com.chilly.android.data.remote.dto.QuizType
 import com.github.terrakok.cicerone.Screen
 import kotlinx.serialization.Serializable
 
@@ -27,12 +28,12 @@ sealed interface Destination : Screen {
     data object Profile : Destination
 
     @Serializable
-    data object History : Destination
+    data object History : Destination // TODO
 
     @Serializable
-    data object Favorites : Destination
+    data object Favorites : Destination // TODO
 
     @Serializable
-    data object Quiz : Destination
+    data class Quiz(val type: QuizType) : Destination
 
 }

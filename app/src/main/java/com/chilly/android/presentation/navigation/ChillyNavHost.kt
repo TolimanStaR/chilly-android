@@ -25,6 +25,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.chilly.android.R
 import com.chilly.android.applicationComponent
 import com.chilly.android.presentation.screens.forgot_password.installForgotPasswordScreen
@@ -70,7 +71,7 @@ fun ChillyNavHost(navController: NavHostController = rememberNavController()) {
             installSignUpComposable(innerPadding)
             installForgotPasswordScreen(innerPadding)
             installProfileScreen(innerPadding)
-            installQuizScreen()
+            installQuizScreen(innerPadding)
 
             // TODO() replace when implemented
             installStubScreen<Destination.Favorites>("favorites", innerPadding)
@@ -136,6 +137,7 @@ private fun NavBackStackEntry?.topBarState(): TopBarState? {
         matches<Destination.Profile>() -> TopBarState(R.string.profile_screen_title, showBackButton = true, showProfileAction = false)
         matches<Destination.History>() -> TopBarState(R.string.history_screen_title)
         matches<Destination.Favorites>() -> TopBarState(R.string.favorites_screen_title)
+        matches<Destination.Quiz>() -> TopBarState(R.string.quiz_screen_title, showBackButton = true, showProfileAction = false)
         else -> null
     }
 }
@@ -154,6 +156,20 @@ private inline fun <reified D : Destination> NavGraphBuilder.installStubScreen(n
                 .fillMaxSize()
         ) {
             Text(name)
+        }
+    }
+}
+
+// TODO() remove when screens are implemented
+private inline fun <reified D : Destination> NavGraphBuilder.installStubScreen(padding: PaddingValues, crossinline name: (D) -> String) {
+    composable<D> { backStackEntry ->
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .padding(padding)
+                .fillMaxSize()
+        ) {
+            Text(name.invoke(backStackEntry.toRoute()))
         }
     }
 }

@@ -4,9 +4,11 @@ import com.chilly.android.data.remote.HandledException
 import com.chilly.android.data.remote.TokenHolder
 import com.chilly.android.data.remote.api.LoginApi
 import com.chilly.android.data.remote.api.PasswordRecoveryApi
+import com.chilly.android.data.remote.api.QuizApi
 import com.chilly.android.data.remote.api.UserApi
 import com.chilly.android.data.remote.api.impl.LoginApiImpl
 import com.chilly.android.data.remote.api.impl.PasswordRecoveryApiImpl
+import com.chilly.android.data.remote.api.impl.QuizApiImpl
 import com.chilly.android.data.remote.api.impl.UserApiImpl
 import com.chilly.android.data.remote.dto.response.ErrorResponse
 import dagger.Module
@@ -74,4 +76,9 @@ class NetworkModule {
     @Singleton
     fun provideUserApi(client: HttpClient, tokenHolder: TokenHolder): UserApi =
         UserApiImpl(client, tokenHolder)
+
+    @Provides
+    @Singleton
+    fun provideQuizApi(client: HttpClient, tokenHolder: TokenHolder): QuizApi =
+        QuizApiImpl(client, tokenHolder)
 }
