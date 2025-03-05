@@ -15,7 +15,6 @@ import androidx.navigation.compose.composable
 import com.chilly.android.R
 import com.chilly.android.applicationComponent
 import com.chilly.android.di.screens.DaggerSplashScreenComponent
-import com.chilly.android.presentation.common.structure.EffectCollector
 import com.chilly.android.presentation.common.structure.ScreenHolder
 import com.chilly.android.presentation.navigation.Destination
 import com.chilly.android.presentation.theme.ChillyTheme
@@ -46,7 +45,6 @@ fun NavGraphBuilder.installSplashComposable() {
             viewModelFactory = { viewModel() }
         ) {
             SplashScreen()
-            EffectCollector(component.effectCollector)
         }
     }
 }

@@ -4,15 +4,10 @@ import android.content.Context
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.chilly.android.domain.repository.PreferencesRepository
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.first
 import timber.log.Timber
 
 private val SEEN_ONBOARDING_KEY = booleanPreferencesKey("SEEN_ONBOARDING")
@@ -24,12 +19,9 @@ class PreferencesRepositoryImpl(
 ) : PreferencesRepository {
 
     private val Context.dataStore by preferencesDataStore(name = "settings")
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
-    private val data = context.dataStore.data
-        .stateIn(scope, SharingStarted.Eagerly, emptyPreferences())
 
     override suspend fun hasSeenOnboarding(): Boolean {
-        return data.value[SEEN_ONBOARDING_KEY] ?: false
+        return getPrefs()[SEEN_ONBOARDING_KEY] ?: false
     }
 
     override suspend fun setHasSeenOnboarding(value: Boolean) {
@@ -38,7 +30,7 @@ class PreferencesRepositoryImpl(
 
     override suspend fun getSavedRefreshToken(): String? {
         Timber.e("searching for token in prefs")
-        return data.value[REFRESH_TOKEN_KEY]
+        return getPrefs()[REFRESH_TOKEN_KEY]
             .also {
                 Timber.e("got token: $it")
             }
@@ -53,7 +45,7 @@ class PreferencesRepositoryImpl(
     }
 
     override suspend fun hasCompletedMainQuiz(): Boolean {
-        return  (data.value[COMPLETED_MAIN_QUIZ] ?: false)
+        return  (getPrefs()[COMPLETED_MAIN_QUIZ] ?: false)
             .also {
                 Timber.e("retrieving quiz completion: $it")
             }
@@ -63,6 +55,9 @@ class PreferencesRepositoryImpl(
         Timber.e("setting quiz completion: $value")
         updatePref(COMPLETED_MAIN_QUIZ, value)
     }
+
+    private suspend fun getPrefs(): Preferences =
+        context.dataStore.data.first()
 
     private suspend fun <T> updatePref(key: Preferences.Key<T>, value: T) {
         context.dataStore.edit { prefs ->
