@@ -11,6 +11,7 @@ import javax.inject.Inject
 class SplashScreenViewModel(
     private val preferencesRepository: PreferencesRepository,
     private val tokenUseCase: TryRefreshTokenUseCase,
+    private val collector: SplashScreenEffectCollector,
     @VisibleForTesting effectReply: Int
 ): ViewModelWithEffects<SplashScreenEffect, Nothing>(effectReply) {
 
@@ -18,9 +19,14 @@ class SplashScreenViewModel(
     constructor(
         preferencesRepository: PreferencesRepository,
         tokenUseCase: TryRefreshTokenUseCase,
-    ) : this(preferencesRepository, tokenUseCase, 0)
+        collector: SplashScreenEffectCollector
+    ) : this(preferencesRepository, tokenUseCase, collector, 0)
 
     init {
+        viewModelScope.launch {
+            effects.collect(collector)
+        }
+
         viewModelScope.launch {
             val loggedIn = tokenUseCase.invoke()
             if (loggedIn) {

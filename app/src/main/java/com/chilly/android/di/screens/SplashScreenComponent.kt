@@ -1,7 +1,6 @@
 package com.chilly.android.di.screens
 
 import com.chilly.android.di.application.ApplicationComponent
-import com.chilly.android.presentation.screens.splash.SplashScreenEffectCollector
 import com.chilly.android.presentation.screens.splash.SplashScreenViewModel
 import dagger.Component
 import javax.inject.Scope
@@ -12,7 +11,6 @@ import javax.inject.Scope
 interface SplashScreenComponent {
 
     fun viewModel(): SplashScreenViewModel
-    val effectCollector: SplashScreenEffectCollector
 
     @Component.Builder
     interface Builder {
