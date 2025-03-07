@@ -13,6 +13,7 @@ sealed interface RecommendationResultEvent {
         data object ScreenShown : UiEvent
         data object LoadAgainClicked : UiEvent
         data object CheckRequest : UiEvent
+        data class PlaceClicked(val id: Int) : UiEvent
     }
 
     sealed interface CommandEvent : RecommendationResultEvent {
@@ -29,5 +30,5 @@ sealed interface RecommendationResultCommand {
 
 sealed interface RecommendationResultNews {
     data object GeneralFail : RecommendationResultNews
-    data object Navigate : RecommendationResultNews
+    data class NavigatePlace(val id: Int) : RecommendationResultNews
 }

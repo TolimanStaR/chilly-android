@@ -25,13 +25,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.toRoute
 import com.chilly.android.R
 import com.chilly.android.applicationComponent
 import com.chilly.android.presentation.screens.forgot_password.installForgotPasswordScreen
 import com.chilly.android.presentation.screens.login.installLoginComposable
 import com.chilly.android.presentation.screens.main.installMainScreen
 import com.chilly.android.presentation.screens.onboarding.installOnboardingComposable
+import com.chilly.android.presentation.screens.place.installPlaceInfoScreen
 import com.chilly.android.presentation.screens.profile.installProfileScreen
 import com.chilly.android.presentation.screens.quiz.installQuizScreen
 import com.chilly.android.presentation.screens.result.installRecommendationResultScreen
@@ -74,6 +74,7 @@ fun ChillyNavHost(navController: NavHostController = rememberNavController()) {
             installProfileScreen(innerPadding)
             installQuizScreen(innerPadding)
             installRecommendationResultScreen(innerPadding)
+            installPlaceInfoScreen(innerPadding)
 
             // TODO() replace when implemented
             installStubScreen<Destination.Favorites>("favorites", innerPadding)
@@ -158,20 +159,6 @@ private inline fun <reified D : Destination> NavGraphBuilder.installStubScreen(n
                 .fillMaxSize()
         ) {
             Text(name)
-        }
-    }
-}
-
-// TODO() remove when screens are implemented
-private inline fun <reified D : Destination> NavGraphBuilder.installStubScreen(padding: PaddingValues, crossinline name: (D) -> String) {
-    composable<D> { backStackEntry ->
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .padding(padding)
-                .fillMaxSize()
-        ) {
-            Text(name.invoke(backStackEntry.toRoute()))
         }
     }
 }

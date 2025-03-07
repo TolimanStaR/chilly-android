@@ -39,4 +39,7 @@ sealed interface Destination : Screen {
     @Serializable
     data class Quiz(val type: QuizType) : Destination
 
+    @Serializable
+    data class PlaceInfo(val id: Int) : Destination
+
 }

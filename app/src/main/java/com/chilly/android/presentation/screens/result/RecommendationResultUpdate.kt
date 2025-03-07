@@ -1,5 +1,7 @@
 package com.chilly.android.presentation.screens.result
 
+import com.chilly.android.presentation.screens.result.RecommendationResultEvent.CommandEvent
+import com.chilly.android.presentation.screens.result.RecommendationResultEvent.UiEvent
 import ru.tinkoff.kotea.core.dsl.DslUpdate
 import javax.inject.Inject
 
@@ -8,35 +10,38 @@ class RecommendationResultUpdate @Inject constructor(
 ) : DslUpdate<RecommendationResultState, RecommendationResultEvent, RecommendationResultCommand, RecommendationResultNews>() {
 
     override fun NextBuilder.update(event: RecommendationResultEvent) = when (event) {
-        is RecommendationResultEvent.UiEvent -> updateOnUi(event)
-        is RecommendationResultEvent.CommandEvent -> updateOnCommand(event)
+        is UiEvent -> updateOnUi(event)
+        is CommandEvent -> updateOnCommand(event)
     }
 
-    private fun NextBuilder.updateOnUi(event: RecommendationResultEvent.UiEvent) {
+    private fun NextBuilder.updateOnUi(event: UiEvent) {
         when (event) {
-            RecommendationResultEvent.UiEvent.LoadAgainClicked -> {
+            UiEvent.LoadAgainClicked -> {
                 state { copy(errorOccurred = false) }
                 commands(RecommendationResultCommand.LoadRecommendations)
             }
-            RecommendationResultEvent.UiEvent.ScreenShown -> {
+            UiEvent.ScreenShown -> {
                 commands(RecommendationResultCommand.LoadRecommendations)
             }
-            RecommendationResultEvent.UiEvent.CheckRequest -> {
+            UiEvent.CheckRequest -> {
                 commands(RecommendationResultCommand.CheckRequested)
+            }
+            is UiEvent.PlaceClicked -> {
+                news(RecommendationResultNews.NavigatePlace(event.id))
             }
         }
     }
 
-    private fun NextBuilder.updateOnCommand(event: RecommendationResultEvent.CommandEvent) {
+    private fun NextBuilder.updateOnCommand(event: CommandEvent) {
         when (event) {
-            RecommendationResultEvent.CommandEvent.LoadingFail -> {
+            CommandEvent.LoadingFail -> {
                 state { copy(errorOccurred = true) }
             }
-            is RecommendationResultEvent.CommandEvent.LoadingSuccess -> {
+            is CommandEvent.LoadingSuccess -> {
                 state { copy(recommendations = event.recommendations) }
             }
 
-            RecommendationResultEvent.CommandEvent.ClearData -> {
+            CommandEvent.ClearData -> {
                 state {copy(recommendations = emptyList()) }
             }
         }
