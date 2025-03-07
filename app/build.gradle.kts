@@ -65,6 +65,8 @@ dependencies {
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.client.serialization)
     implementation(libs.cicerone)
+    implementation(libs.coil)
+    implementation(libs.coil.network)
 
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.mockk)

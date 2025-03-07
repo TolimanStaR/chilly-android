@@ -51,6 +51,7 @@ import com.chilly.android.presentation.common.components.ErrorReloadPlaceHolder
 import com.chilly.android.presentation.common.components.LoadingPlaceholder
 import com.chilly.android.presentation.common.components.SizeParameter
 import com.chilly.android.presentation.common.components.TextInDialogWindow
+import com.chilly.android.presentation.common.components.chillyPepperRes
 import com.chilly.android.presentation.common.structure.NewsCollector
 import com.chilly.android.presentation.common.structure.ScreenHolder
 import com.chilly.android.presentation.common.structure.collectState
@@ -133,7 +134,7 @@ private fun QuizScreen(
                 }
             }
             LinearProgressIndicator(
-                progress = { (state.currentQuestion + 1).toFloat() / state.questions.size },
+                progress = { state.answers.size.toFloat() / state.questions.size },
                 gapSize = 0.dp,
                 strokeCap = StrokeCap.Butt,
                 drawStopIndicator = {},
@@ -219,13 +220,6 @@ private fun QuizScreen(
     }
 }
 
-
-private fun Int.chillyPepperRes(): Int = when(this % 4) {
-    0 -> R.drawable.chilly_pepper_1
-    1 -> R.drawable.chilly_pepper_2
-    2 -> R.drawable.chilly_pepper_3
-    else -> R.drawable.chilly_pepper_4
-}
 
 
 

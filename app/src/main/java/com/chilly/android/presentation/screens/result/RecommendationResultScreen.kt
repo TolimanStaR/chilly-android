@@ -2,6 +2,8 @@ package com.chilly.android.presentation.screens.result
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -19,6 +21,7 @@ import com.chilly.android.di.screens.DaggerRecommendationResultComponent
 import com.chilly.android.di.screens.RecommendationResultComponent
 import com.chilly.android.presentation.common.components.ErrorReloadPlaceHolder
 import com.chilly.android.presentation.common.components.LoadingPlaceholder
+import com.chilly.android.presentation.common.components.PlaceListItem
 import com.chilly.android.presentation.common.structure.NewsCollector
 import com.chilly.android.presentation.common.structure.ScreenHolder
 import com.chilly.android.presentation.common.structure.collectState
@@ -59,8 +62,16 @@ private fun RecommendationResultScreen(
             .padding(padding)
             .padding(16.dp)
     ) {
+        item {
+            Spacer(modifier = Modifier.height(4.dp))
+        }
         items(state.recommendations) { place ->
-            Text(text = place.name)
+            PlaceListItem(place) {
+                // todo onclick
+            }
+        }
+        item {
+            Spacer(modifier = Modifier.height(4.dp))
         }
     }
 }

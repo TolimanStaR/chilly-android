@@ -30,3 +30,10 @@ fun PeppersBackground() {
             .fillMaxSize()
     )
 }
+
+fun Int.chillyPepperRes(): Int = when(this % 4) {
+    0 -> R.drawable.chilly_pepper_1
+    1 -> R.drawable.chilly_pepper_2
+    2 -> R.drawable.chilly_pepper_3
+    else -> R.drawable.chilly_pepper_4
+}
