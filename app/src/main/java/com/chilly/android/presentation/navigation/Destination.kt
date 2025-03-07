@@ -34,6 +34,9 @@ sealed interface Destination : Screen {
     data object Favorites : Destination // TODO
 
     @Serializable
+    data object RecommendationResult : Destination
+
+    @Serializable
     data class Quiz(val type: QuizType) : Destination
 
 }

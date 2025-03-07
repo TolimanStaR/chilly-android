@@ -34,7 +34,7 @@ class QuizUpdate @Inject constructor() : DslUpdate<QuizState, QuizEvent, QuizCom
 
             UiEvent.BackPressed -> {
                 if (state.currentQuestion <= 0) {
-                    state { copy(questions = emptyList(), answers = emptyList()) }
+                    state { copy(questions = emptyList(), answers = emptyList(), errorOccurred = false) }
                     news(QuizNews.NavigateBack)
                 } else {
                     state { copy(currentQuestion = currentQuestion - 1) }
@@ -64,8 +64,10 @@ class QuizUpdate @Inject constructor() : DslUpdate<QuizState, QuizEvent, QuizCom
                 state { copy(answers = emptyList(), questions = emptyList(), isLoading = false) }
                 if (event.type == QuizType.BASE) {
                     commands(QuizCommand.MarkMainQuizFilled)
+                    news(QuizNews.NavigateShortQuiz)
+                } else {
+                    news(QuizNews.NavigateToRecommendationResult)
                 }
-                news(QuizNews.NavigateBack)
             }
         }
     }

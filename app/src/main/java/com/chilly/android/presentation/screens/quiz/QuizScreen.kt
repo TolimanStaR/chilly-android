@@ -74,7 +74,9 @@ private fun QuizScreen(
             return
         }
         needLoading && state.errorOccurred -> {
-            ErrorReloadPlaceHolder(stringResource(R.string.error_occurred_during_loading))
+            ErrorReloadPlaceHolder(stringResource(R.string.error_occurred_during_loading)) {
+                onEvent(UiEvent.LoadAgainClicked(type))
+            }
             return
         }
     }

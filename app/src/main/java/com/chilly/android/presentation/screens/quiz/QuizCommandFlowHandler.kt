@@ -35,6 +35,9 @@ class QuizCommandFlowHandler @Inject constructor(
 
     private fun handleAnswers(command: QuizCommand.SendAnswers): Flow<CommandEvent> = flow {
         val event = quizRepository.saveAnswers(command.type, command.answers)
+            .onSuccess {
+                prefRepository.setRequestedRecommendation(true)
+            }
             .map { CommandEvent.AnswersSent(command.type) }
             .getOrDefault(CommandEvent.GeneralFail)
         emit(event)

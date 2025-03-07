@@ -13,4 +13,8 @@ interface PreferencesRepository {
     suspend fun hasCompletedMainQuiz(): Boolean
 
     suspend fun setHasCompletedMainQuiz(value: Boolean)
+
+    suspend fun hasRequestedRecommendation(): Boolean
+
+    suspend fun setRequestedRecommendation(value: Boolean)
 }

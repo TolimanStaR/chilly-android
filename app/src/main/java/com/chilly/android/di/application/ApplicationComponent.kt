@@ -6,6 +6,7 @@ import com.chilly.android.data.remote.TokenHolder
 import com.chilly.android.data.remote.api.LoginApi
 import com.chilly.android.data.remote.api.PasswordRecoveryApi
 import com.chilly.android.data.remote.api.QuizApi
+import com.chilly.android.data.remote.api.RecommendationApi
 import com.chilly.android.data.remote.api.UserApi
 import com.chilly.android.domain.repository.PreferencesRepository
 import com.chilly.android.domain.repository.QuizRepository
@@ -29,6 +30,7 @@ interface ApplicationComponent {
     val recoveryApi: PasswordRecoveryApi
     val userApi: UserApi
     val quizApi: QuizApi
+    val recommendationApi: RecommendationApi
 
     val navigatorHolder: NavigatorHolder
     val router: Router

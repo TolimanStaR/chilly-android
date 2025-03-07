@@ -34,6 +34,7 @@ import com.chilly.android.presentation.screens.main.installMainScreen
 import com.chilly.android.presentation.screens.onboarding.installOnboardingComposable
 import com.chilly.android.presentation.screens.profile.installProfileScreen
 import com.chilly.android.presentation.screens.quiz.installQuizScreen
+import com.chilly.android.presentation.screens.result.installRecommendationResultScreen
 import com.chilly.android.presentation.screens.sign_up.installSignUpComposable
 import com.chilly.android.presentation.screens.splash.installSplashComposable
 import com.github.terrakok.cicerone.Router
@@ -72,11 +73,24 @@ fun ChillyNavHost(navController: NavHostController = rememberNavController()) {
             installForgotPasswordScreen(innerPadding)
             installProfileScreen(innerPadding)
             installQuizScreen(innerPadding)
+            installRecommendationResultScreen(innerPadding)
 
             // TODO() replace when implemented
             installStubScreen<Destination.Favorites>("favorites", innerPadding)
             installStubScreen<Destination.History>("history", innerPadding)
         }
+    }
+}
+
+private fun NavBackStackEntry?.topBarState(): TopBarState? {
+    return when {
+        matches<Destination.Main>() -> TopBarState(R.string.main_screen_title)
+        matches<Destination.Profile>() -> TopBarState(R.string.profile_screen_title, showBackButton = true, showProfileAction = false)
+        matches<Destination.History>() -> TopBarState(R.string.history_screen_title)
+        matches<Destination.Favorites>() -> TopBarState(R.string.favorites_screen_title)
+        matches<Destination.Quiz>() -> TopBarState(R.string.quiz_screen_title, showBackButton = true, showProfileAction = false)
+        matches<Destination.RecommendationResult>() -> TopBarState(R.string.app_name, showBackButton = true, showProfileAction = false)
+        else -> null
     }
 }
 
@@ -122,24 +136,12 @@ private class TopBarNavigationHandler(
     }
 }
 
-
 private inline fun <reified T : Destination> NavBackStackEntry?.matches(): Boolean =
     this?.destination?.hasRoute<T>() ?: false
 
 private fun NavBackStackEntry?.matchesAny(vararg routes: Destination): Boolean {
     this ?: return false
     return routes.any { destination.hasRoute(it::class) }
-}
-
-private fun NavBackStackEntry?.topBarState(): TopBarState? {
-    return when {
-        matches<Destination.Main>() -> TopBarState(R.string.main_screen_title)
-        matches<Destination.Profile>() -> TopBarState(R.string.profile_screen_title, showBackButton = true, showProfileAction = false)
-        matches<Destination.History>() -> TopBarState(R.string.history_screen_title)
-        matches<Destination.Favorites>() -> TopBarState(R.string.favorites_screen_title)
-        matches<Destination.Quiz>() -> TopBarState(R.string.quiz_screen_title, showBackButton = true, showProfileAction = false)
-        else -> null
-    }
 }
 
 private fun NavBackStackEntry?.isInBottomDestinations(): Boolean {

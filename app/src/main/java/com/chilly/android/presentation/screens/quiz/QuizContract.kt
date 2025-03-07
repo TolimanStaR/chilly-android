@@ -40,4 +40,6 @@ sealed interface QuizCommand {
 sealed interface QuizNews {
     data object GeneralFail : QuizNews
     data object NavigateBack : QuizNews
+    data object NavigateToRecommendationResult : QuizNews
+    data object NavigateShortQuiz : QuizNews
 }

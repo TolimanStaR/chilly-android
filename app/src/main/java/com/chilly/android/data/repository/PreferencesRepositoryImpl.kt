@@ -13,6 +13,7 @@ import timber.log.Timber
 private val SEEN_ONBOARDING_KEY = booleanPreferencesKey("SEEN_ONBOARDING")
 private val REFRESH_TOKEN_KEY = stringPreferencesKey("REFRESH_TOKEN")
 private val COMPLETED_MAIN_QUIZ = booleanPreferencesKey("COMPLETED_MAIN_QUIZ")
+private val REQUESTED_RECOMMENDATION = booleanPreferencesKey("REQUESTED_RECOMMENDATION")
 
 class PreferencesRepositoryImpl(
     private val context: Context,
@@ -54,6 +55,14 @@ class PreferencesRepositoryImpl(
     override suspend fun setHasCompletedMainQuiz(value: Boolean) {
         Timber.e("setting quiz completion: $value")
         updatePref(COMPLETED_MAIN_QUIZ, value)
+    }
+
+    override suspend fun hasRequestedRecommendation(): Boolean {
+        return getPrefs()[REQUESTED_RECOMMENDATION] ?: false
+    }
+
+    override suspend fun setRequestedRecommendation(value: Boolean) {
+        updatePref(REQUESTED_RECOMMENDATION, value)
     }
 
     private suspend fun getPrefs(): Preferences =

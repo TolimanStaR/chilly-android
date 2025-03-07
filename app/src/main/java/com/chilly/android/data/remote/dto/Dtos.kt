@@ -45,3 +45,20 @@ class QuizAnswerDto(
     @SerialName("answerId")
      val answerId: Int
 )
+
+@Serializable
+class PlaceDto(
+    val id: Int,
+    val address: String,
+    @SerialName("images")
+    val imageUrls: List<String>,
+    val name: String,
+    val openHours: List<String>,
+    val phone: String?,
+    val rating: Float?,
+    @SerialName("social")
+    val socials: List<String>,
+    val website: String?,
+    @SerialName("ypage")
+    val yandexMapsLink: String
+)
