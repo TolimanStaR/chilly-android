@@ -8,6 +8,7 @@ import com.chilly.android.data.remote.api.PasswordRecoveryApi
 import com.chilly.android.data.remote.api.QuizApi
 import com.chilly.android.data.remote.api.RecommendationApi
 import com.chilly.android.data.remote.api.UserApi
+import com.chilly.android.domain.repository.PlaceRepository
 import com.chilly.android.domain.repository.PreferencesRepository
 import com.chilly.android.domain.repository.QuizRepository
 import com.chilly.android.domain.repository.UserRepository
@@ -25,6 +26,7 @@ interface ApplicationComponent {
     val preferencesRepository: PreferencesRepository
     val userRepository: UserRepository
     val quizRepository: QuizRepository
+    val placeRepository: PlaceRepository
 
     val loginApi: LoginApi
     val recoveryApi: PasswordRecoveryApi
