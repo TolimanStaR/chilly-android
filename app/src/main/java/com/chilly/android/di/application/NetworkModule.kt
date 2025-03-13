@@ -5,10 +5,12 @@ import com.chilly.android.data.remote.TokenHolder
 import com.chilly.android.data.remote.api.LoginApi
 import com.chilly.android.data.remote.api.PasswordRecoveryApi
 import com.chilly.android.data.remote.api.QuizApi
+import com.chilly.android.data.remote.api.RecommendationApi
 import com.chilly.android.data.remote.api.UserApi
 import com.chilly.android.data.remote.api.impl.LoginApiImpl
 import com.chilly.android.data.remote.api.impl.PasswordRecoveryApiImpl
 import com.chilly.android.data.remote.api.impl.QuizApiImpl
+import com.chilly.android.data.remote.api.impl.RecommendationApiImpl
 import com.chilly.android.data.remote.api.impl.UserApiImpl
 import com.chilly.android.data.remote.dto.response.ErrorResponse
 import dagger.Module
@@ -81,4 +83,9 @@ class NetworkModule {
     @Singleton
     fun provideQuizApi(client: HttpClient, tokenHolder: TokenHolder): QuizApi =
         QuizApiImpl(client, tokenHolder)
+
+    @Provides
+    @Singleton
+    fun provideRecommendationApi(client: HttpClient, tokenHolder: TokenHolder): RecommendationApi =
+        RecommendationApiImpl(client, tokenHolder)
 }

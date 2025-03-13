@@ -11,11 +11,12 @@ import ru.tinkoff.kotea.core.Store
 inline fun <reified S: Store<*, *, *>, C : Any> ScreenHolder(
     noinline componentFactory: @DisallowComposableCalls Context.() -> C,
     noinline storeFactory: @DisallowComposableCalls C.() -> S,
+    vararg params: Any,
     content: @Composable ScreenHolderStoreScope<S, C>.() -> Unit
 ) {
     val context = LocalContext.current
     val component = remember { context.componentFactory() }
-    val holder = remember(component) { StoreHolder.of { component.storeFactory() } }
+    val holder = remember(component, *params) { StoreHolder.of(params) { component.storeFactory() } }
     val store = holder.getStore(context)
 
     val scope = remember(store, component) { ScreenHolderStoreScope(store, component) }

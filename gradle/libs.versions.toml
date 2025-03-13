@@ -19,6 +19,7 @@ junitJupiter = "5.8.1"
 mockk = "1.13.9"
 coroutinesTest = "1.10.1"
 cicerone = "7.1"
+coil = "3.1.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -51,6 +52,8 @@ mockk = { module = "io.mockk:mockk", version.ref = "mockk"}
 kotlin-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutinesTest" }
 slf4j-nop = { module = "org.slf4j:slf4j-nop", version = "2.0.16" }
 cicerone = { module = "com.github.terrakok:cicerone", version.ref = "cicerone"}
+coil = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil"}
+coil-network = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coil" }
 
 
 [plugins]
