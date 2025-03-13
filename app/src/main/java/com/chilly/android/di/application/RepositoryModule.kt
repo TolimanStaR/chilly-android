@@ -1,6 +1,10 @@
 package com.chilly.android.di.application
 
 import android.content.Context
+import com.chilly.android.data.local.dao.HistoryDao
+import com.chilly.android.data.local.dao.PlaceDao
+import com.chilly.android.data.mapper.HistoryMapper
+import com.chilly.android.data.mapper.PlaceMapper
 import com.chilly.android.data.remote.api.QuizApi
 import com.chilly.android.data.remote.api.UserApi
 import com.chilly.android.data.repository.PlaceRepositoryImpl
@@ -41,6 +45,11 @@ class RepositoryModule {
 
     @Provides
     @Singleton
-    fun providePlaceRepository(): PlaceRepository = PlaceRepositoryImpl()
+    fun providePlaceRepository(
+        placeDao: PlaceDao,
+        historyDao: HistoryDao,
+        placeMapper: PlaceMapper,
+        historyMapper: HistoryMapper
+    ): PlaceRepository = PlaceRepositoryImpl(placeDao, historyDao, placeMapper, historyMapper)
 
 }

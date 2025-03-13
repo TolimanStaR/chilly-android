@@ -1,18 +1,47 @@
 package com.chilly.android.data.repository
 
+import com.chilly.android.data.local.dao.HistoryDao
+import com.chilly.android.data.local.dao.PlaceDao
+import com.chilly.android.data.local.entity.HistoryEntry
+import com.chilly.android.data.mapper.HistoryMapper
+import com.chilly.android.data.mapper.PlaceMapper
 import com.chilly.android.data.remote.dto.PlaceDto
+import com.chilly.android.domain.model.HistoryItem
 import com.chilly.android.domain.repository.PlaceRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import java.util.Date
 
-internal class PlaceRepositoryImpl : PlaceRepository {
-
-    private val cachedPlaces: MutableMap<Int, PlaceDto> = mutableMapOf()
+internal class PlaceRepositoryImpl(
+    private val placeDao: PlaceDao,
+    private val historyDao: HistoryDao,
+    private val placeMapper: PlaceMapper,
+    private val historyMapper: HistoryMapper
+) : PlaceRepository {
 
     override suspend fun placeById(id: Int): Result<PlaceDto> {
-        return cachedPlaces[id]?.let { Result.success(it) }
+        return placeDao.findById(id)
+            ?.let(placeMapper::toDto)
+            ?.let { Result.success(it) }
             ?: Result.failure(NoSuchElementException())
     }
 
     override suspend fun savePlaces(places: List<PlaceDto>) {
-        places.forEach { place -> cachedPlaces[place.id] = place }
+        val entitiesArray = places.map(placeMapper::toEntity).toTypedArray()
+        placeDao.insertPlaces(*entitiesArray)
+
+        val historyEntries = places.map { place ->
+            HistoryEntry(
+                placeId = place.id,
+                timestamp = Date()
+            )
+        }.toTypedArray()
+        historyDao.insertEntry(*historyEntries)
     }
+
+    override fun getHistoryFlow(): Flow<List<HistoryItem>> =
+        historyDao.getHistory()
+            .map { currentHistory ->
+                currentHistory.map(historyMapper::toModel)
+            }
 }
