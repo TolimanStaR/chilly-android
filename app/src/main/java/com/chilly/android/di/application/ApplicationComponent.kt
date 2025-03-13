@@ -2,6 +2,8 @@ package com.chilly.android.di.application
 
 import android.content.Context
 import androidx.compose.material3.SnackbarHostState
+import com.chilly.android.data.local.dao.HistoryDao
+import com.chilly.android.data.local.dao.PlaceDao
 import com.chilly.android.data.remote.TokenHolder
 import com.chilly.android.data.remote.api.LoginApi
 import com.chilly.android.data.remote.api.PasswordRecoveryApi
@@ -20,7 +22,7 @@ import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [RepositoryModule::class, NetworkModule::class, NavigationModule::class])
+@Component(modules = [RepositoryModule::class, NetworkModule::class, NavigationModule::class, DatabaseModule::class])
 interface ApplicationComponent {
 
     val preferencesRepository: PreferencesRepository
@@ -33,6 +35,9 @@ interface ApplicationComponent {
     val userApi: UserApi
     val quizApi: QuizApi
     val recommendationApi: RecommendationApi
+
+    val placeDao: PlaceDao
+    val historyDao: HistoryDao
 
     val navigatorHolder: NavigatorHolder
     val router: Router

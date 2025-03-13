@@ -1,0 +1,21 @@
+package com.chilly.android.data.local.entity
+
+import androidx.room.ColumnInfo
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import androidx.room.Relation
+import java.util.Date
+
+@Entity(tableName = "history_entries")
+data class HistoryEntry(
+    val placeId: Int,
+    val timestamp: Date,
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo("history_entry_id") val id: Int = 0,
+)
+
+data class EntryWithPlace(
+    @Embedded val entry: HistoryEntry,
+    @Embedded val place: PlaceEntity
+)
