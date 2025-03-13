@@ -28,6 +28,7 @@ import androidx.navigation.compose.rememberNavController
 import com.chilly.android.R
 import com.chilly.android.applicationComponent
 import com.chilly.android.presentation.screens.forgot_password.installForgotPasswordScreen
+import com.chilly.android.presentation.screens.history.installHistoryScreen
 import com.chilly.android.presentation.screens.login.installLoginComposable
 import com.chilly.android.presentation.screens.main.installMainScreen
 import com.chilly.android.presentation.screens.onboarding.installOnboardingComposable
@@ -75,10 +76,10 @@ fun ChillyNavHost(navController: NavHostController = rememberNavController()) {
             installQuizScreen(innerPadding)
             installRecommendationResultScreen(innerPadding)
             installPlaceInfoScreen(innerPadding)
+            installHistoryScreen(innerPadding)
 
             // TODO() replace when implemented
             installStubScreen<Destination.Favorites>("favorites", innerPadding)
-            installStubScreen<Destination.History>("history", innerPadding)
         }
     }
 }
