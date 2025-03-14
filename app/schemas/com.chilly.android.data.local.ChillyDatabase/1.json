@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "4b84dccb70a7d73b0a48c423605d42e3",
+    "identityHash": "fd5be078cf25665c9863e30502759d12",
     "entities": [
       {
         "tableName": "history_entries",
@@ -109,12 +109,32 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "favorites",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`favorite_place_id` INTEGER NOT NULL, PRIMARY KEY(`favorite_place_id`))",
+        "fields": [
+          {
+            "fieldPath": "placeId",
+            "columnName": "favorite_place_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "favorite_place_id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4b84dccb70a7d73b0a48c423605d42e3')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'fd5be078cf25665c9863e30502759d12')"
     ]
   }
 }

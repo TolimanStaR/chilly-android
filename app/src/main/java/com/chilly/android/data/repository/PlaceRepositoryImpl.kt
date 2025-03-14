@@ -2,6 +2,7 @@ package com.chilly.android.data.repository
 
 import com.chilly.android.data.local.dao.HistoryDao
 import com.chilly.android.data.local.dao.PlaceDao
+import com.chilly.android.data.local.entity.FavoriteItem
 import com.chilly.android.data.local.entity.HistoryEntry
 import com.chilly.android.data.mapper.HistoryMapper
 import com.chilly.android.data.mapper.PlaceMapper
@@ -39,9 +40,28 @@ internal class PlaceRepositoryImpl(
         historyDao.insertEntry(*historyEntries)
     }
 
+    override suspend fun checkInFavorites(placeId: Int): Boolean {
+        return placeDao.searchInFavorites(placeId) != null
+    }
+
+    override suspend fun updateFavorites(placeId: Int, isInFavorites: Boolean) {
+        val item = FavoriteItem(placeId)
+        if (isInFavorites) {
+            placeDao.markAsFavorite(item)
+        } else {
+            placeDao.removeFromFavorites(item)
+        }
+    }
+
     override fun getHistoryFlow(): Flow<List<HistoryItem>> =
         historyDao.getHistory()
             .map { currentHistory ->
                 currentHistory.map(historyMapper::toModel)
+            }
+
+    override fun getFavoritesFlow(): Flow<List<PlaceDto>> =
+        placeDao.getFavorites()
+            .map { favorites ->
+                favorites.map(placeMapper::toDto)
             }
 }

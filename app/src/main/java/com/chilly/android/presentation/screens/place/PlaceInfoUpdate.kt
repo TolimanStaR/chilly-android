@@ -16,11 +16,14 @@ class PlaceInfoUpdate @Inject constructor(
         when (event) {
             PlaceInfoEvent.UiEvent.ReloadPlace -> {
                 state { copy(errorOccurred = false) }
-                commands(PlaceInfoCommand.LoadPlace(state.placeId))
+                commands(PlaceInfoCommand.LoadPlace(state.placeId), PlaceInfoCommand.CheckFavorite(state.placeId))
             }
             PlaceInfoEvent.UiEvent.ShownLoading -> {
                 state { copy(errorOccurred = false) }
-                commands(PlaceInfoCommand.LoadPlace(state.placeId))
+                commands(PlaceInfoCommand.LoadPlace(state.placeId), PlaceInfoCommand.CheckFavorite(state.placeId))
+            }
+            PlaceInfoEvent.UiEvent.ToggleFavoriteClicked -> {
+                commands(PlaceInfoCommand.ToggleFavorites(state.placeId, state.isInFavorites))
             }
         }
     }
@@ -32,6 +35,9 @@ class PlaceInfoUpdate @Inject constructor(
             }
             is PlaceInfoEvent.CommandEvent.LoadSuccess -> {
                 state { copy(place = event.place) }
+            }
+            is PlaceInfoEvent.CommandEvent.FavoritesCheckResult -> {
+                state { copy(isInFavorites = event.inFavorites) }
             }
         }
     }

@@ -27,6 +27,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.chilly.android.R
 import com.chilly.android.applicationComponent
+import com.chilly.android.presentation.screens.favorites.installFavoritesScreen
 import com.chilly.android.presentation.screens.forgot_password.installForgotPasswordScreen
 import com.chilly.android.presentation.screens.history.installHistoryScreen
 import com.chilly.android.presentation.screens.login.installLoginComposable
@@ -77,9 +78,7 @@ fun ChillyNavHost(navController: NavHostController = rememberNavController()) {
             installRecommendationResultScreen(innerPadding)
             installPlaceInfoScreen(innerPadding)
             installHistoryScreen(innerPadding)
-
-            // TODO() replace when implemented
-            installStubScreen<Destination.Favorites>("favorites", innerPadding)
+            installFavoritesScreen(innerPadding)
         }
     }
 }
@@ -148,18 +147,4 @@ private fun NavBackStackEntry?.matchesAny(vararg routes: Destination): Boolean {
 
 private fun NavBackStackEntry?.isInBottomDestinations(): Boolean {
     return matchesAny(*bottomNavigationRoutes.map { it.route }.toTypedArray())
-}
-
-// TODO() remove when screens are implemented
-private inline fun <reified D : Destination> NavGraphBuilder.installStubScreen(name: String, padding: PaddingValues) {
-    composable<D> {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .padding(padding)
-                .fillMaxSize()
-        ) {
-            Text(name)
-        }
-    }
 }
