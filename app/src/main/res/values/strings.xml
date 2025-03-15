@@ -74,5 +74,21 @@
     <string name="error_occurred_during_loading">Error occurred during loading</string>
     <string name="finish_quiz_button">Finish Quiz</string>
     <string name="quiz_screen_title">Quiz</string>
+    <string name="place_address_title">"Address: "</string>
+    <string name="place_rating_title">"Rating: "</string>
+    <string name="place_maps_button">Open on Maps</string>
+    <string name="place_open_hours_title">"Open hours: "</string>
+    <string name="place_contacts_title">"Contacts: "</string>
+    <string name="place_phone_title">"Phone: "</string>
+
+    <string-array name="week_days">
+        <item>Mon</item>
+        <item>Tue</item>
+        <item>Wed</item>
+        <item>Thu</item>
+        <item>Fri</item>
+        <item>Sat</item>
+        <item>Sun</item>
+    </string-array>
 
 </resources>

@@ -140,11 +140,11 @@ private class TopBarNavigationHandler(
 private inline fun <reified T : Destination> NavBackStackEntry?.matches(): Boolean =
     this?.destination?.hasRoute<T>() ?: false
 
+private fun NavBackStackEntry?.isInBottomDestinations(): Boolean {
+    return matchesAny(*bottomNavigationRoutes.map { it.route }.toTypedArray())
+}
+
 private fun NavBackStackEntry?.matchesAny(vararg routes: Destination): Boolean {
     this ?: return false
     return routes.any { destination.hasRoute(it::class) }
-}
-
-private fun NavBackStackEntry?.isInBottomDestinations(): Boolean {
-    return matchesAny(*bottomNavigationRoutes.map { it.route }.toTypedArray())
 }

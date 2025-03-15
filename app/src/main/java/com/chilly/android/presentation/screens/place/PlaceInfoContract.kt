@@ -6,7 +6,8 @@ data class PlaceInfoState(
     val placeId: Int,
     val place: PlaceDto? = null,
     val isInFavorites: Boolean = false,
-    val errorOccurred: Boolean = false
+    val errorOccurred: Boolean = false,
+    val expandedSections: Set<Section> = emptySet()
 )
 
 sealed interface PlaceInfoEvent {
@@ -14,6 +15,8 @@ sealed interface PlaceInfoEvent {
         data object ShownLoading : UiEvent
         data object ReloadPlace : UiEvent
         data object ToggleFavoriteClicked : UiEvent
+        data class ToggleExpansion(val section: Section) : UiEvent
+        data object BackClicked : UiEvent
     }
 
     sealed interface CommandEvent : PlaceInfoEvent {
@@ -30,6 +33,11 @@ sealed interface PlaceInfoCommand {
 }
 
 sealed interface PlaceInfoNews {
-    data object Navigate : PlaceInfoNews
+    data object NavigateUp : PlaceInfoNews
     data object GeneralFail : PlaceInfoNews
+}
+
+enum class Section {
+    CONTACTS,
+    OPEN_HOURS
 }

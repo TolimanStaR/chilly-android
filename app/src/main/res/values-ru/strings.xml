@@ -74,4 +74,20 @@
     <string name="error_occurred_during_loading">Ошибка при загрузке</string>
     <string name="finish_quiz_button">Завершить квиз</string>
     <string name="quiz_screen_title">Квиз</string>
+    <string name="place_address_title">"Расположение: "</string>
+    <string name="place_rating_title">"Оценка: "</string>
+    <string name="place_maps_button">Открыть на карте</string>
+    <string name="place_open_hours_title">"Время работы: "</string>
+    <string name="place_contacts_title">"Контакты: "</string>
+    <string name="place_phone_title">"Телефон: "</string>
+
+    <string-array name="week_days">
+        <item>Пн</item>
+        <item>Вт</item>
+        <item>Ср</item>
+        <item>Чт</item>
+        <item>Пт</item>
+        <item>Сб</item>
+        <item>Вс</item>
+    </string-array>
 </resources>
