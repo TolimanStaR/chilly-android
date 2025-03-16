@@ -13,6 +13,7 @@ import com.chilly.android.data.remote.api.UserApi
 import com.chilly.android.domain.repository.PlaceRepository
 import com.chilly.android.domain.repository.PreferencesRepository
 import com.chilly.android.domain.repository.QuizRepository
+import com.chilly.android.domain.repository.RecommendationRepository
 import com.chilly.android.domain.repository.UserRepository
 import com.chilly.android.presentation.common.structure.ResourcesHolder
 import com.github.terrakok.cicerone.NavigatorHolder
@@ -29,6 +30,7 @@ interface ApplicationComponent {
     val userRepository: UserRepository
     val quizRepository: QuizRepository
     val placeRepository: PlaceRepository
+    val recommendationRepository: RecommendationRepository
 
     val loginApi: LoginApi
     val recoveryApi: PasswordRecoveryApi
