@@ -3,7 +3,6 @@ package com.chilly.android.presentation.screens.place
 import com.chilly.android.domain.repository.PlaceRepository
 import com.chilly.android.presentation.screens.place.PlaceInfoEvent.CommandEvent
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.flow

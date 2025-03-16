@@ -80,6 +80,10 @@
     <string name="place_open_hours_title">"Время работы: "</string>
     <string name="place_contacts_title">"Контакты: "</string>
     <string name="place_phone_title">"Телефон: "</string>
+    <string name="recommendation_result_loading">Загружаем рекомендации</string>
+    <string name="recommendation_result_title">Ваши Рекомендации</string>
+    <string name="today">Сегодня</string>
+    <string name="yesterday">Вчера</string>
 
     <string-array name="week_days">
         <item>Пн</item>

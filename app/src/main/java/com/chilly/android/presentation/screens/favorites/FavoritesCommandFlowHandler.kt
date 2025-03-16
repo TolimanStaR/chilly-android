@@ -3,10 +3,8 @@ package com.chilly.android.presentation.screens.favorites
 import com.chilly.android.domain.repository.PlaceRepository
 import com.chilly.android.presentation.screens.favorites.FavoritesEvent.CommandEvent
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapMerge
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import ru.tinkoff.kotea.core.CommandsFlowHandler
 import javax.inject.Inject

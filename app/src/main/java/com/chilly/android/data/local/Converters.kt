@@ -1,7 +1,9 @@
 package com.chilly.android.data.local
 
 import androidx.room.TypeConverter
-import java.util.Date
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
 
 class Converters {
 
@@ -18,15 +20,15 @@ class Converters {
     }
 
     @TypeConverter
-    fun dateToLong(value: Date?): Long? {
+    fun dateToLong(value: LocalDateTime?): Long? {
         value ?: return null
-        return value.toInstant().toEpochMilli()
+        return value.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
     }
 
     @TypeConverter
-    fun dateFromLong(value: Long?): Date? {
+    fun dateFromLong(value: Long?): LocalDateTime? {
         value ?: return null
-        return Date(value)
+        return LocalDateTime.ofInstant(Instant.ofEpochMilli(value), ZoneId.systemDefault())
     }
 
     companion object {

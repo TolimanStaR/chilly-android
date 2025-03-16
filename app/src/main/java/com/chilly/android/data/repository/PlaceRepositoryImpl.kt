@@ -11,7 +11,9 @@ import com.chilly.android.domain.model.HistoryItem
 import com.chilly.android.domain.repository.PlaceRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import java.util.Date
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
 
 internal class PlaceRepositoryImpl(
     private val placeDao: PlaceDao,
@@ -34,7 +36,7 @@ internal class PlaceRepositoryImpl(
         val historyEntries = places.map { place ->
             HistoryEntry(
                 placeId = place.id,
-                timestamp = Date()
+                timestamp = LocalDateTime.ofInstant(Instant.now(), ZoneId.systemDefault())
             )
         }.toTypedArray()
         historyDao.insertEntry(*historyEntries)

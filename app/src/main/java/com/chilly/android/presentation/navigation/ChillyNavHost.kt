@@ -2,27 +2,19 @@ package com.chilly.android.presentation.navigation
 
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination.Companion.hasRoute
-import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.chilly.android.R
@@ -90,7 +82,7 @@ private fun NavBackStackEntry?.topBarState(): TopBarState? {
         matches<Destination.History>() -> TopBarState(R.string.history_screen_title)
         matches<Destination.Favorites>() -> TopBarState(R.string.favorites_screen_title)
         matches<Destination.Quiz>() -> TopBarState(R.string.quiz_screen_title, showBackButton = true, showProfileAction = false)
-        matches<Destination.RecommendationResult>() -> TopBarState(R.string.app_name, showBackButton = true, showProfileAction = false)
+        matches<Destination.RecommendationResult>() -> TopBarState(R.string.recommendation_result_title, showBackButton = true, showProfileAction = false)
         else -> null
     }
 }

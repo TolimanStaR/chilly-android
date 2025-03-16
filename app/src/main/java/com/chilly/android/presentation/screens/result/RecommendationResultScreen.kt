@@ -10,11 +10,13 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.chilly.android.R
 import com.chilly.android.applicationComponent
 import com.chilly.android.di.screens.DaggerRecommendationResultComponent
 import com.chilly.android.di.screens.RecommendationResultComponent
@@ -42,7 +44,7 @@ private fun RecommendationResultScreen(
 
     when {
         state.recommendations.isEmpty() && !state.errorOccurred -> {
-            LoadingPlaceholder(null) {
+            LoadingPlaceholder(stringResource(R.string.recommendation_result_loading)) {
                 Timber.i("Loading result (recommendations.size = ${state.recommendations.size})")
                 onEvent(UiEvent.ScreenShown)
             }
@@ -86,7 +88,6 @@ fun NavGraphBuilder.installRecommendationResultScreen(padding: PaddingValues) {
                     .build()
             },
             storeFactory = {
-                Timber.e("new recommendation result store created")
                 store()
             }
         ) {

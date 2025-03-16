@@ -1,10 +1,23 @@
 package com.chilly.android.presentation.screens.history
 
+import com.chilly.android.data.remote.dto.PlaceDto
 import com.chilly.android.domain.model.HistoryItem
 
 data class HistoryState(
     val historyItems: List<HistoryItem> = emptyList()
 )
+
+data class HistoryUiState(
+    val historyItems: List<HistoryListItem> = emptyList()
+)
+
+sealed interface HistoryListItem {
+    @JvmInline
+    value class PlaceItem(val value: PlaceDto) : HistoryListItem
+
+    @JvmInline
+    value class HistoryDateLabel(val value: String) : HistoryListItem
+}
 
 sealed interface HistoryEvent {
     sealed interface UiEvent : HistoryEvent {
