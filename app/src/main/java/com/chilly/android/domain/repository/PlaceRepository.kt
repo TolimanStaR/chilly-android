@@ -17,4 +17,8 @@ interface PlaceRepository {
     fun getHistoryFlow(): Flow<List<HistoryItem>>
 
     fun getFavoritesFlow(): Flow<List<PlaceDto>>
+
+    suspend fun clearHistory()
+
+    suspend fun removeItem(item: HistoryItem)
 }

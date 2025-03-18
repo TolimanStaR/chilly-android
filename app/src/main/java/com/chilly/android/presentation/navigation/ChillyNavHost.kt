@@ -79,7 +79,6 @@ private fun NavBackStackEntry?.topBarState(): TopBarState? {
     return when {
         matches<Destination.Main>() -> TopBarState(R.string.main_screen_title)
         matches<Destination.Profile>() -> TopBarState(R.string.profile_screen_title, showBackButton = true, showProfileAction = false)
-        matches<Destination.History>() -> TopBarState(R.string.history_screen_title)
         matches<Destination.Favorites>() -> TopBarState(R.string.favorites_screen_title)
         matches<Destination.Quiz>() -> TopBarState(R.string.quiz_screen_title, showBackButton = true, showProfileAction = false)
         matches<Destination.RecommendationResult>() -> TopBarState(R.string.recommendation_result_title, showBackButton = true, showProfileAction = false)

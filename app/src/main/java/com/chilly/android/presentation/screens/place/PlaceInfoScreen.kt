@@ -2,6 +2,12 @@ package com.chilly.android.presentation.screens.place
 
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -37,6 +43,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -116,13 +123,17 @@ private fun PlaceInfoScreen(
             }
         }
         val place = state.place ?: return@Scaffold
-
+        val mergedPadding = remember(padding, scaffoldPadding) {
+            PaddingValues(
+                top = maxOf(padding.calculateTopPadding(), scaffoldPadding.calculateTopPadding()),
+                bottom = maxOf(padding.calculateBottomPadding(), scaffoldPadding.calculateBottomPadding())
+            )
+        }
         Column(
             verticalArrangement = Arrangement.spacedBy(12.dp),
             modifier = Modifier
                 .verticalScroll(rememberScrollState())
-                .padding(padding)
-                .padding(scaffoldPadding)
+                .padding(mergedPadding)
                 .padding(16.dp)
         ) {
             // images
@@ -320,7 +331,15 @@ private fun ExpandableSection(
                 Icon(imageVector = icon, contentDescription = null)
             }
         }
-        if (expanded) {
+        AnimatedVisibility(
+            visible = expanded,
+            enter = expandVertically(
+                animationSpec = tween(500)
+            ) + fadeIn(),
+            exit = shrinkVertically(
+                animationSpec = tween(500)
+            ) + fadeOut()
+        ) {
             Column(
                 verticalArrangement = Arrangement.spacedBy(4.dp),
                 modifier = Modifier

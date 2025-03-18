@@ -1,6 +1,7 @@
 package com.chilly.android.data.mapper
 
 import com.chilly.android.data.local.entity.EntryWithPlace
+import com.chilly.android.data.local.entity.HistoryEntry
 import com.chilly.android.data.local.entity.PlaceEntity
 import com.chilly.android.data.remote.dto.PlaceDto
 import com.chilly.android.domain.model.HistoryItem
@@ -43,6 +44,13 @@ class HistoryMapper @Inject constructor(
 
     fun toModel(entity: EntryWithPlace): HistoryItem = HistoryItem(
         place = placeMapper.toDto(entity.place),
-        timestamp = entity.entry.timestamp
+        timestamp = entity.entry.timestamp,
+        id = entity.entry.id
+    )
+
+    fun toEntity(model: HistoryItem) = HistoryEntry(
+        placeId = model.place.id,
+        timestamp = model.timestamp,
+        id = model.id
     )
 }

@@ -66,4 +66,13 @@ internal class PlaceRepositoryImpl(
             .map { favorites ->
                 favorites.map(placeMapper::toDto)
             }
+
+    override suspend fun clearHistory() {
+        historyDao.clearHistory()
+    }
+
+    override suspend fun removeItem(item: HistoryItem) {
+        val entity = historyMapper.toEntity(item)
+        historyDao.removeHistoryEntry(entity)
+    }
 }

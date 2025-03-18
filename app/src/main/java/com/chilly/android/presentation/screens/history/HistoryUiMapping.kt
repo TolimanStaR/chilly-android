@@ -11,7 +11,9 @@ import java.time.temporal.ChronoUnit.DAYS
 import java.util.Locale
 
 suspend fun Resources.mapToHistoryUi(state: HistoryState): HistoryUiState = withContext(Dispatchers.Default) {
-    HistoryUiState(historyItems = mapHistoryList(state.historyItems))
+    HistoryUiState(
+        historyItems = mapHistoryList(state.historyItems)
+    )
 }
 
 private fun Resources.mapHistoryList(items: List<HistoryItem>): List<HistoryListItem> {
@@ -24,7 +26,7 @@ private fun Resources.mapHistoryList(items: List<HistoryItem>): List<HistoryList
                 add(label)
                 lastLabel = label
             }
-            add(HistoryListItem.PlaceItem(item.place))
+            add(HistoryListItem.PlaceItem(item))
         }
     }
 }

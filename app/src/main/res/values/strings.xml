@@ -84,6 +84,11 @@
     <string name="recommendation_result_title">Your Recommendation</string>
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
+    <string name="empty_history_text">History Is Empty</string>
+    <string name="confirm_button">Confirm</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="clear_history_dialog_text">Do you want to delete all items from history?</string>
+    <string name="clear_history_dialog_title">Clear History?</string>
 
     <string-array name="week_days">
         <item>Mon</item>

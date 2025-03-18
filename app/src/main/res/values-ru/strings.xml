@@ -84,6 +84,11 @@
     <string name="recommendation_result_title">Ваши Рекомендации</string>
     <string name="today">Сегодня</string>
     <string name="yesterday">Вчера</string>
+    <string name="empty_history_text">История пуста</string>
+    <string name="confirm_button">Подтвердить</string>
+    <string name="cancel_button">Отмена</string>
+    <string name="clear_history_dialog_text">Хотите удалить все записи из истории?</string>
+    <string name="clear_history_dialog_title">Очистить Историю?</string>
 
     <string-array name="week_days">
         <item>Пн</item>

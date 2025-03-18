@@ -5,5 +5,6 @@ import java.time.LocalDateTime
 
 class HistoryItem(
     val place: PlaceDto,
-    val timestamp: LocalDateTime
+    val timestamp: LocalDateTime,
+    val id: Int
 )
