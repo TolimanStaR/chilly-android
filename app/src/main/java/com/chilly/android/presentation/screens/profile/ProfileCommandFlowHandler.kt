@@ -1,5 +1,7 @@
 package com.chilly.android.presentation.screens.profile
 
+import com.chilly.android.data.remote.dto.UserDto
+import com.chilly.android.data.remote.dto.request.ChangePasswordRequest
 import com.chilly.android.domain.repository.PreferencesRepository
 import com.chilly.android.domain.repository.UserRepository
 import com.chilly.android.presentation.screens.profile.ProfileEvent.CommandEvent
@@ -23,6 +25,8 @@ class ProfileCommandFlowHandler @Inject constructor(
                 is ProfileCommand.LoadLoggedUser -> handleUserLoad()
                 ProfileCommand.LogOut -> handleLogOut()
                 ProfileCommand.ClearInterests -> handleClearInterests()
+                is ProfileCommand.ChangeData -> handleChangeData(it)
+                is ProfileCommand.ChangePassword -> handlePasswordChange(it)
             }
         }
 
@@ -41,5 +45,31 @@ class ProfileCommandFlowHandler @Inject constructor(
             .map(CommandEvent::UserLoaded)
             .getOrDefault(CommandEvent.Fail)
         emit(event)
+    }
+
+    private fun handleChangeData(command: ProfileCommand.ChangeData): Flow<CommandEvent> = flow {
+        userRepository.editUserInfo(
+            UserDto(
+                name = command.name,
+                phone = command.phone,
+                email = command.email
+            )
+        ).onFailure {
+            emit(CommandEvent.ChangeFailed)
+        }.onSuccess {
+            emit(CommandEvent.DataChangedSuccessfully)
+            emit(CommandEvent.UserLoaded(it))
+        }
+    }
+
+    private fun handlePasswordChange(command: ProfileCommand.ChangePassword): Flow<CommandEvent> = flow {
+        userRepository.changePassword(ChangePasswordRequest(
+            newPassword = command.newPassword,
+            oldPassword = command.oldPassword
+        )).onFailure{
+            emit(CommandEvent.ChangeFailed)
+        }.onSuccess {
+            emit(CommandEvent.PasswordChangedSuccessfully)
+        }
     }
 }

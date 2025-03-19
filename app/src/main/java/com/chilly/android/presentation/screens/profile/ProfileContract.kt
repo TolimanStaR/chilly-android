@@ -16,6 +16,11 @@ data class ProfileState(
     val oldPasswordShown: Boolean = false,
     val newPasswordShown: Boolean = false,
     val repeatPasswordShown: Boolean = false,
+    val emailErrorTextRes: Int? = null,
+    val phoneErrorTextRes: Int? = null,
+    val newPasswordErrorRes: Int? = null,
+    val repeatPasswordErrorRes: Int? = null,
+    val isLoading: Boolean = false
 )
 
 sealed interface ProfileEvent {
@@ -40,7 +45,10 @@ sealed interface ProfileEvent {
     sealed interface CommandEvent : ProfileEvent {
         data class UserLoaded(val user: UserDto) : CommandEvent
         data object Fail : CommandEvent
+        data object ChangeFailed : CommandEvent
         data object InterestsCleared : CommandEvent
+        data object DataChangedSuccessfully : CommandEvent
+        data object PasswordChangedSuccessfully : CommandEvent
     }
 }
 
@@ -48,6 +56,8 @@ sealed interface ProfileCommand {
     data object LoadLoggedUser : ProfileCommand
     data object ClearInterests : ProfileCommand
     data object LogOut : ProfileCommand
+    data class ChangeData(val name: String, val phone: String, val email: String) : ProfileCommand
+    data class ChangePassword(val oldPassword: String, val newPassword: String) : ProfileCommand
 }
 
 sealed interface ProfileNews {
@@ -56,4 +66,6 @@ sealed interface ProfileNews {
     data object NavigateOnboarding : ProfileNews
     data object NavigateBack : ProfileNews
     data object InterestsCleared : ProfileNews
+    data object DataChangedSuccessfully : ProfileNews
+    data object PasswordChangedSuccessfully : ProfileNews
 }
