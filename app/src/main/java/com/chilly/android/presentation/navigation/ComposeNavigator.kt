@@ -30,7 +30,7 @@ class ComposeNavigator(
     }
 
     private fun back() {
-        navController.navigateUp()
+        navController.popBackStack()
     }
 
     private fun backTo(command: BackTo) {

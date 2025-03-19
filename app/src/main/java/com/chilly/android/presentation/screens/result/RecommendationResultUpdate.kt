@@ -3,6 +3,7 @@ package com.chilly.android.presentation.screens.result
 import com.chilly.android.presentation.screens.result.RecommendationResultEvent.CommandEvent
 import com.chilly.android.presentation.screens.result.RecommendationResultEvent.UiEvent
 import ru.tinkoff.kotea.core.dsl.DslUpdate
+import timber.log.Timber
 import javax.inject.Inject
 
 class RecommendationResultUpdate @Inject constructor(
@@ -42,6 +43,7 @@ class RecommendationResultUpdate @Inject constructor(
             }
 
             CommandEvent.ClearData -> {
+                Timber.e("result cleared")
                 state {copy(recommendations = emptyList()) }
             }
         }

@@ -74,5 +74,30 @@
     <string name="error_occurred_during_loading">Error occurred during loading</string>
     <string name="finish_quiz_button">Finish Quiz</string>
     <string name="quiz_screen_title">Quiz</string>
+    <string name="place_address_title">"Address: "</string>
+    <string name="place_rating_title">"Rating: "</string>
+    <string name="place_maps_button">Open on Maps</string>
+    <string name="place_open_hours_title">"Open hours: "</string>
+    <string name="place_contacts_title">"Contacts: "</string>
+    <string name="place_phone_title">"Phone: "</string>
+    <string name="recommendation_result_loading">Loading your recommendation</string>
+    <string name="recommendation_result_title">Your Recommendation</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="empty_history_text">History Is Empty</string>
+    <string name="confirm_button">Confirm</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="clear_history_dialog_text">Do you want to delete all items from history?</string>
+    <string name="clear_history_dialog_title">Clear History?</string>
+
+    <string-array name="week_days">
+        <item>Mon</item>
+        <item>Tue</item>
+        <item>Wed</item>
+        <item>Thu</item>
+        <item>Fri</item>
+        <item>Sat</item>
+        <item>Sun</item>
+    </string-array>
 
 </resources>

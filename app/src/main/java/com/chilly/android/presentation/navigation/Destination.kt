@@ -28,10 +28,10 @@ sealed interface Destination : Screen {
     data object Profile : Destination
 
     @Serializable
-    data object History : Destination // TODO
+    data object History : Destination
 
     @Serializable
-    data object Favorites : Destination // TODO
+    data object Favorites : Destination
 
     @Serializable
     data object RecommendationResult : Destination

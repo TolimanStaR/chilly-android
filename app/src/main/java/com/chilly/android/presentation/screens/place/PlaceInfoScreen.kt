@@ -1,84 +1,361 @@
 package com.chilly.android.presentation.screens.place
 
+import android.content.Intent
+import android.net.Uri
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.compose.composable
-import com.chilly.android.presentation.common.structure.NewsCollector
-import com.chilly.android.presentation.common.structure.ScreenHolder
-import com.chilly.android.presentation.common.structure.collectState
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withLink
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import coil3.compose.SubcomposeAsyncImage
+import com.chilly.android.R
 import com.chilly.android.applicationComponent
-import com.chilly.android.di.screens.PlaceInfoComponent
 import com.chilly.android.di.screens.DaggerPlaceInfoComponent
+import com.chilly.android.di.screens.PlaceInfoComponent
+import com.chilly.android.presentation.common.components.ChillyButton
 import com.chilly.android.presentation.common.components.ErrorReloadPlaceHolder
 import com.chilly.android.presentation.common.components.LoadingPlaceholder
-import com.chilly.android.presentation.theme.ChillyTheme
+import com.chilly.android.presentation.common.structure.NewsCollector
+import com.chilly.android.presentation.common.structure.ScreenHolder
+import com.chilly.android.presentation.common.structure.collectState
 import com.chilly.android.presentation.navigation.Destination
 import com.chilly.android.presentation.screens.place.PlaceInfoEvent.UiEvent
+import com.chilly.android.presentation.theme.ChillyTheme
+import com.chilly.android.presentation.theme.LinkColor
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun PlaceInfoScreen(
     state: PlaceInfoState,
     padding: PaddingValues,
     onEvent: (UiEvent) -> Unit
 ) {
-    when {
-        state.place == null && !state.errorOccurred -> {
-            LoadingPlaceholder(null) {
-                onEvent(UiEvent.ShownLoading)
-            }
-            return
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    val place = state.place ?: return@TopAppBar
+                    Text(text = place.name)
+                },
+                navigationIcon = {
+                    IconButton(
+                        onClick = {
+                            onEvent(UiEvent.BackClicked)
+                        }
+                    ) {
+                        Icon(imageVector = Icons.AutoMirrored.Default.ArrowBack, contentDescription = null)
+                    }
+                }
+            )
         }
-        state.place == null && state.errorOccurred -> {
-            ErrorReloadPlaceHolder(null) {
-                onEvent(UiEvent.ReloadPlace)
+    ) { scaffoldPadding ->
+        when {
+            state.place == null && !state.errorOccurred -> {
+                LoadingPlaceholder(null) {
+                    onEvent(UiEvent.ShownLoading)
+                }
+                return@Scaffold
             }
-            return
+            state.place == null && state.errorOccurred -> {
+                ErrorReloadPlaceHolder(null) {
+                    onEvent(UiEvent.ReloadPlace)
+                }
+                return@Scaffold
+            }
         }
-    }
-    if (state.place == null) return
-
-    Column(
-        verticalArrangement = Arrangement.spacedBy(12.dp),
-        modifier = Modifier
-            .padding(padding)
-            .padding(16.dp)
-            .verticalScroll(rememberScrollState())
-    ) {
-        SubcomposeAsyncImage(
-            model = state.place.imageUrls.firstOrNull(),
-            contentDescription = null,
-            contentScale = ContentScale.Fit,
-            modifier = Modifier.fillMaxSize(),
-            loading = {
-                Box {
-                    CircularProgressIndicator()
+        val place = state.place ?: return@Scaffold
+        val mergedPadding = remember(padding, scaffoldPadding) {
+            PaddingValues(
+                top = maxOf(padding.calculateTopPadding(), scaffoldPadding.calculateTopPadding()),
+                bottom = maxOf(padding.calculateBottomPadding(), scaffoldPadding.calculateBottomPadding())
+            )
+        }
+        Column(
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .padding(mergedPadding)
+                .padding(16.dp)
+        ) {
+            // images
+            val pagerState = rememberPagerState { place.imageUrls.size }
+            HorizontalPager(
+                state = pagerState,
+                pageSpacing = 8.dp,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(300.dp)
+            ) { page ->
+                SubcomposeAsyncImage(
+                    model = place.imageUrls[page],
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    loading = {
+                        Box(contentAlignment = Alignment.Center) {
+                            CircularProgressIndicator()
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(RoundedCornerShape(12.dp))
+                )
+            }
+            Row(
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            ) {
+                repeat(pagerState.pageCount) { index ->
+                    val color = with(MaterialTheme.colorScheme) {
+                        if (index == pagerState.currentPage) onSurface else secondary
+                    }
+                    Box(
+                        modifier = Modifier
+                            .size(16.dp)
+                            .padding(4.dp)
+                            .clip(CircleShape)
+                            .background(color)
+                    )
                 }
             }
-        )
-        Text(
-            text = state.place.name,
-            style = MaterialTheme.typography.headlineMedium
-        )
-        Text(text = state.place.address)
+            // title & isFavorite
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = place.name,
+                    style = MaterialTheme.typography.headlineMedium
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                IconButton(
+                    onClick = {
+                        onEvent(UiEvent.ToggleFavoriteClicked)
+                    }
+                ) {
+                    val icon = if (state.isInFavorites) {
+                        Icons.Filled.Favorite
+                    } else {
+                        Icons.Outlined.FavoriteBorder
+                    }
+                    val color = with(MaterialTheme.colorScheme) {
+                        if (state.isInFavorites)  primary else onSurface
+                    }
+                    Icon(
+                        imageVector = icon,
+                        contentDescription = null,
+                        tint = color
+                    )
+                }
+            }
+            HorizontalDivider()
+            // data
+            // address + rating -> button 'open on map' -> open hours section (expandable) -> contacts section (expandable)
+            Column {
+                HeadlineText(stringResource(R.string.place_address_title))
+                Text(place.address)
+            }
+            place.rating?.let { rating ->
+                Row {
+                    HeadlineText(stringResource(R.string.place_rating_title))
+                    Text(rating.toString())
+                    // TODO stars for rating
+                }
+            }
+
+            val uriHandler = LocalUriHandler.current
+            val context = LocalContext.current
+
+            ChillyButton(
+                textRes = R.string.place_maps_button,
+                onClick = {
+                    runCatching {
+                        uriHandler.openUri(place.yandexMapsLink)
+                    }
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
+            ExpandableSection(
+                expanded = Section.OPEN_HOURS in state.expandedSections,
+                onToggle = {
+                    onEvent(UiEvent.ToggleExpansion(Section.OPEN_HOURS))
+                },
+                title = {
+                    HeadlineText(stringResource(R.string.place_open_hours_title))
+                }
+            ) {
+                val dayMapping = stringArrayResource(R.array.week_days)
+                place.openHours.forEachIndexed { index, openRange ->
+                    Row {
+                        HeadlineText("${dayMapping[index]} - ")
+                        Text(openRange)
+                    }
+                }
+            }
+
+            ExpandableSection(
+                expanded = Section.CONTACTS in state.expandedSections,
+                onToggle = {
+                    onEvent(UiEvent.ToggleExpansion(Section.CONTACTS))
+                },
+                title = {
+                    HeadlineText(stringResource(R.string.place_contacts_title))
+                }
+            ) {
+                place.phone?.let { phoneNumber ->
+                    Row {
+                        HeadlineText(stringResource(R.string.place_phone_title))
+                        Text(
+                            text = clickableText(phoneNumber) {
+                                Intent(Intent.ACTION_DIAL).also {
+                                    it.data = Uri.parse("tel:$phoneNumber")
+                                    context.startActivity(it)
+                                }
+                            }
+                        )
+                    }
+                }
+                place.socials.forEach { link ->
+                    val socialName = link.checkSocial() ?: return@forEach
+                    Row {
+                        HeadlineText("$socialName: ")
+                        Text(
+                            clickableText(link) {
+                                runCatching {
+                                    uriHandler.openUri(link)
+                                }
+                            }
+                        )
+                    }
+                }
+            }
+        }
     }
+}
+
+private fun clickableText(
+    url: String,
+    text: String = url,
+    onClick: () -> Unit
+): AnnotatedString = buildAnnotatedString {
+    withLink(
+        LinkAnnotation.Url(url = url) { onClick() }
+    ) {
+        withStyle(SpanStyle(color = LinkColor, textDecoration = TextDecoration.Underline)) {
+            append(text)
+        }
+    }
+}
+
+@Composable
+private fun HeadlineText(text: String) {
+    Text(
+        text = text,
+        style = MaterialTheme.typography.bodyMedium,
+        fontWeight = FontWeight.Medium
+    )
+}
+
+@Composable
+private fun ExpandableSection(
+    expanded: Boolean,
+    onToggle: () -> Unit,
+    title: @Composable () -> Unit,
+    content: @Composable ColumnScope.() -> Unit,
+) {
+    Column {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            title()
+            IconButton(
+                onClick = onToggle
+            ) {
+                val icon = if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown
+                Icon(imageVector = icon, contentDescription = null)
+            }
+        }
+        AnimatedVisibility(
+            visible = expanded,
+            enter = expandVertically(
+                animationSpec = tween(500)
+            ) + fadeIn(),
+            exit = shrinkVertically(
+                animationSpec = tween(500)
+            ) + fadeOut()
+        ) {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(4.dp),
+                modifier = Modifier
+                    .padding(start = 16.dp)
+            ) {
+                content()
+            }
+        }
+    }
+}
+
+private fun String.checkSocial(): String? = when {
+    "t.me" in this -> "Telegram"
+    "vk.com" in this -> "VK"
+    "wa.me" in this -> "WhatsApp"
+    else -> null
 }
 
 fun NavGraphBuilder.installPlaceInfoScreen(padding: PaddingValues) {
