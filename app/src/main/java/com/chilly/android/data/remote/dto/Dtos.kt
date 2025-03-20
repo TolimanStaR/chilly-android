@@ -12,7 +12,7 @@ class UserDto(
     @SerialName("firstname")
     val name: String,
     @SerialName("lastname")
-    val lastname: String?
+    val lastname: String? = null
 )
 
 @Serializable

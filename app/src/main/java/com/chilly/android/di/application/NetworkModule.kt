@@ -43,7 +43,12 @@ class NetworkModule {
             handleResponseExceptionWithRequest { cause, _ ->
                 when(cause) {
                     is ClientRequestException -> {
-                        val response = cause.response.body<ErrorResponse>()
+                        val response = runCatching {
+                            cause.response.body<ErrorResponse>()
+                        }.getOrDefault(
+                            ErrorResponse(cause.response.status.value, "Gateway denial")
+                        )
+
                         throw HandledException(response)
                     }
                 }

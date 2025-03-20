@@ -19,6 +19,8 @@ class ProfileNewsCollector @Inject constructor(
             ProfileNews.NavigateBack -> router.exit()
             ProfileNews.NavigateOnboarding -> router.navigateTo(Destination.Onboarding())
             ProfileNews.InterestsCleared -> snackbarShower.show(R.string.interests_cleared_snackbar)
+            ProfileNews.DataChangedSuccessfully -> snackbarShower.show(R.string.profile_data_change)
+            ProfileNews.PasswordChangedSuccessfully -> snackbarShower.show(R.string.password_changed)
         }
     }
 

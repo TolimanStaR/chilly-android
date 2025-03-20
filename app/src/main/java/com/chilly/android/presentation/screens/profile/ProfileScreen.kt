@@ -1,6 +1,7 @@
 package com.chilly.android.presentation.screens.profile
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
@@ -13,10 +14,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
@@ -72,19 +75,20 @@ private fun ProfileScreen(
             )
             ChillyTextField(
                 value = state.emailText,
-                onValueChange = { onEvent(UiEvent.NameTextChanged(it)) },
+                onValueChange = { onEvent(UiEvent.EmailTextChanged(it)) },
+                errorText = state.emailErrorTextRes?.let { stringResource(it) },
                 modifier = Modifier.fillMaxWidth()
-
             )
             ChillyTextField(
                 value = state.phoneText,
                 onValueChange = { onEvent(UiEvent.PhoneTextChanged(it)) },
+                errorText = state.phoneErrorTextRes?.let { stringResource(it) },
                 modifier = Modifier.fillMaxWidth()
             )
             ChillyButton(
                 textRes = R.string.change_info_button,
                 onClick = { onEvent(UiEvent.ChangeDataClicked) },
-                enabled = state.changeDataEnabled,
+                enabled = state.changeDataEnabled && !state.isLoading,
                 modifier = Modifier.fillMaxWidth()
             )
         }
@@ -103,6 +107,7 @@ private fun ProfileScreen(
                 labelTextRes = R.string.new_password_label,
                 placeholderTextRes = R.string.new_password_label,
                 onVisibilityToggle = { onEvent(UiEvent.NewPasswordVisibilityToggled) },
+                errorText = state.newPasswordErrorRes?.let { stringResource(it) },
                 passwordShown = state.newPasswordShown,
                 onValueChange = { onEvent(UiEvent.NewPasswordChanged(it)) },
                 modifier = Modifier.fillMaxWidth()
@@ -112,13 +117,14 @@ private fun ProfileScreen(
                 labelTextRes = R.string.repeat_password_label,
                 placeholderTextRes = R.string.repeat_password_label,
                 onVisibilityToggle = { onEvent(UiEvent.RepeatPasswordVisibilityToggled) },
+                errorText = state.repeatPasswordErrorRes?.let { stringResource(it) },
                 passwordShown = state.repeatPasswordShown,
                 onValueChange = { onEvent(UiEvent.RepeatPasswordChanged(it)) },
                 modifier = Modifier.fillMaxWidth()
             )
             ChillyButton(
                 textRes = R.string.change_passowrd_button,
-                enabled = state.changePasswordEnabled,
+                enabled = state.changePasswordEnabled && !state.isLoading,
                 onClick = { onEvent(UiEvent.ChangePasswordClicked) },
                 modifier = Modifier.fillMaxWidth()
             )
@@ -142,6 +148,11 @@ private fun ProfileScreen(
             onClick = { onEvent(UiEvent.LogOutClicked) },
             modifier = Modifier.fillMaxWidth()
         )
+        if (state.isLoading) {
+            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator()
+            }
+        }
     }
 }
 

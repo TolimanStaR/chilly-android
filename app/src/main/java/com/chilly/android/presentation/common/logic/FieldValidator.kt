@@ -6,6 +6,10 @@ import javax.inject.Inject
 
 class FieldValidator @Inject constructor() {
 
+    /**
+     * checks the string with the Regular expression that associated with given type
+     * if check fails returns resource id for error representation
+     */
     @StringRes
     fun checkError(value: String, validationType: ValidationType): Int? = when {
         validationType.regex.matches(value) -> null
