@@ -21,6 +21,7 @@ coroutinesTest = "1.10.1"
 cicerone = "7.1"
 coil = "3.1.0"
 room = "2.6.1"
+googleLocationService = "21.3.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -58,6 +59,7 @@ coil-network = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = 
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
+google-location-service = { module = "com.google.android.gms:play-services-location", version.ref = "googleLocationService"}
 
 
 [plugins]
