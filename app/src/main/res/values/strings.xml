@@ -90,6 +90,8 @@
     <string name="clear_history_dialog_text">Do you want to delete all items from history?</string>
     <string name="clear_history_dialog_title">Clear History?</string>
     <string name="profile_data_change">Data changed successfully</string>
+    <string name="same_location_refresh">Same location was used to refresh</string>
+    <string name="nearby_places_title">Places near you</string>
 
     <string-array name="week_days">
         <item>Mon</item>

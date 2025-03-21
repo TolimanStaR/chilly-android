@@ -52,6 +52,10 @@ class MainUpdate @Inject constructor(
             is CommandEvent.FeedUpdated -> {
                 state { copy(feed = event.newFeed, isLoading = false, isRefreshing = false) }
             }
+
+            CommandEvent.SameLocationRefresh -> {
+                news(MainNews.SameLocationWasUsed)
+            }
         }
     }
 }

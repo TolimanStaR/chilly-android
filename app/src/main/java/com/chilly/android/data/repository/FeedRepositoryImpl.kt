@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import timber.log.Timber
+import kotlin.math.hypot
 
 class FeedRepositoryImpl(
     private val feedApi: FeedApi,
@@ -34,13 +35,15 @@ class FeedRepositoryImpl(
         return fetchFeedPage(currentLocation)
     }
 
-    override suspend fun refreshFeed(): Result<Unit> {
+    override suspend fun refreshFeed(): Result<Boolean> {
+        val prevLocation = locationForFeed
         updateLocation()
         val currentLocation = locationForFeed
             ?: return Result.failure(FeedRepository.LocationNotAvailableException())
         lastPage = 0
 
         return fetchFeedPage(currentLocation, clear = true)
+            .map { currentLocation.differ(prevLocation, 0.001) }
     }
 
     private suspend fun updateLocation() {
@@ -73,4 +76,9 @@ class FeedRepositoryImpl(
 
                 placeRepository.savePlaces(newPage, writeToHistory = false)
             }
+
+    private fun LocationRepository.LocationData.differ(other: LocationRepository.LocationData?, threshold: Double): Boolean {
+        other ?: return true
+        return hypot(latitude - other.latitude, longitude - other.longitude) >= threshold
+    }
 }

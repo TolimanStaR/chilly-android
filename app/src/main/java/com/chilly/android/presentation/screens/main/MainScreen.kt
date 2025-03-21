@@ -1,5 +1,6 @@
 package com.chilly.android.presentation.screens.main
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,6 +13,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
@@ -26,6 +30,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
@@ -39,6 +45,7 @@ import com.chilly.android.di.screens.MainComponent
 import com.chilly.android.presentation.common.components.ChillyButton
 import com.chilly.android.presentation.common.components.PlaceImagesPager
 import com.chilly.android.presentation.common.components.SizeParameter
+import com.chilly.android.presentation.common.components.animatedAlpha
 import com.chilly.android.presentation.common.structure.NewsCollector
 import com.chilly.android.presentation.common.structure.ScreenHolder
 import com.chilly.android.presentation.common.structure.collectState
@@ -72,10 +79,7 @@ private fun MainScreen(
             modifier = Modifier.weight(1f)
         ) {
             if (state.feed.isEmpty()) {
-                Text(
-                    text ="here is going to be shimmer",
-                    modifier = Modifier.align(Alignment.Center)
-                )
+                FeedShimmer()
                 return@PullToRefreshBox
             }
 
@@ -91,13 +95,12 @@ private fun MainScreen(
                     onEvent(UiEvent.LastFeedElementIsVisible)
                 }
             }
-
             LazyColumn(
                 state = lazyColumnState,
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 item {
-                    Text("Places near you")
+                    Text(stringResource(R.string.nearby_places_title))
                 }
                 items(state.feed) { place ->
                     ElevatedCard(
@@ -122,6 +125,7 @@ private fun MainScreen(
                             Text(
                                 text = place.address
                             )
+                            Text(text = "lat = ${place.latitude}, lon = ${place.longitude}")
                         }
                     }
                 }
@@ -159,6 +163,38 @@ fun NavGraphBuilder.installMainScreen(padding: PaddingValues) {
             val state = collectState()
             NewsCollector(component.newsCollector)
             MainScreen(state.value, padding, store::dispatch)
+        }
+    }
+}
+
+
+@Composable
+private fun FeedShimmer() {
+    val alpha by animatedAlpha(to = 0.1f, duration = 300)
+
+    Column(
+        modifier = Modifier
+            .alpha(alpha)
+            .verticalScroll(rememberScrollState())
+    ) {
+        repeat(5) {
+            Box(
+                Modifier
+                    .fillMaxWidth()
+                    .height(200.dp)
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(MaterialTheme.colorScheme.secondary)
+            )
+            Spacer(Modifier.height(4.dp))
+            Box(
+                Modifier
+                    .fillMaxWidth(0.7f)
+                    .height(24.dp)
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(MaterialTheme.colorScheme.secondary)
+
+            )
+            Spacer(Modifier.height(16.dp))
         }
     }
 }

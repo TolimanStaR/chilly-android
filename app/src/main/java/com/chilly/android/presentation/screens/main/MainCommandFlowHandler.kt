@@ -49,5 +49,10 @@ class MainCommandFlowHandler @Inject constructor(
             .onFailure {
                 emit(CommandEvent.FeedUpdateFailed)
             }
+            .onSuccess { isInNewLocation ->
+                if (!isInNewLocation) {
+                    emit(CommandEvent.SameLocationRefresh)
+                }
+            }
     }
 }

@@ -9,7 +9,7 @@ interface FeedRepository {
 
     suspend fun requestNextPage(): Result<Unit>
 
-    suspend fun refreshFeed(): Result<Unit>
+    suspend fun refreshFeed(): Result<Boolean>
 
     class LocationNotAvailableException : Exception()
 }

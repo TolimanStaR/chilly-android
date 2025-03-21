@@ -90,6 +90,8 @@
     <string name="clear_history_dialog_text">Хотите удалить все записи из истории?</string>
     <string name="clear_history_dialog_title">Очистить Историю?</string>
     <string name="profile_data_change">Данные изменены</string>
+    <string name="same_location_refresh">Местоположение не изменилось</string>
+    <string name="nearby_places_title">Места рядом с вами</string>
 
     <string-array name="week_days">
         <item>Пн</item>

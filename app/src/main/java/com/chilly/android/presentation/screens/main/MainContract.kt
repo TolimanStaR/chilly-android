@@ -21,6 +21,7 @@ sealed interface MainEvent {
         data class CheckQuizResult(val hasBeenCompleted: Boolean) : CommandEvent
         data class FeedUpdated(val newFeed: List<PlaceDto>) : CommandEvent
         data object FeedUpdateFailed : CommandEvent
+        data object SameLocationRefresh : CommandEvent
     }
 }
 
@@ -37,5 +38,7 @@ sealed interface MainNews {
     data object NavigateMainQuiz : MainNews
     data object NavigateShortQuiz : MainNews
     data object GeneralFail : MainNews
+    data object SameLocationWasUsed : MainNews
+
     data class NavigatePlace(val placeId: Int) : MainNews
 }
