@@ -7,6 +7,7 @@ import com.chilly.android.domain.repository.LocationRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
+import timber.log.Timber
 
 class FeedRepositoryImpl(
     private val feedApi: FeedApi,
@@ -45,6 +46,10 @@ class FeedRepositoryImpl(
         locationRepository.getCurrentLocation()
             .onSuccess {
                 locationForFeed = it
+                Timber.i("location updated: $it")
+            }
+            .onFailure {
+                Timber.e(it)
             }
     }
 
@@ -56,6 +61,7 @@ class FeedRepositoryImpl(
                         addAll(newPage)
                     }
                 }
+                Timber.i("new feed page($lastPage): $newPage")
             }
             .map { }
 }

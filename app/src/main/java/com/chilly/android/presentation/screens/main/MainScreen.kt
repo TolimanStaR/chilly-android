@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -28,15 +29,21 @@ import com.chilly.android.presentation.common.components.SizeParameter
 import com.chilly.android.presentation.common.components.TextInDialogWindow
 import com.chilly.android.presentation.common.structure.NewsCollector
 import com.chilly.android.presentation.common.structure.ScreenHolder
+import com.chilly.android.presentation.common.structure.collectState
 import com.chilly.android.presentation.navigation.Destination
 import com.chilly.android.presentation.screens.main.MainEvent.UiEvent
 import com.chilly.android.presentation.theme.ChillyTheme
 
 @Composable
 private fun MainScreen(
+    state: MainState,
     scaffoldPadding: PaddingValues,
     onEvent: (UiEvent) -> Unit
 ) {
+    LaunchedEffect(Unit) {
+        onEvent(UiEvent.ScreenIsShown)
+    }
+
     Column (
         verticalArrangement = Arrangement.Bottom,
         modifier = Modifier
@@ -78,8 +85,9 @@ fun NavGraphBuilder.installMainScreen(padding: PaddingValues) {
             },
             storeFactory = { store() }
         ) {
+            val state = collectState()
             NewsCollector(component.newsCollector)
-            MainScreen(padding, store::dispatch)
+            MainScreen(state.value, padding, store::dispatch)
         }
     }
 }
@@ -90,6 +98,7 @@ fun NavGraphBuilder.installMainScreen(padding: PaddingValues) {
 private fun PreviewMainScreen() {
     ChillyTheme {
         MainScreen(
+            state = MainState(),
             PaddingValues(),
             onEvent = {}
         )

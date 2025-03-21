@@ -4,7 +4,6 @@ import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
-import android.os.Build
 import com.chilly.android.di.application.ApplicationComponent
 import com.chilly.android.di.application.DaggerApplicationComponent
 import timber.log.Timber
