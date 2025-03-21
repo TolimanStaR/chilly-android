@@ -21,6 +21,7 @@ class MainNewsCollector @Inject constructor(
             MainNews.NavigateMainQuiz -> router.navigateTo(Destination.Quiz(QuizType.BASE))
             MainNews.NavigateShortQuiz -> router.navigateTo(Destination.Quiz(QuizType.SHORT))
             MainNews.GeneralFail -> snackbarShower.show(R.string.general_fail_message)
+            is MainNews.NavigatePlace -> router.navigateTo(Destination.PlaceInfo(value.placeId))
         }
     }
 }

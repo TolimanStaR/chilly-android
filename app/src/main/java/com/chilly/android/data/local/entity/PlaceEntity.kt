@@ -16,5 +16,9 @@ data class PlaceEntity(
     val rating: Float?,
     val socials: List<String>,
     val website: String?,
-    val yandexMapsLink: String
+    val yandexMapsLink: String,
+    @ColumnInfo(defaultValue = "0.0")
+    val latitude: Double,
+    @ColumnInfo(defaultValue = "0.0")
+    val longitude: Double
 )

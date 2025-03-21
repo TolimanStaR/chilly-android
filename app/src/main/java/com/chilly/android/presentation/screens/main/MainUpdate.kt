@@ -3,7 +3,6 @@ package com.chilly.android.presentation.screens.main
 import com.chilly.android.presentation.screens.main.MainEvent.CommandEvent
 import com.chilly.android.presentation.screens.main.MainEvent.UiEvent
 import ru.tinkoff.kotea.core.dsl.DslUpdate
-import timber.log.Timber
 import javax.inject.Inject
 
 class MainUpdate @Inject constructor(
@@ -19,15 +18,20 @@ class MainUpdate @Inject constructor(
             // check whether person has completed main questionnaire if yes then go to to small questionnaire otherwise open full questionaire
             UiEvent.GetRecommendationClicked -> commands(MainCommand.CheckMainQuiz)
             UiEvent.LastFeedElementIsVisible -> {
-                Timber.i("lastItem visible event received")
+                state { copy(isLoading = true) }
+                commands(MainCommand.LoadNewFeedPage)
             }
             UiEvent.PulledToRefresh -> {
-                Timber.i("pulled to refresh event received")
+                state { copy(isRefreshing = true) }
+                commands(MainCommand.RefreshFeed)
             }
             UiEvent.ScreenIsShown -> {
-                Timber.i("screen shown event received")
-                commands(MainCommand.LoadFeed, MainCommand.LoadNewFeedPage)
                 state { copy(isLoading = true) }
+                commands(MainCommand.LoadFeed, MainCommand.LoadNewFeedPage)
+            }
+
+            is UiEvent.PlaceClicked -> {
+                news(MainNews.NavigatePlace(event.placeId))
             }
         }
     }
@@ -42,11 +46,11 @@ class MainUpdate @Inject constructor(
                 }
             }
             CommandEvent.FeedUpdateFailed -> {
-                state { copy(isLoading = false) }
+                state { copy(isLoading = false, isRefreshing = false) }
                 news(MainNews.GeneralFail)
             }
             is CommandEvent.FeedUpdated -> {
-                state { copy(feed = event.newFeed, isLoading = false) }
+                state { copy(feed = event.newFeed, isLoading = false, isRefreshing = false) }
             }
         }
     }

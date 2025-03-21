@@ -4,6 +4,7 @@ import com.chilly.android.data.remote.api.FeedApi
 import com.chilly.android.data.remote.dto.PlaceDto
 import com.chilly.android.domain.repository.FeedRepository
 import com.chilly.android.domain.repository.LocationRepository
+import com.chilly.android.domain.repository.PlaceRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -11,6 +12,7 @@ import timber.log.Timber
 
 class FeedRepositoryImpl(
     private val feedApi: FeedApi,
+    private val placeRepository: PlaceRepository,
     private val locationRepository: LocationRepository
 ) : FeedRepository {
 
@@ -38,7 +40,7 @@ class FeedRepositoryImpl(
             ?: return Result.failure(FeedRepository.LocationNotAvailableException())
         lastPage = 0
 
-        return fetchFeedPage(currentLocation)
+        return fetchFeedPage(currentLocation, clear = true)
     }
 
     private suspend fun updateLocation() {
@@ -53,15 +55,22 @@ class FeedRepositoryImpl(
             }
     }
 
-    private suspend fun fetchFeedPage(location: LocationRepository.LocationData): Result<Unit> =
+    private suspend fun fetchFeedPage(location: LocationRepository.LocationData, clear: Boolean = false): Result<Unit> =
         feedApi.getFeedPage(location, lastPage)
-            .onSuccess { newPage ->
+            .map { newPage ->
+                Timber.i("new feed page($lastPage): $newPage")
+
                 currentFeedFlow.update { previous ->
-                    previous.toMutableList().apply {
-                        addAll(newPage)
+                    if (!clear) {
+                        previous.toMutableList().apply {
+
+                            addAll(newPage)
+                        }
+                    } else {
+                        newPage
                     }
                 }
-                Timber.i("new feed page($lastPage): $newPage")
+
+                placeRepository.savePlaces(newPage, writeToHistory = false)
             }
-            .map { }
 }

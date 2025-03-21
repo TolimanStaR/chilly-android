@@ -82,9 +82,11 @@ class RepositoryModule {
     @Singleton
     fun provideFeedRepository(
         feedApi: FeedApi,
+        placeRepository: PlaceRepository,
         locationRepository: LocationRepository
     ): FeedRepository = FeedRepositoryImpl(
         feedApi,
+        placeRepository,
         locationRepository
     )
 

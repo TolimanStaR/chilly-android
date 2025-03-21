@@ -4,6 +4,7 @@ import com.chilly.android.data.remote.dto.PlaceDto
 
 data class MainState(
     val feed: List<PlaceDto> = emptyList(),
+    val isRefreshing: Boolean = false,
     val isLoading: Boolean = false
 )
 
@@ -13,6 +14,7 @@ sealed interface MainEvent {
         data object ScreenIsShown : UiEvent
         data object PulledToRefresh : UiEvent
         data object LastFeedElementIsVisible : UiEvent
+        data class PlaceClicked(val placeId: Int) : UiEvent
     }
 
     sealed interface CommandEvent : MainEvent {
@@ -35,4 +37,5 @@ sealed interface MainNews {
     data object NavigateMainQuiz : MainNews
     data object NavigateShortQuiz : MainNews
     data object GeneralFail : MainNews
+    data class NavigatePlace(val placeId: Int) : MainNews
 }
