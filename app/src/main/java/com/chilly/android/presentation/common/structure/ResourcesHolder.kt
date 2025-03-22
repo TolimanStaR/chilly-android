@@ -34,11 +34,11 @@ class SnackbarShower @Inject constructor(
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
-    fun show(@StringRes resId: Int) {
+    fun show(@StringRes resId: Int) = show(resourcesHolder.getString(resId))
+
+    fun show(text: String) {
         scope.launch {
-            snackbarHostState.showSnackbar(resourcesHolder.getString(resId))
+            snackbarHostState.showSnackbar(text)
         }
     }
-
-    suspend fun show(text: String) = snackbarHostState.showSnackbar(text)
 }

@@ -23,6 +23,7 @@ class MainNewsCollector @Inject constructor(
             MainNews.GeneralFail -> snackbarShower.show(R.string.general_fail_message)
             is MainNews.NavigatePlace -> router.navigateTo(Destination.PlaceInfo(value.placeId))
             MainNews.SameLocationWasUsed -> snackbarShower.show(R.string.same_location_refresh)
+            MainNews.PermissionsDenied -> snackbarShower.show(R.string.location_permission_denied_snackbar)
         }
     }
 }

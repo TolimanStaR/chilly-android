@@ -3,6 +3,7 @@ package com.chilly.android.presentation.screens.main
 import com.chilly.android.presentation.screens.main.MainEvent.CommandEvent
 import com.chilly.android.presentation.screens.main.MainEvent.UiEvent
 import ru.tinkoff.kotea.core.dsl.DslUpdate
+import timber.log.Timber
 import javax.inject.Inject
 
 class MainUpdate @Inject constructor(
@@ -29,9 +30,20 @@ class MainUpdate @Inject constructor(
                 state { copy(isLoading = true) }
                 commands(MainCommand.LoadFeed, MainCommand.LoadNewFeedPage)
             }
-
             is UiEvent.PlaceClicked -> {
                 news(MainNews.NavigatePlace(event.placeId))
+            }
+            is UiEvent.GotPermissionRequestResult -> {
+                Timber.i("PERMISSIONS: result of request: ${event.permissions.entries.map { it.toPair() }}")
+                val accepted = event.permissions.values.any { it }
+                Timber.i("PERMISSIONS: ${if (accepted) "ACCEPTED" else "DENIED"}")
+                if (!accepted) {
+                    news(MainNews.PermissionsDenied)
+                }
+                state { copy(permissionsChecked = true, locationAccessGranted = accepted) }
+            }
+            UiEvent.PermissionsGranted -> {
+                state { copy(permissionsChecked = true, locationAccessGranted = true) }
             }
         }
     }

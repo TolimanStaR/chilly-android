@@ -19,6 +19,7 @@ class FeedRepositoryImpl(
 
     private var locationForFeed: LocationRepository.LocationData? = null
     private var lastPage: Int = -1
+    private var wasLastPageEmpty: Boolean = false
     private val currentFeedFlow: MutableStateFlow<List<PlaceDto>> = MutableStateFlow(emptyList())
 
     override fun getFeedFlow(): Flow<List<PlaceDto>> = currentFeedFlow
@@ -28,23 +29,22 @@ class FeedRepositoryImpl(
             updateLocation()
         }
 
-        val currentLocation = locationForFeed
-            ?: return Result.failure(FeedRepository.LocationNotAvailableException())
-
         lastPage++
-        return fetchFeedPage(currentLocation)
+        return fetchFeedPage(currentLocation())
     }
 
     override suspend fun refreshFeed(): Result<Boolean> {
         val prevLocation = locationForFeed
         updateLocation()
-        val currentLocation = locationForFeed
-            ?: return Result.failure(FeedRepository.LocationNotAvailableException())
+        val currentLocation = currentLocation()
         lastPage = 0
+        wasLastPageEmpty = false
 
         return fetchFeedPage(currentLocation, clear = true)
             .map { currentLocation.differ(prevLocation, 0.001) }
     }
+
+    private fun currentLocation() = locationForFeed ?: LocationRepository.LocationData(0.0, 0.0)
 
     private suspend fun updateLocation() {
         if (locationForFeed != null) return
@@ -58,9 +58,15 @@ class FeedRepositoryImpl(
             }
     }
 
-    private suspend fun fetchFeedPage(location: LocationRepository.LocationData, clear: Boolean = false): Result<Unit> =
-        feedApi.getFeedPage(location, lastPage)
+    private suspend fun fetchFeedPage(location: LocationRepository.LocationData, clear: Boolean = false): Result<Unit> {
+        if (wasLastPageEmpty) {
+            return Result.success(Unit)
+        }
+        return feedApi.getFeedPage(location, lastPage)
             .map { newPage ->
+                if (newPage.isEmpty()) {
+                    wasLastPageEmpty = true
+                }
                 Timber.i("new feed page($lastPage): $newPage")
 
                 currentFeedFlow.update { previous ->
@@ -76,6 +82,7 @@ class FeedRepositoryImpl(
 
                 placeRepository.savePlaces(newPage, writeToHistory = false)
             }
+    }
 
     private fun LocationRepository.LocationData.differ(other: LocationRepository.LocationData?, threshold: Double): Boolean {
         other ?: return true

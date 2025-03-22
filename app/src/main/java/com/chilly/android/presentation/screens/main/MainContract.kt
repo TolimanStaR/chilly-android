@@ -1,12 +1,22 @@
 package com.chilly.android.presentation.screens.main
 
+import android.Manifest
 import com.chilly.android.data.remote.dto.PlaceDto
 
 data class MainState(
     val feed: List<PlaceDto> = emptyList(),
     val isRefreshing: Boolean = false,
-    val isLoading: Boolean = false
-)
+    val isLoading: Boolean = false,
+    val permissionsChecked: Boolean = false,
+    val locationAccessGranted: Boolean = false
+) {
+    companion object {
+        val PERMISSIONS = arrayOf(
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        )
+    }
+}
 
 sealed interface MainEvent {
     sealed interface UiEvent : MainEvent {
@@ -14,7 +24,10 @@ sealed interface MainEvent {
         data object ScreenIsShown : UiEvent
         data object PulledToRefresh : UiEvent
         data object LastFeedElementIsVisible : UiEvent
+        data object PermissionsGranted : UiEvent
+
         data class PlaceClicked(val placeId: Int) : UiEvent
+        data class GotPermissionRequestResult(val permissions: Map<String, Boolean>) : UiEvent
     }
 
     sealed interface CommandEvent : MainEvent {
@@ -39,6 +52,6 @@ sealed interface MainNews {
     data object NavigateShortQuiz : MainNews
     data object GeneralFail : MainNews
     data object SameLocationWasUsed : MainNews
-
     data class NavigatePlace(val placeId: Int) : MainNews
+    data object PermissionsDenied : MainNews
 }

@@ -92,6 +92,12 @@
     <string name="profile_data_change">Данные изменены</string>
     <string name="same_location_refresh">Местоположение не изменилось</string>
     <string name="nearby_places_title">Места рядом с вами</string>
+    <string name="location_permission_denied_snackbar">У приложениея нет разрешения на использование вашего местоположения, чтобы посмотреть места рядом с вами, разешите доступ</string>
+    <string name="location_not_enabled_suggestion">Показать места рядом</string>
+    <string name="grant_permission_button">Разрешить доступ</string>
+    <string name="location_rationale_title">Похоже вы запретили доступ к местоположению</string>
+    <string name="location_rationale_text">Чтобы приложение могло показать ближайшие к вам места, разрешите доступ к местоположению.</string>
+    <string name="chilly_button_caption">Получите персональную рекомендацию</string>
 
     <string-array name="week_days">
         <item>Пн</item>
