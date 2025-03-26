@@ -8,8 +8,8 @@ import javax.inject.Inject
 class MainStore @Inject constructor(
     commandFlowHandler: MainCommandFlowHandler,
     update: MainUpdate
-) : Store<Unit, MainEvent, MainNews> by KoteaStore(
-    initialState = Unit,
+) : Store<MainState, MainEvent, MainNews> by KoteaStore(
+    initialState = MainState(),
     commandsFlowHandlers = listOf(commandFlowHandler),
     update = update
 )

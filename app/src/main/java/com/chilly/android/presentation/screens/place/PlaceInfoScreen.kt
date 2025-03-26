@@ -8,24 +8,15 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -33,7 +24,6 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -46,8 +36,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringArrayResource
@@ -66,7 +54,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
-import coil3.compose.SubcomposeAsyncImage
 import com.chilly.android.R
 import com.chilly.android.applicationComponent
 import com.chilly.android.di.screens.DaggerPlaceInfoComponent
@@ -74,6 +61,7 @@ import com.chilly.android.di.screens.PlaceInfoComponent
 import com.chilly.android.presentation.common.components.ChillyButton
 import com.chilly.android.presentation.common.components.ErrorReloadPlaceHolder
 import com.chilly.android.presentation.common.components.LoadingPlaceholder
+import com.chilly.android.presentation.common.components.PlaceImagesPager
 import com.chilly.android.presentation.common.structure.NewsCollector
 import com.chilly.android.presentation.common.structure.ScreenHolder
 import com.chilly.android.presentation.common.structure.collectState
@@ -137,44 +125,9 @@ private fun PlaceInfoScreen(
                 .padding(16.dp)
         ) {
             // images
-            val pagerState = rememberPagerState { place.imageUrls.size }
-            HorizontalPager(
-                state = pagerState,
-                pageSpacing = 8.dp,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(300.dp)
-            ) { page ->
-                SubcomposeAsyncImage(
-                    model = place.imageUrls[page],
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    loading = {
-                        Box(contentAlignment = Alignment.Center) {
-                            CircularProgressIndicator()
-                        }
-                    },
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .clip(RoundedCornerShape(12.dp))
-                )
-            }
-            Row(
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            ) {
-                repeat(pagerState.pageCount) { index ->
-                    val color = with(MaterialTheme.colorScheme) {
-                        if (index == pagerState.currentPage) onSurface else secondary
-                    }
-                    Box(
-                        modifier = Modifier
-                            .size(16.dp)
-                            .padding(4.dp)
-                            .clip(CircleShape)
-                            .background(color)
-                    )
-                }
-            }
+            PlaceImagesPager(
+                place = place
+            )
             // title & isFavorite
             Row(
                 verticalAlignment = Alignment.CenterVertically

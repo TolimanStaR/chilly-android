@@ -29,17 +29,19 @@ internal class PlaceRepositoryImpl(
             ?: Result.failure(NoSuchElementException())
     }
 
-    override suspend fun savePlaces(places: List<PlaceDto>) {
+    override suspend fun savePlaces(places: List<PlaceDto>, writeToHistory: Boolean) {
         val entitiesArray = places.map(placeMapper::toEntity).toTypedArray()
         placeDao.insertPlaces(*entitiesArray)
 
-        val historyEntries = places.map { place ->
-            HistoryEntry(
-                placeId = place.id,
-                timestamp = LocalDateTime.ofInstant(Instant.now(), ZoneId.systemDefault())
-            )
-        }.toTypedArray()
-        historyDao.insertEntry(*historyEntries)
+        if (writeToHistory) {
+            val historyEntries = places.map { place ->
+                HistoryEntry(
+                    placeId = place.id,
+                    timestamp = LocalDateTime.ofInstant(Instant.now(), ZoneId.systemDefault())
+                )
+            }.toTypedArray()
+            historyDao.insertEntry(*historyEntries)
+        }
     }
 
     override suspend fun checkInFavorites(placeId: Int): Boolean {

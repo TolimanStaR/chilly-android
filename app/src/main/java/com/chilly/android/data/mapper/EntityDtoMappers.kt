@@ -20,7 +20,9 @@ class PlaceMapper @Inject constructor() {
         rating = entity.rating,
         socials = entity.socials,
         website = entity.website,
-        yandexMapsLink = entity.yandexMapsLink
+        yandexMapsLink = entity.yandexMapsLink,
+        latitude = entity.latitude,
+        longitude = entity.longitude
     )
 
     fun toEntity(dto: PlaceDto): PlaceEntity = PlaceEntity(
@@ -33,7 +35,9 @@ class PlaceMapper @Inject constructor() {
         rating = dto.rating,
         socials = dto.socials,
         website = dto.website,
-        yandexMapsLink = dto.yandexMapsLink
+        yandexMapsLink = dto.yandexMapsLink,
+        latitude = dto.latitude,
+        longitude = dto.longitude
     )
 }
 

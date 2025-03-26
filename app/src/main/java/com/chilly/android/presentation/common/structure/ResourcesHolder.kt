@@ -3,6 +3,10 @@ package com.chilly.android.presentation.common.structure
 import android.content.res.Resources
 import androidx.annotation.StringRes
 import androidx.compose.material3.SnackbarHostState
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -28,9 +32,13 @@ class SnackbarShower @Inject constructor(
     private val snackbarHostState: SnackbarHostState
 ) {
 
-    suspend fun show(@StringRes resId: Int) {
-        snackbarHostState.showSnackbar(resourcesHolder.getString(resId))
-    }
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
-    suspend fun show(text: String) = snackbarHostState.showSnackbar(text)
+    fun show(@StringRes resId: Int) = show(resourcesHolder.getString(resId))
+
+    fun show(text: String) {
+        scope.launch {
+            snackbarHostState.showSnackbar(text)
+        }
+    }
 }

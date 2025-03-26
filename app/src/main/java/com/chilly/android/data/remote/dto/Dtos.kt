@@ -60,5 +60,7 @@ class PlaceDto(
     val socials: List<String>,
     val website: String?,
     @SerialName("ypage")
-    val yandexMapsLink: String
+    val yandexMapsLink: String,
+    val latitude: Double,
+    val longitude: Double
 )

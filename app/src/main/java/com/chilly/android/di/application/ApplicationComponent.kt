@@ -5,11 +5,13 @@ import androidx.compose.material3.SnackbarHostState
 import com.chilly.android.data.local.dao.HistoryDao
 import com.chilly.android.data.local.dao.PlaceDao
 import com.chilly.android.data.remote.TokenHolder
+import com.chilly.android.data.remote.api.FeedApi
 import com.chilly.android.data.remote.api.LoginApi
 import com.chilly.android.data.remote.api.PasswordRecoveryApi
 import com.chilly.android.data.remote.api.QuizApi
 import com.chilly.android.data.remote.api.RecommendationApi
 import com.chilly.android.data.remote.api.UserApi
+import com.chilly.android.domain.repository.FeedRepository
 import com.chilly.android.domain.repository.PlaceRepository
 import com.chilly.android.domain.repository.PreferencesRepository
 import com.chilly.android.domain.repository.QuizRepository
@@ -31,12 +33,14 @@ interface ApplicationComponent {
     val quizRepository: QuizRepository
     val placeRepository: PlaceRepository
     val recommendationRepository: RecommendationRepository
+    val feedRepository: FeedRepository
 
     val loginApi: LoginApi
     val recoveryApi: PasswordRecoveryApi
     val userApi: UserApi
     val quizApi: QuizApi
     val recommendationApi: RecommendationApi
+    val feedApi: FeedApi
 
     val placeDao: PlaceDao
     val historyDao: HistoryDao

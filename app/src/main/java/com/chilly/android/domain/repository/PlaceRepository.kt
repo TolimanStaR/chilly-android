@@ -8,7 +8,7 @@ interface PlaceRepository {
 
     suspend fun placeById(id: Int): Result<PlaceDto>
 
-    suspend fun savePlaces(places: List<PlaceDto>)
+    suspend fun savePlaces(places: List<PlaceDto>, writeToHistory: Boolean)
 
     suspend fun checkInFavorites(placeId: Int): Boolean
 

@@ -22,7 +22,7 @@ class RecommendationRepositoryImpl constructor(
 
         return recommendationApi.getRecommendation()
             .onSuccess {
-                placeRepository.savePlaces(it)
+                placeRepository.savePlaces(it, writeToHistory = true)
                 cachedRecommendation = it
                 preferencesRepository.setRequestedRecommendation(false)
             }
