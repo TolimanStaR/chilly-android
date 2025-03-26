@@ -98,6 +98,8 @@
     <string name="location_rationale_title">It seems that you don\'t allow location tracking</string>
     <string name="location_rationale_text">This permission would allow the app to access your location to show the feed of places nearby you</string>
     <string name="chilly_button_caption">Get your personal recommendation</string>
+    <string name="rating_notification_title">Did you like your recommendations?</string>
+    <string name="rating_notification_text">Please share your feedback with us, it will improve recommendations in future</string>
 
     <string-array name="week_days">
         <item>Mon</item>

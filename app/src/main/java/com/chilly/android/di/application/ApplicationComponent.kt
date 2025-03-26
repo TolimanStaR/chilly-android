@@ -18,6 +18,7 @@ import com.chilly.android.domain.repository.QuizRepository
 import com.chilly.android.domain.repository.RecommendationRepository
 import com.chilly.android.domain.repository.UserRepository
 import com.chilly.android.presentation.common.structure.ResourcesHolder
+import com.chilly.android.presentation.common.structure.WorkManagerProvider
 import com.github.terrakok.cicerone.NavigatorHolder
 import com.github.terrakok.cicerone.Router
 import dagger.BindsInstance
@@ -51,6 +52,7 @@ interface ApplicationComponent {
 
     val tokenHolder: TokenHolder
     val resourceHolder: ResourcesHolder
+    val workManagerProvider: WorkManagerProvider
 
     @Component.Builder
     interface Builder {

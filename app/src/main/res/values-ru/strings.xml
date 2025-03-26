@@ -98,6 +98,8 @@
     <string name="location_rationale_title">Похоже вы запретили доступ к местоположению</string>
     <string name="location_rationale_text">Чтобы приложение могло показать ближайшие к вам места, разрешите доступ к местоположению.</string>
     <string name="chilly_button_caption">Получите персональную рекомендацию</string>
+    <string name="rating_notification_title">Вам Понравились рекомнедации?</string>
+    <string name="rating_notification_text">Пожалуйста поделитесь с нами вашими впечатлениями, это поможет сделать рекомендации лучше</string>
 
     <string-array name="week_days">
         <item>Пн</item>

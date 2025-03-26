@@ -1,5 +1,10 @@
 package com.chilly.android.presentation.screens.result
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -10,10 +15,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import androidx.core.app.ActivityCompat
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.chilly.android.R
@@ -29,7 +36,7 @@ import com.chilly.android.presentation.common.structure.collectState
 import com.chilly.android.presentation.navigation.Destination
 import com.chilly.android.presentation.screens.result.RecommendationResultEvent.UiEvent
 import com.chilly.android.presentation.theme.ChillyTheme
-import timber.log.Timber
+
 
 @Composable
 private fun RecommendationResultScreen(
@@ -45,7 +52,6 @@ private fun RecommendationResultScreen(
     when {
         state.recommendations.isEmpty() && !state.errorOccurred -> {
             LoadingPlaceholder(stringResource(R.string.recommendation_result_loading)) {
-                Timber.i("Loading result (recommendations.size = ${state.recommendations.size})")
                 onEvent(UiEvent.ScreenShown)
             }
             return
@@ -55,6 +61,24 @@ private fun RecommendationResultScreen(
                 onEvent(UiEvent.LoadAgainClicked)
             }
             return
+        }
+    }
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        val launcher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            onEvent(UiEvent.OnPermissionRequestResult(isGranted))
+        }
+        val context = LocalContext.current
+        LaunchedEffect(Unit) {
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                launcher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            } else {
+                onEvent(UiEvent.PermissionGranted)
+            }
+        }
+    } else {
+        LaunchedEffect(Unit) {
+            onEvent(UiEvent.PermissionGranted)
         }
     }
 

@@ -1,11 +1,13 @@
 package com.chilly.android.presentation.screens.result
 
+import androidx.work.WorkRequest
 import com.chilly.android.data.remote.dto.PlaceDto
 
 data class RecommendationResultState(
     val isLoading: Boolean = false,
     val recommendations: List<PlaceDto> = emptyList(),
-    val errorOccurred: Boolean = false
+    val errorOccurred: Boolean = false,
+    val isPermissionGranted: Boolean = false
 )
 
 sealed interface RecommendationResultEvent {
@@ -14,6 +16,8 @@ sealed interface RecommendationResultEvent {
         data object LoadAgainClicked : UiEvent
         data object CheckRequest : UiEvent
         data class PlaceClicked(val id: Int) : UiEvent
+        data object PermissionGranted : UiEvent
+        data class OnPermissionRequestResult(val isGranted: Boolean) : UiEvent
     }
 
     sealed interface CommandEvent : RecommendationResultEvent {
@@ -31,4 +35,5 @@ sealed interface RecommendationResultCommand {
 sealed interface RecommendationResultNews {
     data object GeneralFail : RecommendationResultNews
     data class NavigatePlace(val id: Int) : RecommendationResultNews
+    data class SubmitNotificationRequest(val request: WorkRequest) : RecommendationResultNews
 }

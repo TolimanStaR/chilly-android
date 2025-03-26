@@ -76,6 +76,7 @@ dependencies {
     implementation(libs.room.ktx)
     ksp(libs.room.compiler)
     implementation(libs.google.location.service)
+    implementation(libs.androidx.work)
 
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.mockk)
