@@ -17,3 +17,6 @@ val Gray90 = Color(0xFF212121)
 val Peach10 = Color(0xFFFFF2E3)
 
 val LinkColor = Color(0xFF00D0FF)
+
+val Yellow50 = Color(0xFFFFEB3B)
+val Yellow70 = Color(0xFFFFC107)

@@ -15,7 +15,10 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -33,7 +36,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -62,6 +69,7 @@ import com.chilly.android.presentation.common.components.ChillyButton
 import com.chilly.android.presentation.common.components.ErrorReloadPlaceHolder
 import com.chilly.android.presentation.common.components.LoadingPlaceholder
 import com.chilly.android.presentation.common.components.PlaceImagesPager
+import com.chilly.android.presentation.common.components.PlaceRatingDialog
 import com.chilly.android.presentation.common.structure.NewsCollector
 import com.chilly.android.presentation.common.structure.ScreenHolder
 import com.chilly.android.presentation.common.structure.collectState
@@ -117,6 +125,16 @@ private fun PlaceInfoScreen(
                 bottom = maxOf(padding.calculateBottomPadding(), scaffoldPadding.calculateBottomPadding())
             )
         }
+        var showRateDialog by remember { mutableStateOf(false) }
+        if (showRateDialog) {
+            PlaceRatingDialog(
+                place = place,
+                onDismiss = { showRateDialog = false },
+                onRatingChange = { onEvent(UiEvent.RatingChanged(it)) },
+                onCommentChange = { onEvent(UiEvent.CommentTextChanged(it)) },
+                onConfirm = { onEvent(UiEvent.SendRatingClicked) }
+            )
+        }
         Column(
             verticalArrangement = Arrangement.spacedBy(12.dp),
             modifier = Modifier
@@ -158,8 +176,7 @@ private fun PlaceInfoScreen(
                 }
             }
             HorizontalDivider()
-            // data
-            // address + rating -> button 'open on map' -> open hours section (expandable) -> contacts section (expandable)
+
             Column {
                 HeadlineText(stringResource(R.string.place_address_title))
                 Text(place.address)
@@ -168,7 +185,6 @@ private fun PlaceInfoScreen(
                 Row {
                     HeadlineText(stringResource(R.string.place_rating_title))
                     Text(rating.toString())
-                    // TODO stars for rating
                 }
             }
 
@@ -235,6 +251,49 @@ private fun PlaceInfoScreen(
                                 }
                             }
                         )
+                    }
+                }
+            }
+
+            ExpandableSection(
+                expanded = Section.COMMENTS in state.expandedSections,
+                onToggle = {
+                    onEvent(UiEvent.ToggleExpansion(Section.COMMENTS))
+                },
+                title = {
+                    HeadlineText(stringResource(R.string.reviews_section_title))
+                }
+            ) {
+                ChillyButton(
+                    textRes = R.string.rate_place_button,
+                    onClick = {
+                        showRateDialog = true
+                    }
+                )
+                LaunchedEffect(Unit) {
+                    if (state.comments.isNotEmpty()) {
+                        onEvent(UiEvent.EmptyReviewsSectionExpanded)
+                    }
+                }
+                if (state.comments.isEmpty()) {
+                    Text(stringResource(R.string.empty_comment_section))
+                } else {
+                    LazyColumn(
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier.height(400.dp)
+                    ) {
+                        items(state.comments) { comment ->
+                            // TODO 'pretty' show comments
+                            Text(comment)
+                        }
+                        item {
+                            ChillyButton(
+                                textRes = R.string.load_comments_button,
+                                onClick = {
+                                    onEvent(UiEvent.LoadNextCommentsPageClicked)
+                                }
+                            )
+                        }
                     }
                 }
             }

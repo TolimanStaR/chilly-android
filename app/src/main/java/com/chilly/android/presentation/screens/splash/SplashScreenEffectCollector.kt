@@ -4,7 +4,6 @@ import com.chilly.android.di.screens.SplashScope
 import com.chilly.android.presentation.navigation.Destination
 import com.github.terrakok.cicerone.Router
 import kotlinx.coroutines.flow.FlowCollector
-import timber.log.Timber
 import javax.inject.Inject
 
 @SplashScope
@@ -17,9 +16,7 @@ class SplashScreenEffectCollector @Inject constructor(
             SplashScreenEffect.NavigateLogin -> router.newRootScreen(Destination.LogIn)
             SplashScreenEffect.NavigateMain -> router.newRootScreen(Destination.Main)
             SplashScreenEffect.NavigateOnboarding -> router.newRootScreen(Destination.Onboarding(0))
-            is SplashScreenEffect.NavigateRating -> router.newRootScreen(Destination.Main).also {
-                Timber.e("RATING SCREEN SHOULD BE OPENED WITH ${value.ids} BUT NOT YET IMPLEMENTED")
-            }
+            is SplashScreenEffect.NavigateRating -> router.newRootScreen(Destination.Rating(value.ids))
         }
     }
 }

@@ -100,6 +100,14 @@
     <string name="chilly_button_caption">Получите персональную рекомендацию</string>
     <string name="rating_notification_title">Вам Понравились рекомнедации?</string>
     <string name="rating_notification_text">Пожалуйста поделитесь с нами вашими впечатлениями, это поможет сделать рекомендации лучше</string>
+    <string name="rating_title">Rate recommendations</string>
+    <string name="comment_placeholder" />
+    <string name="comment_sent_message">Your feedback has been sent, thank you!</string>
+    <string name="reviews_section_title">Reviews</string>
+    <string name="rate_place_button">Write Review</string>
+    <string name="empty_comment_section">No reviews, you can leave your!</string>
+    <string name="load_comments_button">Load more</string>
+    <string name="rating_sent_text">Your Comment has been sent!</string>
 
     <string-array name="week_days">
         <item>Пн</item>

@@ -40,6 +40,24 @@ class PlaceInfoUpdate @Inject constructor(
             UiEvent.BackClicked -> {
                 news(PlaceInfoNews.NavigateUp)
             }
+
+            is UiEvent.CommentTextChanged -> {
+                state { copy(commentText = event.value) }
+            }
+            UiEvent.EmptyReviewsSectionExpanded -> {
+                commands(PlaceInfoCommand.LoadComments(state.placeId))
+            }
+            UiEvent.LoadNextCommentsPageClicked -> {
+                commands(PlaceInfoCommand.LoadComments(state.placeId))
+            }
+            is UiEvent.RatingChanged -> {
+                state { copy(ratingValue = event.value) }
+            }
+            UiEvent.SendRatingClicked -> {
+                with(state) {
+                    commands(PlaceInfoCommand.SendRating(placeId, ratingValue, commentText))
+                }
+            }
         }
     }
 
@@ -53,6 +71,13 @@ class PlaceInfoUpdate @Inject constructor(
             }
             is CommandEvent.FavoritesCheckResult -> {
                 state { copy(isInFavorites = event.inFavorites) }
+            }
+
+            is CommandEvent.CommentsLoaded -> {
+                state { copy(comments = event.comments) }
+            }
+            CommandEvent.RatingSentSuccessfully -> {
+                news(PlaceInfoNews.RatingSent)
             }
         }
     }

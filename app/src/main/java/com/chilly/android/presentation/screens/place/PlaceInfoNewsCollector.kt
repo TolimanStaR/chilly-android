@@ -19,6 +19,8 @@ class PlaceInfoNewsCollector @Inject constructor(
             PlaceInfoNews.NavigateUp -> {
                 router.exit()
             }
+
+            PlaceInfoNews.RatingSent -> snackbarShower.show(R.string.rating_sent_text)
         }
     }
 }

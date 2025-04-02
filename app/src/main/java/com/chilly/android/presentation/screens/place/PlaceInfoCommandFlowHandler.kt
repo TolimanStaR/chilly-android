@@ -20,6 +20,8 @@ class PlaceInfoCommandFlowHandler @Inject constructor(
                 is PlaceInfoCommand.LoadPlace -> handleLoad(it)
                 is PlaceInfoCommand.CheckFavorite -> handleFavoriteCheck(it)
                 is PlaceInfoCommand.ToggleFavorites -> handleFavoritesToggle(it)
+                is PlaceInfoCommand.LoadComments -> handleComments(it)
+                is PlaceInfoCommand.SendRating -> handleRatingSent(it)
             }
         }
 
@@ -27,6 +29,14 @@ class PlaceInfoCommandFlowHandler @Inject constructor(
         val newStatus = !command.currentlyInFavorites
         placeRepository.updateFavorites(command.placeId, newStatus)
         emit(CommandEvent.FavoritesCheckResult(newStatus))
+    }
+
+    private fun handleComments(command: PlaceInfoCommand.LoadComments): Flow<CommandEvent> = flow {
+
+    }
+
+    private fun handleRatingSent(command: PlaceInfoCommand.SendRating): Flow<CommandEvent> = flow {
+
     }
 
     private fun handleLoad(command: PlaceInfoCommand.LoadPlace): Flow<CommandEvent> = flow {

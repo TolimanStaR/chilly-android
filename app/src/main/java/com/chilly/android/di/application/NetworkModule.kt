@@ -2,12 +2,14 @@ package com.chilly.android.di.application
 
 import com.chilly.android.data.remote.HandledException
 import com.chilly.android.data.remote.TokenHolder
+import com.chilly.android.data.remote.api.CommentsApi
 import com.chilly.android.data.remote.api.FeedApi
 import com.chilly.android.data.remote.api.LoginApi
 import com.chilly.android.data.remote.api.PasswordRecoveryApi
 import com.chilly.android.data.remote.api.QuizApi
 import com.chilly.android.data.remote.api.RecommendationApi
 import com.chilly.android.data.remote.api.UserApi
+import com.chilly.android.data.remote.api.impl.CommentApiImpl
 import com.chilly.android.data.remote.api.impl.FeedApiImpl
 import com.chilly.android.data.remote.api.impl.LoginApiImpl
 import com.chilly.android.data.remote.api.impl.PasswordRecoveryApiImpl
@@ -100,4 +102,9 @@ class NetworkModule {
     @Singleton
     fun provideFeedApi(client: HttpClient, tokenHolder: TokenHolder): FeedApi =
         FeedApiImpl(client, tokenHolder)
+
+    @Provides
+    @Singleton
+    fun provideCommentsApi(client: HttpClient, tokenHolder: TokenHolder): CommentsApi =
+        CommentApiImpl(client, tokenHolder)
 }

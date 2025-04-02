@@ -100,6 +100,14 @@
     <string name="chilly_button_caption">Get your personal recommendation</string>
     <string name="rating_notification_title">Did you like your recommendations?</string>
     <string name="rating_notification_text">Please share your feedback with us, it will improve recommendations in future</string>
+    <string name="rating_title">Rate recommendations</string>
+    <string name="comment_placeholder" />
+    <string name="comment_sent_message">Your feedback has been sent, thank you!</string>
+    <string name="reviews_section_title">Reviews</string>
+    <string name="rate_place_button">Write Review</string>
+    <string name="empty_comment_section">No reviews, you can leave your!</string>
+    <string name="load_comments_button">Load more</string>
+    <string name="rating_sent_text">Your Comment has been sent!</string>
 
     <string-array name="week_days">
         <item>Mon</item>
