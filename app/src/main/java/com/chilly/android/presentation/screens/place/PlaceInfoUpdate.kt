@@ -48,7 +48,7 @@ class PlaceInfoUpdate @Inject constructor(
                 commands(PlaceInfoCommand.LoadComments(state.placeId))
             }
             UiEvent.LoadNextCommentsPageClicked -> {
-                commands(PlaceInfoCommand.LoadComments(state.placeId))
+                commands(PlaceInfoCommand.LoadCommentsPage(state.placeId))
             }
             is UiEvent.RatingChanged -> {
                 state { copy(ratingValue = event.value) }

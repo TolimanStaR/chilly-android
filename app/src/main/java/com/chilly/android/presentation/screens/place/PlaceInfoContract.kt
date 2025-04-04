@@ -1,5 +1,6 @@
 package com.chilly.android.presentation.screens.place
 
+import com.chilly.android.data.remote.dto.CommentDto
 import com.chilly.android.data.remote.dto.PlaceDto
 
 data class PlaceInfoState(
@@ -10,7 +11,7 @@ data class PlaceInfoState(
     val expandedSections: Set<Section> = emptySet(),
     val commentText: String = "",
     val ratingValue: Float = 0f,
-    val comments: List<String> = emptyList()
+    val comments: List<CommentDto> = emptyList()
 )
 
 sealed interface PlaceInfoEvent {
@@ -32,7 +33,7 @@ sealed interface PlaceInfoEvent {
         data object LoadFail : CommandEvent
         data class FavoritesCheckResult(val inFavorites: Boolean) : CommandEvent
         data object RatingSentSuccessfully : CommandEvent
-        data class CommentsLoaded(val comments: List<String>) : CommandEvent
+        data class CommentsLoaded(val comments: List<CommentDto>) : CommandEvent
     }
 }
 
@@ -42,6 +43,7 @@ sealed interface PlaceInfoCommand {
     data class ToggleFavorites(val placeId: Int, val currentlyInFavorites: Boolean) : PlaceInfoCommand
     data class SendRating(val placeId: Int, val rating: Float, val comment: String) : PlaceInfoCommand
     data class LoadComments(val placeId: Int) : PlaceInfoCommand
+    data class LoadCommentsPage(val placeId: Int) : PlaceInfoCommand
 }
 
 sealed interface PlaceInfoNews {

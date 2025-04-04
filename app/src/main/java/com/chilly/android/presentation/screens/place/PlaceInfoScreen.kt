@@ -284,7 +284,7 @@ private fun PlaceInfoScreen(
                     ) {
                         items(state.comments) { comment ->
                             // TODO 'pretty' show comments
-                            Text(comment)
+                            Text(comment.text)
                         }
                         item {
                             ChillyButton(
