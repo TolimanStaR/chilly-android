@@ -81,7 +81,7 @@ import com.chilly.android.presentation.theme.LinkColor
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun PlaceInfoScreen(
-    state: PlaceInfoState,
+    state: PlaceUiState,
     padding: PaddingValues,
     onEvent: (UiEvent) -> Unit
 ) {
@@ -284,7 +284,7 @@ private fun PlaceInfoScreen(
                     ) {
                         items(state.comments) { comment ->
                             // TODO 'pretty' show comments
-                            Text(comment.text)
+                            Text(comment.text!!)
                         }
                         item {
                             ChillyButton(
@@ -383,7 +383,7 @@ fun NavGraphBuilder.installPlaceInfoScreen(padding: PaddingValues) {
             storeFactory = { storeFactory.create(route.id) },
             route.id
         ) {
-            val state = collectState()
+            val state = collectState(component.stateUiMapper)
             NewsCollector(component.newsCollector)
             PlaceInfoScreen(state.value, padding, store::dispatch)
         }
@@ -396,7 +396,7 @@ fun NavGraphBuilder.installPlaceInfoScreen(padding: PaddingValues) {
 private fun PreviewPlaceInfoScreen() {
     ChillyTheme {
         PlaceInfoScreen(
-            state = PlaceInfoState(-1),
+            state = PlaceUiState(-1),
             padding = PaddingValues(),
             onEvent = {}
         )

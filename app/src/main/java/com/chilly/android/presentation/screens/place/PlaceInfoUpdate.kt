@@ -48,12 +48,14 @@ class PlaceInfoUpdate @Inject constructor(
                 commands(PlaceInfoCommand.LoadComments(state.placeId))
             }
             UiEvent.LoadNextCommentsPageClicked -> {
+                state { copy(isLoading = true) }
                 commands(PlaceInfoCommand.LoadCommentsPage(state.placeId))
             }
             is UiEvent.RatingChanged -> {
                 state { copy(ratingValue = event.value) }
             }
             UiEvent.SendRatingClicked -> {
+                state { copy(isLoading = true) }
                 with(state) {
                     commands(PlaceInfoCommand.SendRating(placeId, ratingValue, commentText))
                 }
@@ -64,20 +66,27 @@ class PlaceInfoUpdate @Inject constructor(
     private fun NextBuilder.updateOnCommand(event: CommandEvent) {
         when (event) {
             CommandEvent.LoadFail -> {
-                state { copy(errorOccurred = true) }
+                state { copy(errorOccurred = true, isLoading = false) }
             }
             is CommandEvent.LoadSuccess -> {
-                state { copy(place = event.place) }
+                state { copy(place = event.place, isLoading = false) }
             }
             is CommandEvent.FavoritesCheckResult -> {
                 state { copy(isInFavorites = event.inFavorites) }
             }
-
             is CommandEvent.CommentsLoaded -> {
-                state { copy(comments = event.comments) }
+                state { copy(comments = event.comments, isLoading = false) }
             }
             CommandEvent.RatingSentSuccessfully -> {
+                state { copy(isLoading = false) }
                 news(PlaceInfoNews.RatingSent)
+            }
+            CommandEvent.EmptyCommentPage -> {
+                state { copy(allCommentsLoaded = true, isLoading = false) }
+                news(PlaceInfoNews.EmptyCommentsLoaded)
+            }
+            CommandEvent.CommentModified -> {
+                news(PlaceInfoNews.CommentModified)
             }
         }
     }

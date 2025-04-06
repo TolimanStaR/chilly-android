@@ -25,7 +25,7 @@ class CommentsRepositoryImpl(
 
     private var lastFetchedPage: Int = -1
 
-    override suspend fun sendReview(request: CommentRequest): Result<Unit> {
+    override suspend fun sendReview(request: CommentRequest): Result<Boolean> {
         return commentsApi.sendComment(request)
     }
 
@@ -34,7 +34,7 @@ class CommentsRepositoryImpl(
         return commentsFlow
     }
 
-    override suspend fun fetchNextCommentsPage(placeId: Int): Result<Unit> {
+    override suspend fun fetchNextCommentsPage(placeId: Int): Result<Boolean> {
         currentPlaceId = placeId
         val fetchingPage = lastFetchedPage + 1
         return commentsApi.getCommentsPage(currentPlaceId, lastFetchedPage + 1)
@@ -45,6 +45,8 @@ class CommentsRepositoryImpl(
                         addAll(newPage)
                     }
                 }
+
+                newPage.isNotEmpty()
             }
     }
 }

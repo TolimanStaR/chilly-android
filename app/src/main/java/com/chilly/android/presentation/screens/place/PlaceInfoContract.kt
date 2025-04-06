@@ -11,7 +11,29 @@ data class PlaceInfoState(
     val expandedSections: Set<Section> = emptySet(),
     val commentText: String = "",
     val ratingValue: Float = 0f,
-    val comments: List<CommentDto> = emptyList()
+    val comments: List<CommentDto> = emptyList(),
+    val allCommentsLoaded: Boolean = false,
+    val isLoading: Boolean = false
+)
+
+data class PlaceUiState(
+    val placeId: Int,
+    val place: PlaceDto? = null,
+    val isInFavorites: Boolean = false,
+    val errorOccurred: Boolean = false,
+    val expandedSections: Set<Section> = emptySet(),
+    val commentText: String = "",
+    val ratingValue: Float = 0f,
+    val comments: List<CommentUiModel> = emptyList(),
+    val allCommentsLoaded: Boolean = false,
+    val isLoading: Boolean = false
+)
+
+class CommentUiModel(
+    val id: Int,
+    val timeString: String,
+    val text: String?,
+    val rating: Float
 )
 
 sealed interface PlaceInfoEvent {
@@ -34,6 +56,8 @@ sealed interface PlaceInfoEvent {
         data class FavoritesCheckResult(val inFavorites: Boolean) : CommandEvent
         data object RatingSentSuccessfully : CommandEvent
         data class CommentsLoaded(val comments: List<CommentDto>) : CommandEvent
+        data object EmptyCommentPage : CommandEvent
+        data object CommentModified : CommandEvent
     }
 }
 
@@ -50,6 +74,8 @@ sealed interface PlaceInfoNews {
     data object NavigateUp : PlaceInfoNews
     data object GeneralFail : PlaceInfoNews
     data object RatingSent : PlaceInfoNews
+    data object EmptyCommentsLoaded : PlaceInfoNews
+    data object CommentModified : PlaceInfoNews
 }
 
 enum class Section {

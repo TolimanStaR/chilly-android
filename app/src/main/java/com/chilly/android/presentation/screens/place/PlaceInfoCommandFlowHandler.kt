@@ -42,6 +42,11 @@ class PlaceInfoCommandFlowHandler @Inject constructor(
 
     private fun handleCommentsPage(command: PlaceInfoCommand.LoadCommentsPage): Flow<CommandEvent> = flow {
         commentsRepository.fetchNextCommentsPage(command.placeId)
+            .onSuccess { hasContent ->
+                if (!hasContent) {
+                    emit(CommandEvent.EmptyCommentPage)
+                }
+            }
             .onFailure {
                 emit(CommandEvent.LoadFail)
             }
@@ -54,7 +59,13 @@ class PlaceInfoCommandFlowHandler @Inject constructor(
                 rating = command.rating,
                 commentText = command.comment.ifEmpty { null }
             )
-        )
+        ).onSuccess { isNewComment ->
+            if (!isNewComment) {
+                emit(CommandEvent.CommentModified)
+            }
+        }.onFailure {
+            emit(CommandEvent.LoadFail)
+        }
     }
 
     private fun handleLoad(command: PlaceInfoCommand.LoadPlace): Flow<CommandEvent> = flow {

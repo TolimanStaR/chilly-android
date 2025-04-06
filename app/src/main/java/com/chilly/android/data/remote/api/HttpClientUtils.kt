@@ -8,6 +8,7 @@ import io.ktor.client.request.bearerAuth
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.put
+import io.ktor.client.statement.HttpResponse
 
 suspend inline fun <reified T> HttpClient.getResult(
     url: String,
@@ -18,6 +19,14 @@ suspend inline fun <reified T> HttpClient.postWithResult(
     url: String,
     block: HttpRequestBuilder.() -> Unit
 ): Result<T> = runCatching { post(url, block).body() }
+
+suspend inline fun <reified T> HttpClient.postWithResult(
+    url: String,
+    onResponse: HttpResponse.() -> T,
+    block: HttpRequestBuilder.() -> Unit
+): Result<T> = runCatching {
+    post(url, block).onResponse()
+}
 
 suspend inline fun HttpClient.wrappedPost(
     url: String,

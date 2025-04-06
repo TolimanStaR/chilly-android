@@ -108,6 +108,8 @@
     <string name="empty_comment_section">No reviews, you can leave your!</string>
     <string name="load_comments_button">Load more</string>
     <string name="rating_sent_text">Your Comment has been sent!</string>
+    <string name="empty_comments_received">No more comments</string>
+    <string name="comment_modified_message">Your review has been changed</string>
 
     <string-array name="week_days">
         <item>Mon</item>
