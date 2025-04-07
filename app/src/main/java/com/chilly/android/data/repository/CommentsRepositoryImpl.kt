@@ -25,8 +25,13 @@ class CommentsRepositoryImpl(
 
     private var lastFetchedPage: Int = -1
 
-    override suspend fun sendReview(request: CommentRequest): Result<Boolean> {
-        return commentsApi.sendComment(request)
+    override suspend fun sendReview(request: CommentRequest): Result<CommentsRepository.SendResult> {
+        return commentsApi.sendComment(request).map { commentResult ->
+            when(commentResult) {
+                CommentsApi.CommentResult.CommentCreated -> CommentsRepository.SendResult.ReviewCreated
+                CommentsApi.CommentResult.CommentModified -> CommentsRepository.SendResult.ReviewModified
+            }
+        }
     }
 
     override fun getComments(placeId: Int): Flow<List<CommentDto>> {
@@ -34,7 +39,7 @@ class CommentsRepositoryImpl(
         return commentsFlow
     }
 
-    override suspend fun fetchNextCommentsPage(placeId: Int): Result<Boolean> {
+    override suspend fun fetchNextCommentsPage(placeId: Int): Result<CommentsRepository.FetchResult> {
         currentPlaceId = placeId
         val fetchingPage = lastFetchedPage + 1
         return commentsApi.getCommentsPage(currentPlaceId, lastFetchedPage + 1)
@@ -46,7 +51,10 @@ class CommentsRepositoryImpl(
                     }
                 }
 
-                newPage.isNotEmpty()
+                when {
+                    newPage.isNotEmpty() -> CommentsRepository.FetchResult.PageWithContent
+                    else -> CommentsRepository.FetchResult.EmptyPage
+                }
             }
     }
 }

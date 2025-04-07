@@ -78,6 +78,7 @@ class PlaceInfoUpdate @Inject constructor(
                 state { copy(comments = event.comments, isLoading = false) }
             }
             CommandEvent.RatingSentSuccessfully -> {
+                // TODO add comment to a list
                 state { copy(isLoading = false) }
                 news(PlaceInfoNews.RatingSent)
             }

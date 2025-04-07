@@ -8,6 +8,7 @@ import com.chilly.android.data.remote.api.setAuthorization
 import com.chilly.android.data.remote.dto.CommentDto
 import com.chilly.android.data.remote.dto.request.CommentRequest
 import io.ktor.client.HttpClient
+import io.ktor.client.call.body
 import io.ktor.client.request.parameter
 import io.ktor.client.request.setBody
 import io.ktor.http.HttpStatusCode
@@ -17,11 +18,15 @@ class CommentApiImpl(
     private val tokenHolder: TokenHolder
 ) : CommentsApi {
 
-    override suspend fun sendComment(request: CommentRequest): Result<Boolean> =
+    override suspend fun sendComment(request: CommentRequest): Result<CommentsApi.CommentResult> =
         client.postWithResult(
             "api/reviews",
             onResponse = {
-                status == HttpStatusCode.Created
+                body<Unit>()
+                when {
+                    status == HttpStatusCode.Created -> CommentsApi.CommentResult.CommentCreated
+                    else -> CommentsApi.CommentResult.CommentModified
+                }
             }
         ) {
             setAuthorization(tokenHolder)
