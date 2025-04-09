@@ -4,6 +4,10 @@ import android.content.res.Resources
 import com.chilly.android.data.remote.dto.CommentDto
 import com.chilly.android.di.screens.PlaceInfoScope
 import com.chilly.android.presentation.common.structure.UiStateMapper
+import com.chilly.android.presentation.common.logic.formattedDate
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
 import javax.inject.Inject
 
 @PlaceInfoScope
@@ -33,5 +37,8 @@ class PlaceUiMapper @Inject constructor() : UiStateMapper<PlaceInfoState, PlaceU
         }
     }
 
-    private fun Resources.timestampToString(value: Long): String = "$value" // TODO
+    private fun Resources.timestampToString(value: Long): String {
+        val localDate = LocalDateTime.ofInstant(Instant.ofEpochMilli(value), ZoneId.systemDefault())
+        return formattedDate(localDate)
+    }
 }

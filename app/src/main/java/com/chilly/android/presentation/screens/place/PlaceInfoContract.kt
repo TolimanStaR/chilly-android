@@ -10,7 +10,7 @@ data class PlaceInfoState(
     val errorOccurred: Boolean = false,
     val expandedSections: Set<Section> = emptySet(),
     val commentText: String = "",
-    val ratingValue: Float = 0f,
+    val ratingValue: Float = 5f,
     val comments: List<CommentDto> = emptyList(),
     val allCommentsLoaded: Boolean = false,
     val isLoading: Boolean = false

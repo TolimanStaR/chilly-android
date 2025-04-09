@@ -110,6 +110,11 @@
     <string name="rating_sent_text">Your Comment has been sent!</string>
     <string name="empty_comments_received">No more comments</string>
     <string name="comment_modified_message">Your review has been changed</string>
+    <string name="rating_comment_suggest">If you have more to say, please leave comment here</string>
+    <string name="rating_in_dialog">My rate is: %1$.1f</string>
+    <string name="rating_dialog_title">Please Rate %1$s</string>
+    <string name="dialog_confirm_button">Send Feedback</string>
+    <string name="comment_card_title">%1$s Rating: %2$.1f</string>
 
     <string-array name="week_days">
         <item>Mon</item>

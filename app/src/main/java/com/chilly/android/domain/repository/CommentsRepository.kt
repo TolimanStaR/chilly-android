@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface CommentsRepository {
 
-    // TODO use constants to make more readable
     suspend fun sendReview(request: CommentRequest): Result<SendResult>
 
     fun getComments(placeId: Int): Flow<List<CommentDto>>

@@ -2,7 +2,6 @@ package com.chilly.android.data.remote.api
 
 import com.chilly.android.data.remote.dto.CommentDto
 import com.chilly.android.data.remote.dto.request.CommentRequest
-import com.chilly.android.domain.repository.CommentsRepository
 
 interface CommentsApi {
     suspend fun sendComment(request: CommentRequest): Result<CommentResult>

@@ -7,6 +7,7 @@ import com.chilly.android.domain.repository.CommentsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
+import timber.log.Timber
 
 class CommentsRepositoryImpl(
     private val commentsApi: CommentsApi
@@ -42,6 +43,7 @@ class CommentsRepositoryImpl(
     override suspend fun fetchNextCommentsPage(placeId: Int): Result<CommentsRepository.FetchResult> {
         currentPlaceId = placeId
         val fetchingPage = lastFetchedPage + 1
+
         return commentsApi.getCommentsPage(currentPlaceId, lastFetchedPage + 1)
             .map { newPage ->
                 lastFetchedPage = fetchingPage
@@ -55,6 +57,9 @@ class CommentsRepositoryImpl(
                     newPage.isNotEmpty() -> CommentsRepository.FetchResult.PageWithContent
                     else -> CommentsRepository.FetchResult.EmptyPage
                 }
+            }
+            .onFailure {
+                Timber.e("Comments page fetch failed", it)
             }
     }
 }

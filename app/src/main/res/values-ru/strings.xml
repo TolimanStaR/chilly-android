@@ -100,16 +100,21 @@
     <string name="chilly_button_caption">Получите персональную рекомендацию</string>
     <string name="rating_notification_title">Вам Понравились рекомнедации?</string>
     <string name="rating_notification_text">Пожалуйста поделитесь с нами вашими впечатлениями, это поможет сделать рекомендации лучше</string>
-    <string name="rating_title">Rate recommendations</string>
+    <string name="rating_title">Оцените рекомендации</string>
     <string name="comment_placeholder" />
-    <string name="comment_sent_message">Your feedback has been sent, thank you!</string>
-    <string name="reviews_section_title">Reviews</string>
-    <string name="rate_place_button">Write Review</string>
-    <string name="empty_comment_section">No reviews, you can leave your!</string>
-    <string name="load_comments_button">Load more</string>
-    <string name="rating_sent_text">Your Comment has been sent!</string>
-    <string name="empty_comments_received">No more comments</string>
-    <string name="comment_modified_message">Your review has been changed</string>
+    <string name="comment_sent_message">Ваш отзыв отправлен, спасибо!</string>
+    <string name="reviews_section_title">Отзывы</string>
+    <string name="rate_place_button">Написать отзыв</string>
+    <string name="empty_comment_section">Пока нет отзывов, напишите ваш!</string>
+    <string name="load_comments_button">Загрузить ещё</string>
+    <string name="rating_sent_text">Ваш отзыв отправлен!</string>
+    <string name="empty_comments_received">Отзывов больше нет</string>
+    <string name="comment_modified_message">Ваш предыдущий отзыв изменен</string>
+    <string name="rating_comment_suggest">Если вам есть что сказать, напишите здесь</string>
+    <string name="rating_in_dialog">Моя оценка: %1$s</string>
+    <string name="rating_dialog_title">Пожалуйста оцените %1$s</string>
+    <string name="dialog_confirm_button">Отправить отзыв</string>
+    <string name="comment_card_title">%1$s оценка: %2$s</string>
 
     <string-array name="week_days">
         <item>Пн</item>

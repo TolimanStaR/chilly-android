@@ -17,6 +17,7 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.chilly.android.R
 import com.chilly.android.data.remote.dto.PlaceDto
@@ -30,20 +31,22 @@ fun PlaceRatingDialog(
     onDismiss: () -> Unit,
     onRatingChange: (Float) -> Unit,
     onCommentChange: (String) -> Unit,
-    onConfirm: () -> Unit
+    onConfirm: () -> Unit,
+    commentValue: String = "",
+    ratingValue: Float = 5f
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
         title = {
-            Text("Please Rate ${place.name}")
+            Text(stringResource(R.string.rating_dialog_title, place.name))
         },
         text = {
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                var sliderState by remember { mutableFloatStateOf(5f) }
+                var sliderState by remember(ratingValue) { mutableFloatStateOf(ratingValue) }
                 Text(
-                    text = "My rate is: ${"%.1f".format(sliderState)}"
+                    text = stringResource(R.string.rating_in_dialog, sliderState)
                 )
                 val sliderColors = SliderDefaults.colors(
                     thumbColor = Yellow70,
@@ -76,9 +79,9 @@ fun PlaceRatingDialog(
                         )
                     }
                 )
-                Text("If you have more to say, please leave comment here")
+                Text(stringResource(R.string.rating_comment_suggest))
                 ChillyTextField(
-                    value = "",
+                    value = commentValue,
                     onValueChange = {
                         onCommentChange(it)
                     },
@@ -88,7 +91,7 @@ fun PlaceRatingDialog(
         },
         confirmButton = {
             ChillyButton(
-                text = "Send Feedback",
+                textRes = R.string.dialog_confirm_button,
                 onClick = {
                     onConfirm()
                     onDismiss()

@@ -53,19 +53,20 @@ class PlaceInfoCommandFlowHandler @Inject constructor(
     }
 
     private fun handleRatingSent(command: PlaceInfoCommand.SendRating): Flow<CommandEvent> = flow {
-        commentsRepository.sendReview(
+        val event = commentsRepository.sendReview(
             CommentRequest(
                 placeId = command.placeId,
                 rating = command.rating,
                 commentText = command.comment.ifEmpty { null }
             )
-        ).onSuccess { sendResult ->
-            if (sendResult is CommentsRepository.SendResult.ReviewModified) {
-                emit(CommandEvent.CommentModified)
+        ).map { sendResult ->
+            when(sendResult) {
+                CommentsRepository.SendResult.ReviewModified -> CommandEvent.CommentModified
+                CommentsRepository.SendResult.ReviewCreated -> CommandEvent.RatingSentSuccessfully
             }
-        }.onFailure {
-            emit(CommandEvent.LoadFail)
-        }
+        }.getOrDefault(CommandEvent.LoadFail)
+
+        emit(event)
     }
 
     private fun handleLoad(command: PlaceInfoCommand.LoadPlace): Flow<CommandEvent> = flow {

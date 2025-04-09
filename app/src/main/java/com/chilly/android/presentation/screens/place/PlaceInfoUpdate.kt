@@ -45,7 +45,7 @@ class PlaceInfoUpdate @Inject constructor(
                 state { copy(commentText = event.value) }
             }
             UiEvent.EmptyReviewsSectionExpanded -> {
-                commands(PlaceInfoCommand.LoadComments(state.placeId))
+                commands(PlaceInfoCommand.LoadComments(state.placeId), PlaceInfoCommand.LoadCommentsPage(state.placeId))
             }
             UiEvent.LoadNextCommentsPageClicked -> {
                 state { copy(isLoading = true) }
@@ -67,6 +67,7 @@ class PlaceInfoUpdate @Inject constructor(
         when (event) {
             CommandEvent.LoadFail -> {
                 state { copy(errorOccurred = true, isLoading = false) }
+                news(PlaceInfoNews.GeneralFail)
             }
             is CommandEvent.LoadSuccess -> {
                 state { copy(place = event.place, isLoading = false) }
@@ -75,7 +76,7 @@ class PlaceInfoUpdate @Inject constructor(
                 state { copy(isInFavorites = event.inFavorites) }
             }
             is CommandEvent.CommentsLoaded -> {
-                state { copy(comments = event.comments, isLoading = false) }
+                state { copy(comments = event.comments) }
             }
             CommandEvent.RatingSentSuccessfully -> {
                 // TODO add comment to a list
@@ -87,6 +88,7 @@ class PlaceInfoUpdate @Inject constructor(
                 news(PlaceInfoNews.EmptyCommentsLoaded)
             }
             CommandEvent.CommentModified -> {
+                state { copy(isLoading = false) }
                 news(PlaceInfoNews.CommentModified)
             }
         }

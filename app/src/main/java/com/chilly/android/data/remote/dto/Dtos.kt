@@ -70,6 +70,7 @@ class CommentDto(
     val id: Int,
     val placeId: Int,
     val userId: Int,
+    @SerialName("commentText")
     val text: String?,
     val timestamp: Long, // time milliseconds in UTC
     val rating: Float

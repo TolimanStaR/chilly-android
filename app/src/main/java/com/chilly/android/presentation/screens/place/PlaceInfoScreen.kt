@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -57,6 +58,7 @@ import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
@@ -71,6 +73,8 @@ import com.chilly.android.applicationComponent
 import com.chilly.android.di.screens.DaggerPlaceInfoComponent
 import com.chilly.android.di.screens.PlaceInfoComponent
 import com.chilly.android.presentation.common.components.ChillyButton
+import com.chilly.android.presentation.common.components.ChillyButtonColor
+import com.chilly.android.presentation.common.components.ChillyButtonType
 import com.chilly.android.presentation.common.components.ErrorReloadPlaceHolder
 import com.chilly.android.presentation.common.components.LoadingPlaceholder
 import com.chilly.android.presentation.common.components.PlaceImagesPager
@@ -136,7 +140,9 @@ private fun PlaceInfoScreen(
             PlaceRatingDialog(
                 place = place,
                 onDismiss = { showRateDialog = false },
+                ratingValue = state.ratingValue,
                 onRatingChange = { onEvent(UiEvent.RatingChanged(it)) },
+                commentValue = state.commentText,
                 onCommentChange = { onEvent(UiEvent.CommentTextChanged(it)) },
                 onConfirm = { onEvent(UiEvent.SendRatingClicked) }
             )
@@ -272,15 +278,18 @@ private fun PlaceInfoScreen(
             ) {
                 ChillyButton(
                     textRes = R.string.rate_place_button,
+                    type = ChillyButtonType.Secondary,
                     onClick = {
                         showRateDialog = true
-                    }
+                    },
+                    modifier = Modifier.fillMaxWidth()
                 )
                 LaunchedEffect(Unit) {
-                    if (state.comments.isNotEmpty()) {
+                    if (state.comments.isEmpty()) {
                         onEvent(UiEvent.EmptyReviewsSectionExpanded)
                     }
                 }
+
                 if (state.isLoading) {
                     Row(
                         horizontalArrangement = Arrangement.Center,
@@ -290,43 +299,22 @@ private fun PlaceInfoScreen(
                     }
                 }
                 if (state.comments.isEmpty()) {
-                    Text(stringResource(R.string.empty_comment_section))
+                    Text(
+                        text = stringResource(R.string.empty_comment_section),
+                        textAlign = TextAlign.Center,
+                        color = MaterialTheme.colorScheme.secondary,
+                        modifier = Modifier.fillMaxWidth()
+                    )
                 } else {
                     LazyColumn(
                         verticalArrangement = Arrangement.spacedBy(8.dp),
-                        modifier = Modifier.height(400.dp)
+                        modifier = Modifier.heightIn(max = 400.dp)
                     ) {
+                        item {
+                            Spacer(Modifier.height(4.dp))
+                        }
                         items(state.comments, key = { it.id }) { comment ->
-                            ElevatedCard(
-                                colors = CardDefaults.elevatedCardColors(
-                                    containerColor = MaterialTheme.colorScheme.surface
-                                ),
-                                elevation = CardDefaults.cardElevation(4.dp),
-                                modifier = Modifier.fillMaxWidth(),
-                            ) {
-                                Column(
-                                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                                    modifier = Modifier.padding(16.dp)
-                                ) {
-                                    Row(
-                                        horizontalArrangement = Arrangement.spacedBy(16.dp),
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        Text(
-                                            text = "${comment.timeString}, ${"{%.1f}".format(comment.rating)}",
-                                            style = MaterialTheme.typography.headlineSmall
-                                        )
-                                        Icon(
-                                            imageVector = Icons.Default.Star,
-                                            contentDescription = null,
-                                            tint = Yellow70
-                                        )
-                                    }
-                                    comment.text?.let {
-                                        Text(text = it)
-                                    }
-                                }
-                            }
+                            CommentCard(comment)
                         }
                         if (!state.allCommentsLoaded) {
                             item {
@@ -334,12 +322,58 @@ private fun PlaceInfoScreen(
                                     textRes = R.string.load_comments_button,
                                     onClick = {
                                         onEvent(UiEvent.LoadNextCommentsPageClicked)
-                                    }
+                                    },
+                                    type = ChillyButtonType.Secondary,
+                                    color = ChillyButtonColor.Gray,
+                                    modifier = Modifier.fillMaxWidth()
                                 )
                             }
                         }
+                        item {
+                            Spacer(Modifier.height(4.dp))
+                        }
                     }
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun CommentCard(
+    comment: CommentUiModel
+) {
+    ElevatedCard(
+        colors = CardDefaults.elevatedCardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        elevation = CardDefaults.cardElevation(4.dp),
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = stringResource(
+                        R.string.comment_card_title,
+                        comment.timeString,
+                        comment.rating
+                    ),
+                    style = MaterialTheme.typography.headlineSmall
+                )
+                Icon(
+                    imageVector = Icons.Default.Star,
+                    contentDescription = null,
+                    tint = Yellow70
+                )
+            }
+            comment.text?.let {
+                Text(text = it)
             }
         }
     }
@@ -373,6 +407,7 @@ private fun ExpandableSection(
     expanded: Boolean,
     onToggle: () -> Unit,
     title: @Composable () -> Unit,
+    contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp),
     content: @Composable ColumnScope.() -> Unit,
 ) {
     Column {
@@ -399,7 +434,7 @@ private fun ExpandableSection(
             Column(
                 verticalArrangement = Arrangement.spacedBy(4.dp),
                 modifier = Modifier
-                    .padding(start = 16.dp)
+                    .padding(contentPadding)
             ) {
                 content()
             }
