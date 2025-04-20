@@ -1,16 +1,20 @@
 package com.chilly.android.presentation.screens.place
 
+import com.chilly.android.data.remote.dto.request.CommentRequest
+import com.chilly.android.domain.repository.CommentsRepository
 import com.chilly.android.domain.repository.PlaceRepository
 import com.chilly.android.presentation.screens.place.PlaceInfoEvent.CommandEvent
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import ru.tinkoff.kotea.core.CommandsFlowHandler
 import javax.inject.Inject
 
 class PlaceInfoCommandFlowHandler @Inject constructor(
-    private val placeRepository: PlaceRepository
+    private val placeRepository: PlaceRepository,
+    private val commentsRepository: CommentsRepository
 ) : CommandsFlowHandler<PlaceInfoCommand, CommandEvent> {
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -20,6 +24,9 @@ class PlaceInfoCommandFlowHandler @Inject constructor(
                 is PlaceInfoCommand.LoadPlace -> handleLoad(it)
                 is PlaceInfoCommand.CheckFavorite -> handleFavoriteCheck(it)
                 is PlaceInfoCommand.ToggleFavorites -> handleFavoritesToggle(it)
+                is PlaceInfoCommand.LoadComments -> handleComments(it)
+                is PlaceInfoCommand.LoadCommentsPage -> handleCommentsPage(it)
+                is PlaceInfoCommand.SendRating -> handleRatingSent(it)
             }
         }
 
@@ -27,6 +34,39 @@ class PlaceInfoCommandFlowHandler @Inject constructor(
         val newStatus = !command.currentlyInFavorites
         placeRepository.updateFavorites(command.placeId, newStatus)
         emit(CommandEvent.FavoritesCheckResult(newStatus))
+    }
+
+    private fun handleComments(command: PlaceInfoCommand.LoadComments): Flow<CommandEvent> =
+        commentsRepository.getComments(command.placeId)
+            .map { CommandEvent.CommentsLoaded(it) }
+
+    private fun handleCommentsPage(command: PlaceInfoCommand.LoadCommentsPage): Flow<CommandEvent> = flow {
+        commentsRepository.fetchNextCommentsPage(command.placeId)
+            .onSuccess { fetchResult ->
+                if (fetchResult is CommentsRepository.FetchResult.EmptyPage) {
+                    emit(CommandEvent.EmptyCommentPage)
+                }
+            }
+            .onFailure {
+                emit(CommandEvent.LoadFail)
+            }
+    }
+
+    private fun handleRatingSent(command: PlaceInfoCommand.SendRating): Flow<CommandEvent> = flow {
+        val event = commentsRepository.sendReview(
+            CommentRequest(
+                placeId = command.placeId,
+                rating = command.rating,
+                commentText = command.comment.ifEmpty { null }
+            )
+        ).map { sendResult ->
+            when(sendResult) {
+                CommentsRepository.SendResult.ReviewModified -> CommandEvent.CommentModified
+                CommentsRepository.SendResult.ReviewCreated -> CommandEvent.RatingSentSuccessfully
+            }
+        }.getOrDefault(CommandEvent.LoadFail)
+
+        emit(event)
     }
 
     private fun handleLoad(command: PlaceInfoCommand.LoadPlace): Flow<CommandEvent> = flow {

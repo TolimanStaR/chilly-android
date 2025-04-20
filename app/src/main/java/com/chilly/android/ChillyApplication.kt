@@ -23,9 +23,9 @@ class ChillyApplication : Application() {
         }
 
         val channel = NotificationChannel(
-            LOCATION_NOTIFICATION_CHANNEL,
-            LOCATION_NOTIFICATION_CHANNEL,
-            NotificationManager.IMPORTANCE_LOW
+            NOTIFICATION_CHANNEL,
+            NOTIFICATION_CHANNEL,
+            NotificationManager.IMPORTANCE_DEFAULT
         )
 
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -33,7 +33,7 @@ class ChillyApplication : Application() {
     }
 
     companion object {
-        const val LOCATION_NOTIFICATION_CHANNEL = "location_channel"
+        const val NOTIFICATION_CHANNEL = "notifications_channel"
     }
 }
 

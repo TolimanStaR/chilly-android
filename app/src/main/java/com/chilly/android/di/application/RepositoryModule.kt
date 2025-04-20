@@ -5,10 +5,12 @@ import com.chilly.android.data.local.dao.HistoryDao
 import com.chilly.android.data.local.dao.PlaceDao
 import com.chilly.android.data.mapper.HistoryMapper
 import com.chilly.android.data.mapper.PlaceMapper
+import com.chilly.android.data.remote.api.CommentsApi
 import com.chilly.android.data.remote.api.FeedApi
 import com.chilly.android.data.remote.api.QuizApi
 import com.chilly.android.data.remote.api.RecommendationApi
 import com.chilly.android.data.remote.api.UserApi
+import com.chilly.android.data.repository.CommentsRepositoryImpl
 import com.chilly.android.data.repository.FeedRepositoryImpl
 import com.chilly.android.data.repository.LocationRepositoryImpl
 import com.chilly.android.data.repository.PlaceRepositoryImpl
@@ -16,6 +18,7 @@ import com.chilly.android.data.repository.PreferencesRepositoryImpl
 import com.chilly.android.data.repository.QuizRepositoryImpl
 import com.chilly.android.data.repository.RecommendationRepositoryImpl
 import com.chilly.android.data.repository.UserRepositoryImpl
+import com.chilly.android.domain.repository.CommentsRepository
 import com.chilly.android.domain.repository.FeedRepository
 import com.chilly.android.domain.repository.LocationRepository
 import com.chilly.android.domain.repository.PlaceRepository
@@ -90,6 +93,12 @@ class RepositoryModule {
         locationRepository
     )
 
-
+    @Provides
+    @Singleton
+    fun provideCommentsRepository(
+        commentsApi: CommentsApi
+    ): CommentsRepository = CommentsRepositoryImpl(
+        commentsApi
+    )
 
 }

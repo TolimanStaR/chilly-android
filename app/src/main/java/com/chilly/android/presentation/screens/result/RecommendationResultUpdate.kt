@@ -1,9 +1,13 @@
 package com.chilly.android.presentation.screens.result
 
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkRequest
+import androidx.work.workDataOf
+import com.chilly.android.data.remote.dto.PlaceDto
 import com.chilly.android.presentation.screens.result.RecommendationResultEvent.CommandEvent
 import com.chilly.android.presentation.screens.result.RecommendationResultEvent.UiEvent
 import ru.tinkoff.kotea.core.dsl.DslUpdate
-import timber.log.Timber
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class RecommendationResultUpdate @Inject constructor(
@@ -30,6 +34,13 @@ class RecommendationResultUpdate @Inject constructor(
             is UiEvent.PlaceClicked -> {
                 news(RecommendationResultNews.NavigatePlace(event.id))
             }
+
+            is UiEvent.OnPermissionRequestResult -> {
+                state { copy(isPermissionGranted = event.isGranted) }
+            }
+            UiEvent.PermissionGranted -> {
+                state { copy(isPermissionGranted = true) }
+            }
         }
     }
 
@@ -40,12 +51,23 @@ class RecommendationResultUpdate @Inject constructor(
             }
             is CommandEvent.LoadingSuccess -> {
                 state { copy(recommendations = event.recommendations) }
+                news(RecommendationResultNews.SubmitNotificationRequest(
+                    createNotificationRequest(event.recommendations)
+                ))
             }
 
             CommandEvent.ClearData -> {
-                Timber.e("result cleared")
                 state {copy(recommendations = emptyList()) }
             }
         }
+    }
+
+    private fun createNotificationRequest(recs: List<PlaceDto>): WorkRequest {
+        return OneTimeWorkRequestBuilder<NotificationWork>()
+            .setInitialDelay(10, TimeUnit.SECONDS)
+            .setInputData(workDataOf(
+                NotificationWork.INPUT_PLACE_IDS to recs.map { it.id }.toIntArray()
+            ))
+            .build()
     }
 }

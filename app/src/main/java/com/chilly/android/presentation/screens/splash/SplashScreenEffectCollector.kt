@@ -16,6 +16,7 @@ class SplashScreenEffectCollector @Inject constructor(
             SplashScreenEffect.NavigateLogin -> router.newRootScreen(Destination.LogIn)
             SplashScreenEffect.NavigateMain -> router.newRootScreen(Destination.Main)
             SplashScreenEffect.NavigateOnboarding -> router.newRootScreen(Destination.Onboarding(0))
+            is SplashScreenEffect.NavigateRating -> router.newRootScreen(Destination.Rating(value.ids))
         }
     }
 }

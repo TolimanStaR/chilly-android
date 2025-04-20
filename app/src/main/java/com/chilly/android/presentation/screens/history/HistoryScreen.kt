@@ -1,6 +1,5 @@
 package com.chilly.android.presentation.screens.history
 
-import android.content.res.Resources
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
@@ -213,7 +212,7 @@ fun NavGraphBuilder.installHistoryScreen(padding: PaddingValues) {
             },
             storeFactory = { store() }
         ) {
-            val state = collectState(Resources::mapToHistoryUi)
+            val state = collectState(component.uiStateMapper)
             NewsCollector(component.newsCollector)
             HistoryScreen(state.value, padding, store::dispatch)
         }

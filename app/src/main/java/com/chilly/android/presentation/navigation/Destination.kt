@@ -42,4 +42,7 @@ sealed interface Destination : Screen {
     @Serializable
     data class PlaceInfo(val id: Int) : Destination
 
+    @Serializable
+    data class Rating(val ids: List<Int>) : Destination
+
 }

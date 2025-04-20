@@ -22,6 +22,7 @@ cicerone = "7.1"
 coil = "3.1.0"
 room = "2.6.1"
 googleLocationService = "21.3.0"
+work = "2.10.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -60,6 +61,7 @@ room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 google-location-service = { module = "com.google.android.gms:play-services-location", version.ref = "googleLocationService"}
+androidx-work = { module = "androidx.work:work-runtime-ktx", version.ref = "work" }
 
 
 [plugins]

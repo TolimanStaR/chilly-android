@@ -40,19 +40,56 @@ class PlaceInfoUpdate @Inject constructor(
             UiEvent.BackClicked -> {
                 news(PlaceInfoNews.NavigateUp)
             }
+
+            is UiEvent.CommentTextChanged -> {
+                state { copy(commentText = event.value) }
+            }
+            UiEvent.EmptyReviewsSectionExpanded -> {
+                commands(PlaceInfoCommand.LoadComments(state.placeId), PlaceInfoCommand.LoadCommentsPage(state.placeId))
+            }
+            UiEvent.LoadNextCommentsPageClicked -> {
+                state { copy(isLoading = true) }
+                commands(PlaceInfoCommand.LoadCommentsPage(state.placeId))
+            }
+            is UiEvent.RatingChanged -> {
+                state { copy(ratingValue = event.value) }
+            }
+            UiEvent.SendRatingClicked -> {
+                state { copy(isLoading = true) }
+                with(state) {
+                    commands(PlaceInfoCommand.SendRating(placeId, ratingValue, commentText))
+                }
+            }
         }
     }
 
     private fun NextBuilder.updateOnCommand(event: CommandEvent) {
         when (event) {
             CommandEvent.LoadFail -> {
-                state { copy(errorOccurred = true) }
+                state { copy(errorOccurred = true, isLoading = false) }
+                news(PlaceInfoNews.GeneralFail)
             }
             is CommandEvent.LoadSuccess -> {
-                state { copy(place = event.place) }
+                state { copy(place = event.place, isLoading = false) }
             }
             is CommandEvent.FavoritesCheckResult -> {
                 state { copy(isInFavorites = event.inFavorites) }
+            }
+            is CommandEvent.CommentsLoaded -> {
+                state { copy(comments = event.comments) }
+            }
+            CommandEvent.RatingSentSuccessfully -> {
+                // TODO add comment to a list
+                state { copy(isLoading = false) }
+                news(PlaceInfoNews.RatingSent)
+            }
+            CommandEvent.EmptyCommentPage -> {
+                state { copy(allCommentsLoaded = true, isLoading = false) }
+                news(PlaceInfoNews.EmptyCommentsLoaded)
+            }
+            CommandEvent.CommentModified -> {
+                state { copy(isLoading = false) }
+                news(PlaceInfoNews.CommentModified)
             }
         }
     }

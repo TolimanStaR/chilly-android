@@ -13,7 +13,7 @@ class SplashScreenViewModel(
     private val tokenUseCase: TryRefreshTokenUseCase,
     private val collector: SplashScreenEffectCollector,
     @VisibleForTesting effectReply: Int
-): ViewModelWithEffects<SplashScreenEffect, Nothing>(effectReply) {
+): ViewModelWithEffects<SplashScreenEffect, SplashScreenEvent>(effectReply) {
 
     @Inject
     constructor(
@@ -26,24 +26,29 @@ class SplashScreenViewModel(
         viewModelScope.launch {
             effects.collect(collector)
         }
+    }
 
+    private suspend fun tryOnboarding(mainDestination: SplashScreenEffect) {
+        if (preferencesRepository.hasSeenOnboarding()) {
+            emit(mainDestination)
+        } else {
+            emit(SplashScreenEffect.NavigateOnboarding)
+        }
+    }
+
+    private fun loadScreen(mainDestination: SplashScreenEffect) {
         viewModelScope.launch {
             val loggedIn = tokenUseCase.invoke()
             if (loggedIn) {
-                tryOnboarding()
+                tryOnboarding(mainDestination)
             } else {
                 emit(SplashScreenEffect.NavigateLogin)
             }
         }
     }
 
-    private suspend fun tryOnboarding() {
-        if (preferencesRepository.hasSeenOnboarding()) {
-            emit(SplashScreenEffect.NavigateMain)
-        } else {
-            emit(SplashScreenEffect.NavigateOnboarding)
-        }
+    override fun dispatch(event: SplashScreenEvent) = when(event) {
+        is SplashScreenEvent.GotNotificationEvent -> loadScreen(SplashScreenEffect.NavigateRating(event.recIds))
+        SplashScreenEvent.GotRegularIntent -> loadScreen(SplashScreenEffect.NavigateMain)
     }
-
-    override fun dispatch(event: Nothing) = Unit
 }

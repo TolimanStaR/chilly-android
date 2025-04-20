@@ -3,7 +3,6 @@ package com.chilly.android.presentation.common.structure
 import android.content.Context
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.ViewModelStoreOwner
-import io.ktor.http.parameters
 import ru.tinkoff.kotea.android.storeViaViewModel
 import ru.tinkoff.kotea.core.Store
 import kotlin.reflect.KClass

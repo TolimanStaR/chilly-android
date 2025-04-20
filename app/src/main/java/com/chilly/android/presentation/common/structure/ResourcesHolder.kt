@@ -1,8 +1,10 @@
 package com.chilly.android.presentation.common.structure
 
+import android.content.Context
 import android.content.res.Resources
 import androidx.annotation.StringRes
 import androidx.compose.material3.SnackbarHostState
+import androidx.work.WorkManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -41,4 +43,12 @@ class SnackbarShower @Inject constructor(
             snackbarHostState.showSnackbar(text)
         }
     }
+}
+
+@Singleton
+class WorkManagerProvider @Inject constructor(
+    private val applicationContext: Context
+) {
+
+    fun getInstance(): WorkManager = WorkManager.getInstance(applicationContext)
 }

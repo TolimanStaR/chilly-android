@@ -14,8 +14,13 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -23,7 +28,11 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -33,7 +42,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -45,6 +58,7 @@ import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
@@ -59,9 +73,12 @@ import com.chilly.android.applicationComponent
 import com.chilly.android.di.screens.DaggerPlaceInfoComponent
 import com.chilly.android.di.screens.PlaceInfoComponent
 import com.chilly.android.presentation.common.components.ChillyButton
+import com.chilly.android.presentation.common.components.ChillyButtonColor
+import com.chilly.android.presentation.common.components.ChillyButtonType
 import com.chilly.android.presentation.common.components.ErrorReloadPlaceHolder
 import com.chilly.android.presentation.common.components.LoadingPlaceholder
 import com.chilly.android.presentation.common.components.PlaceImagesPager
+import com.chilly.android.presentation.common.components.PlaceRatingDialog
 import com.chilly.android.presentation.common.structure.NewsCollector
 import com.chilly.android.presentation.common.structure.ScreenHolder
 import com.chilly.android.presentation.common.structure.collectState
@@ -69,11 +86,12 @@ import com.chilly.android.presentation.navigation.Destination
 import com.chilly.android.presentation.screens.place.PlaceInfoEvent.UiEvent
 import com.chilly.android.presentation.theme.ChillyTheme
 import com.chilly.android.presentation.theme.LinkColor
+import com.chilly.android.presentation.theme.Yellow70
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun PlaceInfoScreen(
-    state: PlaceInfoState,
+    state: PlaceUiState,
     padding: PaddingValues,
     onEvent: (UiEvent) -> Unit
 ) {
@@ -117,6 +135,18 @@ private fun PlaceInfoScreen(
                 bottom = maxOf(padding.calculateBottomPadding(), scaffoldPadding.calculateBottomPadding())
             )
         }
+        var showRateDialog by remember { mutableStateOf(false) }
+        if (showRateDialog) {
+            PlaceRatingDialog(
+                place = place,
+                onDismiss = { showRateDialog = false },
+                ratingValue = state.ratingValue,
+                onRatingChange = { onEvent(UiEvent.RatingChanged(it)) },
+                commentValue = state.commentText,
+                onCommentChange = { onEvent(UiEvent.CommentTextChanged(it)) },
+                onConfirm = { onEvent(UiEvent.SendRatingClicked) }
+            )
+        }
         Column(
             verticalArrangement = Arrangement.spacedBy(12.dp),
             modifier = Modifier
@@ -158,8 +188,7 @@ private fun PlaceInfoScreen(
                 }
             }
             HorizontalDivider()
-            // data
-            // address + rating -> button 'open on map' -> open hours section (expandable) -> contacts section (expandable)
+
             Column {
                 HeadlineText(stringResource(R.string.place_address_title))
                 Text(place.address)
@@ -168,7 +197,6 @@ private fun PlaceInfoScreen(
                 Row {
                     HeadlineText(stringResource(R.string.place_rating_title))
                     Text(rating.toString())
-                    // TODO stars for rating
                 }
             }
 
@@ -238,6 +266,115 @@ private fun PlaceInfoScreen(
                     }
                 }
             }
+
+            ExpandableSection(
+                expanded = Section.COMMENTS in state.expandedSections,
+                onToggle = {
+                    onEvent(UiEvent.ToggleExpansion(Section.COMMENTS))
+                },
+                title = {
+                    HeadlineText(stringResource(R.string.reviews_section_title))
+                }
+            ) {
+                ChillyButton(
+                    textRes = R.string.rate_place_button,
+                    type = ChillyButtonType.Secondary,
+                    onClick = {
+                        showRateDialog = true
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                LaunchedEffect(Unit) {
+                    if (state.comments.isEmpty()) {
+                        onEvent(UiEvent.EmptyReviewsSectionExpanded)
+                    }
+                }
+
+                if (state.isLoading) {
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                }
+                if (state.comments.isEmpty()) {
+                    Text(
+                        text = stringResource(R.string.empty_comment_section),
+                        textAlign = TextAlign.Center,
+                        color = MaterialTheme.colorScheme.secondary,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                } else {
+                    LazyColumn(
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier.heightIn(max = 400.dp)
+                    ) {
+                        item {
+                            Spacer(Modifier.height(4.dp))
+                        }
+                        items(state.comments, key = { it.id }) { comment ->
+                            CommentCard(comment)
+                        }
+                        if (!state.allCommentsLoaded) {
+                            item {
+                                ChillyButton(
+                                    textRes = R.string.load_comments_button,
+                                    onClick = {
+                                        onEvent(UiEvent.LoadNextCommentsPageClicked)
+                                    },
+                                    type = ChillyButtonType.Secondary,
+                                    color = ChillyButtonColor.Gray,
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+                            }
+                        }
+                        item {
+                            Spacer(Modifier.height(4.dp))
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun CommentCard(
+    comment: CommentUiModel
+) {
+    ElevatedCard(
+        colors = CardDefaults.elevatedCardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        elevation = CardDefaults.cardElevation(4.dp),
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = stringResource(
+                        R.string.comment_card_title,
+                        comment.timeString,
+                        comment.rating
+                    ),
+                    style = MaterialTheme.typography.headlineSmall
+                )
+                Icon(
+                    imageVector = Icons.Default.Star,
+                    contentDescription = null,
+                    tint = Yellow70
+                )
+            }
+            comment.text?.let {
+                Text(text = it)
+            }
         }
     }
 }
@@ -270,6 +407,7 @@ private fun ExpandableSection(
     expanded: Boolean,
     onToggle: () -> Unit,
     title: @Composable () -> Unit,
+    contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp),
     content: @Composable ColumnScope.() -> Unit,
 ) {
     Column {
@@ -296,7 +434,7 @@ private fun ExpandableSection(
             Column(
                 verticalArrangement = Arrangement.spacedBy(4.dp),
                 modifier = Modifier
-                    .padding(start = 16.dp)
+                    .padding(contentPadding)
             ) {
                 content()
             }
@@ -324,7 +462,7 @@ fun NavGraphBuilder.installPlaceInfoScreen(padding: PaddingValues) {
             storeFactory = { storeFactory.create(route.id) },
             route.id
         ) {
-            val state = collectState()
+            val state = collectState(component.stateUiMapper)
             NewsCollector(component.newsCollector)
             PlaceInfoScreen(state.value, padding, store::dispatch)
         }
@@ -337,7 +475,7 @@ fun NavGraphBuilder.installPlaceInfoScreen(padding: PaddingValues) {
 private fun PreviewPlaceInfoScreen() {
     ChillyTheme {
         PlaceInfoScreen(
-            state = PlaceInfoState(-1),
+            state = PlaceUiState(-1),
             padding = PaddingValues(),
             onEvent = {}
         )

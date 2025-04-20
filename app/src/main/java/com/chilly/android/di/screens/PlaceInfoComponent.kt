@@ -4,7 +4,7 @@ package com.chilly.android.di.screens
 import com.chilly.android.di.application.ApplicationComponent
 import com.chilly.android.presentation.screens.place.PlaceInfoNewsCollector
 import com.chilly.android.presentation.screens.place.PlaceInfoStore
-import dagger.BindsInstance
+import com.chilly.android.presentation.screens.place.PlaceUiMapper
 import dagger.Component
 import javax.inject.Scope
 
@@ -14,6 +14,7 @@ interface PlaceInfoComponent {
 
     val storeFactory: PlaceInfoStore.Factory
     val newsCollector: PlaceInfoNewsCollector
+    val stateUiMapper: PlaceUiMapper
 
     @Component.Builder
     interface Builder {

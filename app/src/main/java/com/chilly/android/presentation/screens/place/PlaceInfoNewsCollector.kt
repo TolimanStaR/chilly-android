@@ -13,12 +13,11 @@ class PlaceInfoNewsCollector @Inject constructor(
 
     override suspend fun emit(value: PlaceInfoNews) {
         when (value) {
-            PlaceInfoNews.GeneralFail -> {
-                snackbarShower.show(R.string.general_fail_message)
-            }
-            PlaceInfoNews.NavigateUp -> {
-                router.exit()
-            }
+            PlaceInfoNews.GeneralFail -> snackbarShower.show(R.string.general_fail_message)
+            PlaceInfoNews.NavigateUp -> router.exit()
+            PlaceInfoNews.RatingSent -> snackbarShower.show(R.string.rating_sent_text)
+            PlaceInfoNews.EmptyCommentsLoaded -> snackbarShower.show(R.string.empty_comments_received)
+            PlaceInfoNews.CommentModified -> snackbarShower.show(R.string.comment_modified_message)
         }
     }
 }

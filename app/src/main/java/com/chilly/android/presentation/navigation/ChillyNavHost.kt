@@ -28,6 +28,7 @@ import com.chilly.android.presentation.screens.onboarding.installOnboardingCompo
 import com.chilly.android.presentation.screens.place.installPlaceInfoScreen
 import com.chilly.android.presentation.screens.profile.installProfileScreen
 import com.chilly.android.presentation.screens.quiz.installQuizScreen
+import com.chilly.android.presentation.screens.rating.installRatingScreen
 import com.chilly.android.presentation.screens.result.installRecommendationResultScreen
 import com.chilly.android.presentation.screens.sign_up.installSignUpComposable
 import com.chilly.android.presentation.screens.splash.installSplashComposable
@@ -71,6 +72,7 @@ fun ChillyNavHost(navController: NavHostController = rememberNavController()) {
             installPlaceInfoScreen(innerPadding)
             installHistoryScreen(innerPadding)
             installFavoritesScreen(innerPadding)
+            installRatingScreen(innerPadding)
         }
     }
 }
@@ -82,6 +84,7 @@ private fun NavBackStackEntry?.topBarState(): TopBarState? {
         matches<Destination.Favorites>() -> TopBarState(R.string.favorites_screen_title)
         matches<Destination.Quiz>() -> TopBarState(R.string.quiz_screen_title, showBackButton = true, showProfileAction = false)
         matches<Destination.RecommendationResult>() -> TopBarState(R.string.recommendation_result_title, showBackButton = true, showProfileAction = false)
+        matches<Destination.Rating>() -> TopBarState(R.string.rating_title, showBackButton = true, showProfileAction = false)
         else -> null
     }
 }

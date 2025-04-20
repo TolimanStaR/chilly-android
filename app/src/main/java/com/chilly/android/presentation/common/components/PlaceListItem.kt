@@ -2,7 +2,6 @@ package com.chilly.android.presentation.common.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil3.compose.SubcomposeAsyncImage
 import com.chilly.android.data.remote.dto.PlaceDto
@@ -36,19 +36,45 @@ fun PlaceListItem(
     place: PlaceDto,
     onclick: () -> Unit
 ) {
+    PlaceCard(
+        place,
+        onCardClick = { onclick() }
+    ) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text(
+                text = place.name,
+                style = MaterialTheme.typography.headlineSmall
+            )
+            Text(
+                text = place.address
+            )
+        }
+    }
+}
+
+@Composable
+fun PlaceCard(
+    place: PlaceDto,
+    imageSize: Dp = 60.dp,
+    onCardClick: (PlaceDto) -> Unit = {},
+    content: @Composable (PlaceDto) -> Unit
+) {
     ElevatedCard(
         colors = CardDefaults.elevatedCardColors(
             containerColor = MaterialTheme.colorScheme.surface
         ),
         elevation = CardDefaults.cardElevation(4.dp),
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
+        onClick = {
+            onCardClick(place)
+        }
     ) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .clickable(onClick = onclick)
-                .padding(16.dp)
+            modifier = Modifier.padding(16.dp)
         ) {
             SubcomposeAsyncImage(
                 model = place.imageUrls.firstOrNull(),
@@ -67,19 +93,9 @@ fun PlaceListItem(
                 },
                 modifier = Modifier
                     .clip(RoundedCornerShape(8.dp))
-                    .size(60.dp)
+                    .size(imageSize)
             )
-            Column(
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Text(
-                    text = place.name,
-                    style = MaterialTheme.typography.headlineSmall
-                )
-                Text(
-                    text = place.address
-                )
-            }
+            content(place)
         }
     }
 }

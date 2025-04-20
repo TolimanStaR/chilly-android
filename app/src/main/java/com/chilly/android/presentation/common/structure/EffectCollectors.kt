@@ -8,10 +8,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import ru.tinkoff.kotea.core.Store
 
 @Composable
@@ -33,13 +35,21 @@ fun <St: Any, S: Store<St, *, *>> ScreenHolderStoreScope<S, *>.collectState(): S
 
 @Composable
 fun <St: Any, UiSt: Any, S: Store<St, *, *>> ScreenHolderStoreScope<S, *>.collectState(
-    mapper: suspend Resources.(St) -> UiSt
+    mapper: UiStateMapper<St, UiSt>
 ): State<UiSt> {
     val resources = LocalContext.current.resources
-    val initialValue = runBlocking { resources.mapper(store.state.value) }
+    val initialValue = runBlocking { mapToUi(resources, store.state.value, mapper) }
     return store.state
-        .map { resources.mapper(it) }
+        .map { value -> mapToUi(resources, value, mapper) }
         .collectAsStateWithLifecycle(initialValue)
+}
+
+private suspend fun <St: Any, UiSt: Any> mapToUi(resources: Resources, state: St, mapper: UiStateMapper<St, UiSt>): UiSt {
+    return withContext(Dispatchers.Default) {
+        with(mapper) {
+            resources.mapToUiState(state)
+        }
+    }
 }
 
 @Composable

@@ -8,6 +8,15 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        create("release") {
+            storeFile =
+                file("${rootDir}/chilly-keystore.jks")
+            storePassword = System.getenv("STORE_PASSWORD")
+            keyAlias = "release_key"
+            keyPassword = System.getenv("KEY_PASSWORD")
+        }
+    }
     namespace = "com.chilly.android"
     compileSdk = 35
 
@@ -28,6 +37,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {
@@ -76,6 +86,7 @@ dependencies {
     implementation(libs.room.ktx)
     ksp(libs.room.compiler)
     implementation(libs.google.location.service)
+    implementation(libs.androidx.work)
 
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.mockk)
