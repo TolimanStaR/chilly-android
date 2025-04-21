@@ -36,14 +36,14 @@ jobs:
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: ./gradlew assembleRelease
 
-      - name: Upload Release Artifact
-        uses: actions/upload-release-asset@v1.0.2
+      - name: Create Github release
+        uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag: ${{ github.event.inputs.version_tag }}
-          release_name: Chilly Android ${{ github.event.inputs.version_tag }}
-          body: 'Automatically generated release'
+          token: ${{ secrets.GITHUB_TOKEN }}
           files: app/build/outputs/apk/release/app-release.apk
+          name: "Chilly Android Release ${{ github.event.inputs.version_tag }}"
+          tag_name: ${{ github.event.inputs.version_tag }}
           draft: false
           prerelease: false
