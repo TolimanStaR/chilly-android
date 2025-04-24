@@ -27,9 +27,9 @@ import com.chilly.android.presentation.theme.ChillyTheme
 private fun SplashScreen(
     onEvent: (SplashScreenEvent) -> Unit
 ) {
-    val activity = LocalContext.current as Activity
+    val activity = LocalContext.current as? Activity
     LaunchedEffect(Unit) {
-        activity.intent?.extras?.let { bundle ->
+        activity?.intent?.extras?.let { bundle ->
             val ids = bundle.getIntArray(NotificationWork.INPUT_PLACE_IDS)
             if (ids != null) {
                 onEvent(SplashScreenEvent.GotNotificationEvent(ids.toList()))

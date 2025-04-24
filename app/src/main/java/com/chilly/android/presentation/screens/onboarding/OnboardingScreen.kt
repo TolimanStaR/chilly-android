@@ -91,7 +91,7 @@ private fun OnboardingScreen(
                         type = ChillyButtonType.Tertiary,
                         modifier = Modifier.weight(1f),
                         onClick = {
-                            onEvent(OnboardingEvent.Finish)
+                            onEvent(OnboardingEvent.Finish(onboarding.loggedIn))
                         }
                     )
                 }
@@ -99,7 +99,7 @@ private fun OnboardingScreen(
                     textRes = onboardingUi.nextTextId,
                     modifier = Modifier.weight(1f),
                     onClick = {
-                        onEvent(OnboardingEvent.NextStep(onboarding.index, OnboardingUi.count))
+                        onEvent(OnboardingEvent.NextStep(onboarding.index, onboarding.loggedIn, OnboardingUi.count))
                     }
                 )
             }
