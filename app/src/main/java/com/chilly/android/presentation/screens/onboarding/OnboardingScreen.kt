@@ -30,7 +30,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.chilly.android.R
 import com.chilly.android.applicationComponent
@@ -41,6 +40,7 @@ import com.chilly.android.presentation.common.components.ChillyButtonType
 import com.chilly.android.presentation.common.structure.EffectCollector
 import com.chilly.android.presentation.common.structure.ScreenHolder
 import com.chilly.android.presentation.navigation.Destination
+import com.chilly.android.presentation.navigation.slidingComposable
 import com.chilly.android.presentation.theme.ChillyTheme
 import com.chilly.android.presentation.theme.Gray90
 import com.chilly.android.presentation.theme.Peach10
@@ -127,7 +127,7 @@ private fun Stepper(index: Int) {
 
 
 fun NavGraphBuilder.installOnboardingComposable(padding: PaddingValues) {
-    composable<Destination.Onboarding> { backStack ->
+    slidingComposable<Destination.Onboarding>{ backStack ->
         ScreenHolder(
             componentFactory = {
                 DaggerOnboardingComponent.builder()

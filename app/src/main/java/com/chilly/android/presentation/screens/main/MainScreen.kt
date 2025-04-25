@@ -51,7 +51,6 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.compose.composable
 import com.chilly.android.R
 import com.chilly.android.applicationComponent
 import com.chilly.android.di.screens.DaggerMainComponent
@@ -64,6 +63,7 @@ import com.chilly.android.presentation.common.structure.NewsCollector
 import com.chilly.android.presentation.common.structure.ScreenHolder
 import com.chilly.android.presentation.common.structure.collectState
 import com.chilly.android.presentation.navigation.Destination
+import com.chilly.android.presentation.navigation.fadingComposable
 import com.chilly.android.presentation.screens.main.MainEvent.UiEvent
 import com.chilly.android.presentation.theme.ChillyTheme
 
@@ -74,19 +74,19 @@ private fun MainScreen(
     scaffoldPadding: PaddingValues,
     onEvent: (UiEvent) -> Unit
 ) {
-    val context = LocalContext.current as Activity
+    val context = LocalContext.current as? Activity
     val permissionLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
         onEvent(UiEvent.GotPermissionRequestResult(permissions))
     }
     var permissionRationaleDialogIsShown by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) { // checkPermissions
         when {
-            MainState.PERMISSIONS.any {
+            context != null && MainState.PERMISSIONS.any {
                 ActivityCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
             } -> {
                 onEvent(UiEvent.PermissionsGranted)
             }
-            MainState.PERMISSIONS.any {
+            context != null && MainState.PERMISSIONS.any {
                 ActivityCompat.shouldShowRequestPermissionRationale(context,it)
             } -> {
                 permissionRationaleDialogIsShown = true
@@ -129,7 +129,7 @@ private fun MainScreen(
         onEvent(UiEvent.ScreenIsShown)
     }
 
-    val permissionGranted = MainState.PERMISSIONS.any { ActivityCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED }
+    val permissionGranted = context != null && MainState.PERMISSIONS.any { ActivityCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED }
     LaunchedEffect(permissionGranted) {
         if (permissionGranted) {
             onEvent(UiEvent.PermissionsGranted)
@@ -181,6 +181,7 @@ private fun MainScreen(
                             ChillyButton(
                                 text = stringResource(R.string.grant_permission_button),
                                 onClick = {
+                                    if (context == null) return@ChillyButton
                                     Intent(
                                         Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
                                         Uri.fromParts("package", context.packageName, null)
@@ -243,7 +244,7 @@ private fun MainScreen(
 }
 
 fun NavGraphBuilder.installMainScreen(padding: PaddingValues) {
-    composable<Destination.Main> {
+    fadingComposable<Destination.Main> {
         ScreenHolder<MainStore, MainComponent>(
             componentFactory = {
                 DaggerMainComponent.builder()

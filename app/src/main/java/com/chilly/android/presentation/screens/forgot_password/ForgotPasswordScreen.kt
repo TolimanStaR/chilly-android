@@ -29,7 +29,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.compose.composable
 import com.chilly.android.R
 import com.chilly.android.applicationComponent
 import com.chilly.android.di.screens.DaggerForgotPasswordComponent
@@ -43,6 +42,7 @@ import com.chilly.android.presentation.common.structure.NewsCollector
 import com.chilly.android.presentation.common.structure.ScreenHolder
 import com.chilly.android.presentation.common.structure.collectState
 import com.chilly.android.presentation.navigation.Destination
+import com.chilly.android.presentation.navigation.slidingComposable
 import com.chilly.android.presentation.screens.forgot_password.ForgotPasswordEvent.UiEvent
 import com.chilly.android.presentation.theme.ChillyTheme
 
@@ -87,6 +87,7 @@ private fun ForgotPasswordScreen(
         Column(
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
+            // todo slide in and out
             when (state.step) {
                 RecoveryStep.EMAIL -> EmailStepFields(state, onEvent)
                 RecoveryStep.CODE -> CodeVerificationStepFields(state, onEvent)
@@ -175,7 +176,7 @@ private fun RecoveryStep.toMainButtonTextRes() = when(this) {
 }
 
 fun NavGraphBuilder.installForgotPasswordScreen(padding: PaddingValues) {
-    composable<Destination.ForgotPassword> {
+    slidingComposable<Destination.ForgotPassword> {
         ScreenHolder(
             componentFactory = {
                 DaggerForgotPasswordComponent.builder()

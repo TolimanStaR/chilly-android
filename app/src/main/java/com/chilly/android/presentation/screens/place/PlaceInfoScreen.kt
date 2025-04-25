@@ -1,7 +1,6 @@
 package com.chilly.android.presentation.screens.place
 
 import android.content.Intent
-import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
@@ -65,8 +64,8 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.chilly.android.R
 import com.chilly.android.applicationComponent
@@ -83,6 +82,7 @@ import com.chilly.android.presentation.common.structure.NewsCollector
 import com.chilly.android.presentation.common.structure.ScreenHolder
 import com.chilly.android.presentation.common.structure.collectState
 import com.chilly.android.presentation.navigation.Destination
+import com.chilly.android.presentation.navigation.fadingComposable
 import com.chilly.android.presentation.screens.place.PlaceInfoEvent.UiEvent
 import com.chilly.android.presentation.theme.ChillyTheme
 import com.chilly.android.presentation.theme.LinkColor
@@ -245,7 +245,7 @@ private fun PlaceInfoScreen(
                         Text(
                             text = clickableText(phoneNumber) {
                                 Intent(Intent.ACTION_DIAL).also {
-                                    it.data = Uri.parse("tel:$phoneNumber")
+                                    it.data = "tel:$phoneNumber".toUri()
                                     context.startActivity(it)
                                 }
                             }
@@ -450,7 +450,7 @@ private fun String.checkSocial(): String? = when {
 }
 
 fun NavGraphBuilder.installPlaceInfoScreen(padding: PaddingValues) {
-    composable<Destination.PlaceInfo> { backStackEntry ->
+    fadingComposable<Destination.PlaceInfo> { backStackEntry ->
         val route = backStackEntry.toRoute<Destination.PlaceInfo>()
 
         ScreenHolder<PlaceInfoStore, PlaceInfoComponent>(

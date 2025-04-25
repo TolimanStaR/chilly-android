@@ -13,21 +13,21 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.compose.composable
-import com.chilly.android.presentation.common.structure.NewsCollector
-import com.chilly.android.presentation.common.structure.ScreenHolder
-import com.chilly.android.presentation.common.structure.collectState
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavGraphBuilder
 import com.chilly.android.applicationComponent
-import com.chilly.android.di.screens.FavoritesComponent
 import com.chilly.android.di.screens.DaggerFavoritesComponent
+import com.chilly.android.di.screens.FavoritesComponent
 import com.chilly.android.presentation.common.components.PlaceListItem
-import com.chilly.android.presentation.theme.ChillyTheme
+import com.chilly.android.presentation.common.structure.NewsCollector
+import com.chilly.android.presentation.common.structure.ScreenHolder
+import com.chilly.android.presentation.common.structure.collectState
 import com.chilly.android.presentation.navigation.Destination
+import com.chilly.android.presentation.navigation.fadingComposable
 import com.chilly.android.presentation.screens.favorites.FavoritesEvent.UiEvent
+import com.chilly.android.presentation.theme.ChillyTheme
 
 @Composable
 private fun FavoritesScreen(
@@ -63,7 +63,7 @@ private fun FavoritesScreen(
 }
 
 fun NavGraphBuilder.installFavoritesScreen(padding: PaddingValues) {
-    composable<Destination.Favorites> {
+    fadingComposable<Destination.Favorites> {
         ScreenHolder<FavoritesStore, FavoritesComponent>(
             componentFactory = {
                 DaggerFavoritesComponent.builder()

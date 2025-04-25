@@ -18,7 +18,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.compose.composable
 import com.chilly.android.R
 import com.chilly.android.applicationComponent
 import com.chilly.android.di.screens.DaggerSignUpComponent
@@ -33,6 +32,7 @@ import com.chilly.android.presentation.common.structure.NewsCollector
 import com.chilly.android.presentation.common.structure.ScreenHolder
 import com.chilly.android.presentation.common.structure.collectState
 import com.chilly.android.presentation.navigation.Destination
+import com.chilly.android.presentation.navigation.slidingComposable
 import com.chilly.android.presentation.screens.sign_up.SignUpEvent.UiEvent
 import com.chilly.android.presentation.theme.ChillyTheme
 
@@ -121,7 +121,7 @@ private fun SignUpScreen(
 }
 
 fun NavGraphBuilder.installSignUpComposable(padding: PaddingValues) {
-    composable<Destination.SignUp> {
+    slidingComposable<Destination.SignUp> {
         ScreenHolder(
             componentFactory = {
                 DaggerSignUpComponent.builder()

@@ -1,11 +1,7 @@
 package com.chilly.android.presentation.screens.forgot_password
 
-import androidx.annotation.StringRes
-import androidx.compose.material3.SnackbarHostState
 import com.chilly.android.R
-import com.chilly.android.presentation.common.structure.ResourcesHolder
 import com.chilly.android.presentation.common.structure.SnackbarShower
-import com.chilly.android.presentation.common.structure.getString
 import com.chilly.android.presentation.navigation.Destination
 import com.github.terrakok.cicerone.Router
 import kotlinx.coroutines.flow.FlowCollector
