@@ -14,12 +14,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.compose.composable
 import com.chilly.android.R
 import com.chilly.android.applicationComponent
 import com.chilly.android.di.screens.DaggerSplashScreenComponent
 import com.chilly.android.presentation.common.structure.ScreenHolder
 import com.chilly.android.presentation.navigation.Destination
+import com.chilly.android.presentation.navigation.fadingComposable
 import com.chilly.android.presentation.screens.result.NotificationWork
 import com.chilly.android.presentation.theme.ChillyTheme
 
@@ -27,9 +27,9 @@ import com.chilly.android.presentation.theme.ChillyTheme
 private fun SplashScreen(
     onEvent: (SplashScreenEvent) -> Unit
 ) {
-    val activity = LocalContext.current as Activity
+    val activity = LocalContext.current as? Activity
     LaunchedEffect(Unit) {
-        activity.intent?.extras?.let { bundle ->
+        activity?.intent?.extras?.let { bundle ->
             val ids = bundle.getIntArray(NotificationWork.INPUT_PLACE_IDS)
             if (ids != null) {
                 onEvent(SplashScreenEvent.GotNotificationEvent(ids.toList()))
@@ -53,7 +53,7 @@ private fun SplashScreen(
 }
 
 fun NavGraphBuilder.installSplashComposable() {
-    composable<Destination.Splash> {
+    fadingComposable<Destination.Splash> {
         ScreenHolder(
             componentFactory = {
                 DaggerSplashScreenComponent.builder()

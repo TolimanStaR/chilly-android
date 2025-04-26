@@ -1,6 +1,7 @@
 package com.chilly.android.presentation.screens.quiz
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection.Companion.Up
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -37,7 +38,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.chilly.android.R
 import com.chilly.android.applicationComponent
@@ -56,6 +56,7 @@ import com.chilly.android.presentation.common.structure.NewsCollector
 import com.chilly.android.presentation.common.structure.ScreenHolder
 import com.chilly.android.presentation.common.structure.collectState
 import com.chilly.android.presentation.navigation.Destination
+import com.chilly.android.presentation.navigation.slidingComposable
 import com.chilly.android.presentation.screens.quiz.QuizEvent.UiEvent
 import com.chilly.android.presentation.theme.ChillyTheme
 
@@ -224,7 +225,7 @@ private fun QuizScreen(
 
 
 fun NavGraphBuilder.installQuizScreen(padding: PaddingValues) {
-    composable<Destination.Quiz> { backStackEntry ->
+    slidingComposable<Destination.Quiz>(Up) { backStackEntry ->
         ScreenHolder<QuizStore, QuizComponent>(
             componentFactory = {
                 DaggerQuizComponent.builder()

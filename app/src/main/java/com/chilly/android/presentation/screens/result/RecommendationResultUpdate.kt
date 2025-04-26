@@ -64,7 +64,7 @@ class RecommendationResultUpdate @Inject constructor(
 
     private fun createNotificationRequest(recs: List<PlaceDto>): WorkRequest {
         return OneTimeWorkRequestBuilder<NotificationWork>()
-            .setInitialDelay(10, TimeUnit.SECONDS)
+            .setInitialDelay(20, TimeUnit.HOURS)
             .setInputData(workDataOf(
                 NotificationWork.INPUT_PLACE_IDS to recs.map { it.id }.toIntArray()
             ))

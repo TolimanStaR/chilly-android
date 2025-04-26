@@ -21,24 +21,24 @@ class OnboardingViewModel(
     override fun dispatch(event: OnboardingEvent) {
         when(event) {
             is OnboardingEvent.NextStep -> handleNextStep(event)
-            OnboardingEvent.Finish -> handleFinish()
+            is OnboardingEvent.Finish -> handleFinish(event)
         }
     }
 
     private fun handleNextStep(event: OnboardingEvent.NextStep) {
         val next = event.current + 1
         if (next >= event.count) {
-            handleFinish()
+            handleFinish(OnboardingEvent.Finish(event.loggedIn))
         } else {
-            emit(OnboardingEffect.NavigateOnboardingScreen(next))
+            emit(OnboardingEffect.NavigateOnboardingScreen(next, event.loggedIn))
         }
     }
 
-    private fun handleFinish() {
+    private fun handleFinish(event: OnboardingEvent.Finish) {
         viewModelScope.launch {
             preferencesRepository.setHasSeenOnboarding(true)
         }
-        emit(OnboardingEffect.OnboardingFinished)
+        emit(OnboardingEffect.OnboardingFinished(event.loggedIn))
     }
 
 }

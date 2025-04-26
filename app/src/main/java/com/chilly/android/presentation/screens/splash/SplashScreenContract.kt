@@ -1,7 +1,7 @@
 package com.chilly.android.presentation.screens.splash
 
 sealed interface SplashScreenEffect {
-    data object NavigateOnboarding : SplashScreenEffect
+    data class NavigateOnboarding(val isLogged: Boolean) : SplashScreenEffect
     data object NavigateLogin : SplashScreenEffect
     data object NavigateMain : SplashScreenEffect
     data class NavigateRating(val ids: List<Int>) : SplashScreenEffect

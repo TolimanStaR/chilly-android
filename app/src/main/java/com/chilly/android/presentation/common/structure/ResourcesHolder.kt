@@ -9,6 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -40,7 +41,11 @@ class SnackbarShower @Inject constructor(
 
     fun show(text: String) {
         scope.launch {
-            snackbarHostState.showSnackbar(text)
+            runCatching {
+                snackbarHostState.showSnackbar(text)
+            }.onFailure {
+                Timber.e("got error during showing of snackBar", it)
+            }
         }
     }
 }

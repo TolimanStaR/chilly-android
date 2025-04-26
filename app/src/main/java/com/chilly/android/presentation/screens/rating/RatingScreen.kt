@@ -1,5 +1,6 @@
 package com.chilly.android.presentation.screens.rating
 
+import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection.Companion.Up
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -13,7 +14,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.chilly.android.applicationComponent
 import com.chilly.android.di.screens.DaggerRatingComponent
@@ -25,6 +25,7 @@ import com.chilly.android.presentation.common.structure.NewsCollector
 import com.chilly.android.presentation.common.structure.ScreenHolder
 import com.chilly.android.presentation.common.structure.collectState
 import com.chilly.android.presentation.navigation.Destination
+import com.chilly.android.presentation.navigation.slidingComposable
 import com.chilly.android.presentation.screens.rating.RatingEvent.UiEvent
 import com.chilly.android.presentation.theme.ChillyTheme
 
@@ -83,7 +84,7 @@ private fun RatingScreen(
 }
 
 fun NavGraphBuilder.installRatingScreen(innerPadding: PaddingValues) {
-    composable<Destination.Rating> { backStackEntry ->
+    slidingComposable<Destination.Rating>(Up) { backStackEntry ->
         val route = backStackEntry.toRoute<Destination.Rating>()
         ScreenHolder<RatingStore, RatingComponent>(
             componentFactory = {

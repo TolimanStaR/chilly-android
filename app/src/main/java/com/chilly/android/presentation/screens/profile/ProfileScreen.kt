@@ -27,7 +27,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.compose.composable
 import com.chilly.android.R
 import com.chilly.android.applicationComponent
 import com.chilly.android.di.screens.DaggerProfileComponent
@@ -42,6 +41,7 @@ import com.chilly.android.presentation.common.structure.NewsCollector
 import com.chilly.android.presentation.common.structure.ScreenHolder
 import com.chilly.android.presentation.common.structure.collectState
 import com.chilly.android.presentation.navigation.Destination
+import com.chilly.android.presentation.navigation.peekingComposable
 import com.chilly.android.presentation.screens.profile.ProfileEvent.UiEvent
 import com.chilly.android.presentation.theme.ChillyTheme
 
@@ -179,7 +179,7 @@ private fun ProfileCard(content: @Composable ColumnScope.() -> Unit) {
 }
 
 fun NavGraphBuilder.installProfileScreen(padding: PaddingValues) {
-    composable<Destination.Profile> {
+    peekingComposable<Destination.Profile> {
         ScreenHolder<ProfileStore, ProfileComponent>(
             componentFactory = {
                 DaggerProfileComponent.builder()

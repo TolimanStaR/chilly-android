@@ -6,6 +6,7 @@ import com.chilly.android.domain.repository.PreferencesRepository
 import com.chilly.android.domain.useCase.login.TryRefreshTokenUseCase
 import com.chilly.android.presentation.common.structure.ViewModelWithEffects
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 class SplashScreenViewModel(
@@ -28,27 +29,27 @@ class SplashScreenViewModel(
         }
     }
 
-    private suspend fun tryOnboarding(mainDestination: SplashScreenEffect) {
-        if (preferencesRepository.hasSeenOnboarding()) {
-            emit(mainDestination)
-        } else {
-            emit(SplashScreenEffect.NavigateOnboarding)
-        }
-    }
-
-    private fun loadScreen(mainDestination: SplashScreenEffect) {
-        viewModelScope.launch {
-            val loggedIn = tokenUseCase.invoke()
-            if (loggedIn) {
-                tryOnboarding(mainDestination)
-            } else {
-                emit(SplashScreenEffect.NavigateLogin)
-            }
-        }
-    }
-
     override fun dispatch(event: SplashScreenEvent) = when(event) {
         is SplashScreenEvent.GotNotificationEvent -> loadScreen(SplashScreenEffect.NavigateRating(event.recIds))
         SplashScreenEvent.GotRegularIntent -> loadScreen(SplashScreenEffect.NavigateMain)
+    }
+
+    private fun loadScreen(destinationEffect: SplashScreenEffect) {
+        viewModelScope.launch {
+            val loggedIn = tokenUseCase.invoke()
+            Timber.e("checked logged state")
+            tryOnboarding(destinationEffect, loggedIn)
+        }
+    }
+
+    private suspend fun tryOnboarding(destinationEffect: SplashScreenEffect, isLogged: Boolean) {
+        Timber.e("before trying onboarding")
+        val alreadySeenOnboarding = preferencesRepository.hasSeenOnboarding()
+        Timber.e("has seen onboarding value: $alreadySeenOnboarding")
+        when {
+            alreadySeenOnboarding && isLogged -> emit(destinationEffect)
+            !alreadySeenOnboarding -> emit(SplashScreenEffect.NavigateOnboarding(isLogged))
+            else -> emit(SplashScreenEffect.NavigateLogin)
+        }
     }
 }

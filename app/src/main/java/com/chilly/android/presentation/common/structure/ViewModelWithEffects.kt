@@ -12,7 +12,7 @@ abstract class ViewModelWithEffects<Effect: Any, Event: Any>(
     @VisibleForTesting effectsReplay: Int = 0
 ) : ViewModel() {
 
-    private val _effects = MutableSharedFlow<Effect>(effectsReplay)
+    private val _effects = MutableSharedFlow<Effect>(replay = effectsReplay)
     val effects: Flow<Effect> = _effects.asSharedFlow()
 
     protected fun emit(effect: Effect) {
