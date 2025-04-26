@@ -48,24 +48,24 @@ class OnboardingViewModelTest {
 
     @Test
     fun `when next step received and there are more steps navigate to next step`() = runTest {
-        underTest.dispatch(OnboardingEvent.NextStep(0, 2))
+        underTest.dispatch(OnboardingEvent.NextStep(0, false,2))
         val effect = underTest.effects.first()
-        assertEquals(effect, OnboardingEffect.NavigateOnboardingScreen(1))
+        assertEquals(effect, OnboardingEffect.NavigateOnboardingScreen(1, false))
     }
 
     @Test
     fun `when next step received on last step finish onboarding`() = runTest {
-        underTest.dispatch(OnboardingEvent.NextStep(1, 2))
+        underTest.dispatch(OnboardingEvent.NextStep(1, false, 2))
         val effect = underTest.effects.first()
-        assertEquals(effect, OnboardingEffect.OnboardingFinished)
+        assertEquals(effect, OnboardingEffect.OnboardingFinished(false))
         coVerify { prefsMock.setHasSeenOnboarding(eq(true))  }
     }
 
     @Test
     fun `when skip received finish onboarding`() = runTest {
-        underTest.dispatch(OnboardingEvent.Finish)
+        underTest.dispatch(OnboardingEvent.Finish(false))
         val effect = underTest.effects.first()
-        assertEquals(effect, OnboardingEffect.OnboardingFinished)
+        assertEquals(effect, OnboardingEffect.OnboardingFinished(false))
         coVerify { prefsMock.setHasSeenOnboarding(eq(true))  }
     }
 

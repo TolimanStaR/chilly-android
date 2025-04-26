@@ -18,7 +18,6 @@ import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -38,44 +37,8 @@ class SplashScreenViewModelTest {
         mainThreadSurrogate.close()
     }
 
-    @Disabled
     @Test
-    fun `when token cannot be refreshed navigate to login screen`() = runTest {
-        val prefsMock: PreferencesRepository = mockk()
-        val tokenUCMock: TryRefreshTokenUseCase = mockk()
-        val collector: SplashScreenEffectCollector = mockk()
-
-        coEvery { tokenUCMock.invoke() } returns false
-        coEvery { collector.emit(any()) } just Runs
-
-        val underTest = SplashScreenViewModel(prefsMock, tokenUCMock, collector,10)
-
-        val effect = underTest.effects.first()
-        assertEquals(effect, SplashScreenEffect.NavigateLogin)
-        coVerify { collector.emit(any()) }
-    }
-
-    @Disabled
-    @Test
-    fun `when token refreshed and onboarding hasn't been seen navigate to onboarding`() = runTest {
-        val prefsMock: PreferencesRepository = mockk()
-        val tokenUCMock: TryRefreshTokenUseCase = mockk()
-        val collector: SplashScreenEffectCollector = mockk()
-
-        coEvery { tokenUCMock.invoke() } returns true
-        coEvery { prefsMock.hasSeenOnboarding() } returns false
-        coEvery { collector.emit(any()) } just Runs
-
-        val underTest = SplashScreenViewModel(prefsMock, tokenUCMock, collector,10)
-
-        val effect = underTest.effects.first()
-        assertEquals(effect, SplashScreenEffect.NavigateOnboarding)
-        coVerify { collector.emit(any()) }
-    }
-
-    @Disabled
-    @Test
-    fun `when token refreshed and seen onboarding navigate to main`() = runTest {
+    fun `when person seen onboarding and can be logged, navigating to main screen`() = runTest {
         val prefsMock: PreferencesRepository = mockk()
         val tokenUCMock: TryRefreshTokenUseCase = mockk()
         val collector: SplashScreenEffectCollector = mockk()
@@ -85,9 +48,46 @@ class SplashScreenViewModelTest {
         coEvery { collector.emit(any()) } just Runs
 
         val underTest = SplashScreenViewModel(prefsMock, tokenUCMock, collector,10)
+        underTest.dispatch(SplashScreenEvent.GotRegularIntent)
 
         val effect = underTest.effects.first()
         assertEquals(effect, SplashScreenEffect.NavigateMain)
+        coVerify { collector.emit(any()) }
+    }
+
+    @Test
+    fun `when person seen onboarding and cannot be logged, navigating to login screen`() = runTest {
+        val prefsMock: PreferencesRepository = mockk()
+        val tokenUCMock: TryRefreshTokenUseCase = mockk()
+        val collector: SplashScreenEffectCollector = mockk()
+
+        coEvery { tokenUCMock.invoke() } returns false
+        coEvery { prefsMock.hasSeenOnboarding() } returns true
+        coEvery { collector.emit(any()) } just Runs
+
+        val underTest = SplashScreenViewModel(prefsMock, tokenUCMock, collector,10)
+        underTest.dispatch(SplashScreenEvent.GotRegularIntent)
+
+        val effect = underTest.effects.first()
+        assertEquals(effect, SplashScreenEffect.NavigateLogin)
+        coVerify { collector.emit(any()) }
+    }
+
+    @Test
+    fun `when haven't seen onboarding navigate to onboarding`() = runTest {
+        val prefsMock: PreferencesRepository = mockk()
+        val tokenUCMock: TryRefreshTokenUseCase = mockk()
+        val collector: SplashScreenEffectCollector = mockk()
+
+        coEvery { tokenUCMock.invoke() } returns false
+        coEvery { prefsMock.hasSeenOnboarding() } returns false
+        coEvery { collector.emit(any()) } just Runs
+
+        val underTest = SplashScreenViewModel(prefsMock, tokenUCMock, collector,10)
+        underTest.dispatch(SplashScreenEvent.GotRegularIntent)
+
+        val effect = underTest.effects.first()
+        assertEquals(effect, SplashScreenEffect.NavigateOnboarding(false))
         coVerify { collector.emit(any()) }
     }
 }
