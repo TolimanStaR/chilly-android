@@ -33,7 +33,7 @@ import io.ktor.util.appendIfNameAbsent
 import kotlinx.serialization.json.Json
 import javax.inject.Singleton
 
-private const val DEFAULT_URL = "http://188.120.236.240:8085/"
+private const val DEFAULT_URL = "https://toliman.st4r.fvds.ru:8085/"
 
 @Module
 class NetworkModule {

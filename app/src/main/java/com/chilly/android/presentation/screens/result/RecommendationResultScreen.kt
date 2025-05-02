@@ -3,6 +3,7 @@ package com.chilly.android.presentation.screens.result
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
+import android.view.ViewGroup
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -11,11 +12,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -30,8 +30,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.app.ActivityCompat
 import androidx.navigation.NavGraphBuilder
+import com.chilly.android.R
 import com.chilly.android.applicationComponent
 import com.chilly.android.di.screens.DaggerRecommendationResultComponent
 import com.chilly.android.di.screens.RecommendationResultComponent
@@ -45,6 +47,11 @@ import com.chilly.android.presentation.navigation.Destination
 import com.chilly.android.presentation.navigation.fadingComposable
 import com.chilly.android.presentation.screens.result.RecommendationResultEvent.UiEvent
 import com.chilly.android.presentation.theme.ChillyTheme
+import org.osmdroid.util.BoundingBox
+import org.osmdroid.util.GeoPoint
+import org.osmdroid.views.MapView
+import org.osmdroid.views.overlay.Marker
+import timber.log.Timber
 
 
 @Composable
@@ -90,25 +97,41 @@ private fun RecommendationResultScreen(
             onEvent(UiEvent.PermissionGranted)
         }
     }
-
     // show recommendations
-    LazyColumn(
+    Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier
             .padding(padding)
             .padding(16.dp)
     ) {
-        item {
-            Spacer(modifier = Modifier.height(4.dp))
-        }
-        items(state.recommendations) { place ->
+        Spacer(modifier = Modifier.height(4.dp))
+        state.recommendations.forEach { place ->
             PlaceListItem(place) {
                 onEvent(UiEvent.PlaceClicked(place.id))
             }
         }
-        item {
-            Spacer(modifier = Modifier.height(4.dp))
+        Spacer(modifier = Modifier.height(24.dp))
+        Box(
+            modifier = Modifier
+                .fillMaxHeight()
+                .clip(RoundedCornerShape(16.dp))
+        ) {
+            ResultMapView(
+                initialPosition = GeoPoint(56.310178, 44.010828),
+                initialZoom = 12.0,
+                markers = state.recommendations.map { place ->
+                    MarkerData(
+                        title = place.name,
+                        latitude = place.longitude,
+                        longitude = place.latitude
+                    )
+                },
+                onMarkerClick = {
+                    Timber.i("marker clicked: ${it.title}")
+                }
+            )
         }
+        Spacer(modifier = Modifier.height(16.dp))
     }
 }
 
@@ -138,11 +161,129 @@ private fun ShimmeringLoadingScreen(
                     .background(MaterialTheme.colorScheme.secondary)
             )
             Spacer(Modifier.height(16.dp))
-
         }
     }
 }
 
+@Composable
+fun ResultMapView(
+    initialZoom: Double,
+    initialPosition: GeoPoint,
+    markers: List<MarkerData>,
+    onMarkerClick: (MarkerData) -> Unit,
+
+) {
+    AndroidView(
+        factory = { context ->
+            MapView(context).apply {
+                layoutParams = ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT
+                )
+                setMultiTouchControls(true)
+
+                controller.setZoom(initialZoom)
+                controller.setCenter(initialPosition)
+                Timber.i("before zooming")
+                zoomToMarkers(markers)
+                Timber.i("after zooming")
+                overlays.clear()
+                markers.forEach { markerData ->
+                    overlays.add(createMarker(this, markerData, onMarkerClick))
+                }
+            }
+
+        },
+        update = { view ->
+            view.overlays.clear()
+            markers.forEach { markerData ->
+                view.overlays.add(createMarker(view, markerData, onMarkerClick))
+            }
+            view.invalidate()
+        },
+        modifier = Modifier
+    )
+}
+
+private fun createMarker(
+    mapView: MapView,
+    markerData: MarkerData,
+    onClick: (MarkerData) -> Unit
+): Marker {
+    return Marker(mapView).apply {
+        position = GeoPoint(
+            markerData.latitude,
+            markerData.longitude
+        )
+        Timber.i("marker for ${markerData.title} is positioned at lat = ${position.latitude}, lon = ${position.longitude}")
+        title = markerData.title
+        icon = mapView.context.getDrawable(R.drawable.marker_icon)
+        setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+        setOnMarkerClickListener { _, _ ->
+            onClick(markerData)
+            true
+        }
+    }
+}
+
+private fun MapView.zoomToMarkers(
+    markers: List<MarkerData>
+) {
+    if (markers.isEmpty()) return
+    Timber.e("markers size: ${markers.size}")
+
+    var minLat = Double.MAX_VALUE
+    var maxLat = Double.MIN_VALUE
+    var minLon = Double.MAX_VALUE
+    var maxLon = Double.MIN_VALUE
+
+    markers.forEach { marker ->
+        minLat = minOf(minLat, marker.latitude)
+        maxLat = maxOf(maxLat, marker.latitude)
+        minLon = minOf(minLon, marker.longitude)
+        maxLon = maxOf(maxLon, marker.longitude)
+    }
+
+    val markersBox = BoundingBox(
+        /* north = */ maxLat,
+        /* east = */ maxLon,
+        /* south = */ minLat,
+        /* west = */ minLon
+    )
+
+    Timber.i("calculated bounding box: $markersBox")
+    val paddedBox = markersBox.increaseByScale(1.1)
+    Timber.i("padded box is: $paddedBox")
+
+    controller.setCenter(paddedBox.centerWithDateLine)
+    controller.setZoom(20.0)
+
+    Timber.i("current box: $boundingBox")
+
+    while (paddedBox !in boundingBox && canZoomOut()) {
+        controller.zoomOut()
+    }
+}
+
+private fun BoundingBox.increaseByScale(scale: Double): BoundingBox {
+    val centerLat = centerLatitude
+    val centerLon = centerLongitude
+
+    val latSpan = latitudeSpan * scale / 2
+    val lonSpan = longitudeSpanWithDateLine * scale / 2
+
+    return BoundingBox(
+        centerLat + latSpan, // north
+        centerLon + lonSpan, // east
+        centerLat - latSpan, // south
+        centerLon - lonSpan  // west
+    )
+}
+
+private operator fun BoundingBox.contains(other: BoundingBox): Boolean {
+    return this.contains(other.latNorth, other.lonEast) &&
+            this.contains(other.latSouth, other.lonWest)
+}
 
 fun NavGraphBuilder.installRecommendationResultScreen(padding: PaddingValues) {
     fadingComposable<Destination.RecommendationResult> {
