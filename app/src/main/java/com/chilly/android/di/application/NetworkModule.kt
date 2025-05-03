@@ -31,9 +31,10 @@ import io.ktor.http.HttpHeaders
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.util.appendIfNameAbsent
 import kotlinx.serialization.json.Json
+import timber.log.Timber
 import javax.inject.Singleton
 
-private const val DEFAULT_URL = "http://188.120.236.240:8085/"
+private const val DEFAULT_URL = "https://toliman.st4r.fvds.ru:8085/"
 
 @Module
 class NetworkModule {
@@ -45,6 +46,8 @@ class NetworkModule {
 
         HttpResponseValidator {
             handleResponseExceptionWithRequest { cause, _ ->
+                Timber.e(cause, "got network exception")
+
                 when(cause) {
                     is ClientRequestException -> {
                         val response = runCatching {
@@ -52,7 +55,7 @@ class NetworkModule {
                         }.getOrDefault(
                             ErrorResponse(cause.response.status.value, "Gateway denial")
                         )
-
+                        Timber.i("Exception rethrown as handled, response = $response")
                         throw HandledException(response)
                     }
                 }

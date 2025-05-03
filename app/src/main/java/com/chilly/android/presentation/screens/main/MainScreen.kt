@@ -194,7 +194,7 @@ private fun MainScreen(
                 items(state.feed) { place ->
                     ElevatedCard(
                         colors = CardDefaults.elevatedCardColors(
-                            containerColor = MaterialTheme.colorScheme.surface
+                            containerColor = MaterialTheme.colorScheme.surfaceBright
                         ),
                         elevation = CardDefaults.cardElevation(4.dp),
                         modifier = Modifier.fillMaxWidth(),

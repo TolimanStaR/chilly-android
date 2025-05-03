@@ -16,7 +16,7 @@ private val LightColorScheme = lightColorScheme(
     onPrimary = Color.White,
     primaryContainer = Red10,
     onPrimaryContainer = Red70,
-    secondary = Gray50, // gray buttons
+    secondary = Gray40, // gray buttons
     onSecondary = Color.White,
     secondaryContainer = Gray20, // disabled elements
     onSecondaryContainer = Color.White,
@@ -54,7 +54,7 @@ private val DarkColorScheme = darkColorScheme(
     onBackground = Color.White,
     surfaceContainer = Gray70,
     onSurfaceVariant = Gray20,
-    surfaceBright = Gray70,
+    surfaceBright = Gray80,
     surfaceDim = Gray90,
 
     error = Red70,
