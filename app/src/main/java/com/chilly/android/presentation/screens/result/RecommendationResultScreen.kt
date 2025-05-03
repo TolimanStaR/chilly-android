@@ -121,8 +121,8 @@ private fun RecommendationResultScreen(
                 markers = state.recommendations.map { place ->
                     MarkerData(
                         title = place.name,
-                        latitude = place.longitude,
-                        longitude = place.latitude
+                        latitude = place.latitude,
+                        longitude = place.longitude
                     )
                 },
                 onMarkerClick = {
@@ -130,7 +130,7 @@ private fun RecommendationResultScreen(
                 }
             )
         }
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(24.dp))
     }
 }
 
