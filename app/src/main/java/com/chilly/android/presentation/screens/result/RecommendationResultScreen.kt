@@ -32,6 +32,7 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.app.ActivityCompat
+import androidx.core.view.doOnLayout
 import androidx.navigation.NavGraphBuilder
 import com.chilly.android.R
 import com.chilly.android.applicationComponent
@@ -102,7 +103,7 @@ private fun RecommendationResultScreen(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier
             .padding(padding)
-            .padding(16.dp)
+            .padding(horizontal = 16.dp)
     ) {
         Spacer(modifier = Modifier.height(4.dp))
         state.recommendations.forEach { place ->
@@ -110,15 +111,13 @@ private fun RecommendationResultScreen(
                 onEvent(UiEvent.PlaceClicked(place.id))
             }
         }
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(16.dp))
         Box(
             modifier = Modifier
                 .fillMaxHeight()
                 .clip(RoundedCornerShape(16.dp))
         ) {
             ResultMapView(
-                initialPosition = GeoPoint(56.310178, 44.010828),
-                initialZoom = 12.0,
                 markers = state.recommendations.map { place ->
                     MarkerData(
                         title = place.name,
@@ -167,8 +166,6 @@ private fun ShimmeringLoadingScreen(
 
 @Composable
 fun ResultMapView(
-    initialZoom: Double,
-    initialPosition: GeoPoint,
     markers: List<MarkerData>,
     onMarkerClick: (MarkerData) -> Unit,
 
@@ -182,17 +179,19 @@ fun ResultMapView(
                 )
                 setMultiTouchControls(true)
 
-                controller.setZoom(initialZoom)
-                controller.setCenter(initialPosition)
-                Timber.i("before zooming")
-                zoomToMarkers(markers)
-                Timber.i("after zooming")
+                val bounds = calculateBounds(markers)
+                controller.setCenter(bounds?.centerWithDateLine)
+                controller.setZoom(18.0)
+
                 overlays.clear()
                 markers.forEach { markerData ->
                     overlays.add(createMarker(this, markerData, onMarkerClick))
                 }
-            }
 
+                doOnLayout {
+                    zoomToBoundingBox(bounds, true, 100)
+                }
+            }
         },
         update = { view ->
             view.overlays.clear()
@@ -226,10 +225,10 @@ private fun createMarker(
     }
 }
 
-private fun MapView.zoomToMarkers(
+private fun calculateBounds(
     markers: List<MarkerData>
-) {
-    if (markers.isEmpty()) return
+): BoundingBox? {
+    if (markers.isEmpty()) return null
     Timber.e("markers size: ${markers.size}")
 
     var minLat = Double.MAX_VALUE
@@ -251,18 +250,7 @@ private fun MapView.zoomToMarkers(
         /* west = */ minLon
     )
 
-    Timber.i("calculated bounding box: $markersBox")
-    val paddedBox = markersBox.increaseByScale(1.1)
-    Timber.i("padded box is: $paddedBox")
-
-    controller.setCenter(paddedBox.centerWithDateLine)
-    controller.setZoom(20.0)
-
-    Timber.i("current box: $boundingBox")
-
-    while (paddedBox !in boundingBox && canZoomOut()) {
-        controller.zoomOut()
-    }
+    return markersBox.increaseByScale(1.1)
 }
 
 private fun BoundingBox.increaseByScale(scale: Double): BoundingBox {
