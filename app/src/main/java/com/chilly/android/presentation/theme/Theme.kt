@@ -54,7 +54,7 @@ private val DarkColorScheme = darkColorScheme(
     onBackground = Color.White,
     surfaceContainer = Gray70,
     onSurfaceVariant = Gray20,
-    surfaceBright = Gray70,
+    surfaceBright = Gray80,
     surfaceDim = Gray90,
 
     error = Red70,
