@@ -2,6 +2,7 @@ package com.chilly.android.domain.useCase.recommendation
 
 import com.chilly.android.data.remote.dto.PlaceDto
 import com.chilly.android.domain.repository.RecommendationRepository
+import timber.log.Timber
 import javax.inject.Inject
 
 class GetRecommendationUseCase @Inject constructor(
@@ -10,5 +11,6 @@ class GetRecommendationUseCase @Inject constructor(
 
     suspend operator fun invoke(): Result<List<PlaceDto>> {
         return recommendationRepository.getRecommendation()
+            .onFailure { Timber.e(it) }
     }
 }

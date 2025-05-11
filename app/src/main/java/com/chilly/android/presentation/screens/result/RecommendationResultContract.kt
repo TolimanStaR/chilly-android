@@ -37,3 +37,9 @@ sealed interface RecommendationResultNews {
     data class NavigatePlace(val id: Int) : RecommendationResultNews
     data class SubmitNotificationRequest(val request: WorkRequest) : RecommendationResultNews
 }
+
+data class MarkerData(
+    val title: String = "",
+    val latitude: Double = 0.0,
+    val longitude: Double = 0.0
+)

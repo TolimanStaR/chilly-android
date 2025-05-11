@@ -87,6 +87,7 @@ dependencies {
     ksp(libs.room.compiler)
     implementation(libs.google.location.service)
     implementation(libs.androidx.work)
+    implementation(libs.osmdroid)
 
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.mockk)

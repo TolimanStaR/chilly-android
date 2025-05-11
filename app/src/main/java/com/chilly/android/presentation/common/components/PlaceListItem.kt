@@ -2,6 +2,7 @@ package com.chilly.android.presentation.common.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil3.compose.SubcomposeAsyncImage
@@ -48,7 +50,9 @@ fun PlaceListItem(
                 style = MaterialTheme.typography.headlineSmall
             )
             Text(
-                text = place.address
+                text = place.address,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
             )
         }
     }
@@ -57,13 +61,13 @@ fun PlaceListItem(
 @Composable
 fun PlaceCard(
     place: PlaceDto,
-    imageSize: Dp = 60.dp,
+    imageSize: Dp = 80.dp,
     onCardClick: (PlaceDto) -> Unit = {},
     content: @Composable (PlaceDto) -> Unit
 ) {
     ElevatedCard(
         colors = CardDefaults.elevatedCardColors(
-            containerColor = MaterialTheme.colorScheme.surface
+            containerColor = MaterialTheme.colorScheme.surfaceBright
         ),
         elevation = CardDefaults.cardElevation(4.dp),
         modifier = Modifier.fillMaxWidth(),
@@ -94,6 +98,7 @@ fun PlaceCard(
                 modifier = Modifier
                     .clip(RoundedCornerShape(8.dp))
                     .size(imageSize)
+                    .border(width = 0.5.dp, color = MaterialTheme.colorScheme.secondary, shape = RoundedCornerShape(8.dp))
             )
             content(place)
         }
@@ -104,7 +109,8 @@ fun PlaceCard(
 fun PlaceImagesPager(
     place: PlaceDto
 ) {
-    val pagerState = rememberPagerState { place.imageUrls.size }
+    val initialPage = if (place.imageUrls.size > 1) 1 else 0
+    val pagerState = rememberPagerState(initialPage = initialPage) { place.imageUrls.size }
     Column {
         HorizontalPager(
             state = pagerState,
@@ -125,6 +131,7 @@ fun PlaceImagesPager(
                 modifier = Modifier
                     .fillMaxSize()
                     .clip(RoundedCornerShape(12.dp))
+                    .border(width = 0.5.dp, color = MaterialTheme.colorScheme.secondary, shape = RoundedCornerShape(12.dp))
             )
         }
         Row(
@@ -134,15 +141,15 @@ fun PlaceImagesPager(
             repeat(pagerState.pageCount) { index ->
                 val (color, size) = with(MaterialTheme.colorScheme) {
                     if (index == pagerState.currentPage)
-                        onSurface to 16.dp
+                        onSurface to 8.dp
                     else
-                        secondary to 12.dp
+                        secondary to 6.dp
                 }
                 Box(
                     modifier = Modifier
-                        .size(size)
-                        .padding(4.dp)
+                        .padding(horizontal = 3.dp, vertical = 6.dp)
                         .clip(CircleShape)
+                        .size(size)
                         .background(color)
                 )
             }
