@@ -1,14 +1,14 @@
 package com.chilly.android.di.screens
 
 
-import com.chilly.android.di.application.ApplicationComponent
+import com.chilly.android.di.activity.ActivityComponent
 import com.chilly.android.presentation.screens.favorites.FavoritesNewsCollector
 import com.chilly.android.presentation.screens.favorites.FavoritesStore
 import dagger.Component
 import javax.inject.Scope
 
 @FavoritesScope
-@Component(dependencies = [ApplicationComponent::class])
+@Component(dependencies = [ActivityComponent::class])
 interface FavoritesComponent {
 
     fun store(): FavoritesStore
@@ -16,7 +16,7 @@ interface FavoritesComponent {
 
     @Component.Builder
     interface Builder {
-        fun appComponent(applicationComponent: ApplicationComponent): Builder
+        fun appComponent(activityComponent: ActivityComponent): Builder
         fun build(): FavoritesComponent
     }
 }

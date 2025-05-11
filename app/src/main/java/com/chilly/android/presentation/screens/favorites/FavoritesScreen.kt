@@ -17,7 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraphBuilder
-import com.chilly.android.applicationComponent
+import com.chilly.android.activityComponent
 import com.chilly.android.di.screens.DaggerFavoritesComponent
 import com.chilly.android.di.screens.FavoritesComponent
 import com.chilly.android.presentation.common.components.PlaceListItem
@@ -67,7 +67,7 @@ fun NavGraphBuilder.installFavoritesScreen(padding: PaddingValues) {
         ScreenHolder<FavoritesStore, FavoritesComponent>(
             componentFactory = {
                 DaggerFavoritesComponent.builder()
-                    .appComponent(applicationComponent)
+                    .appComponent(activityComponent)
                     .build()
             },
             storeFactory = { store() }

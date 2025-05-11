@@ -15,7 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavGraphBuilder
 import com.chilly.android.R
-import com.chilly.android.applicationComponent
+import com.chilly.android.activityComponent
 import com.chilly.android.di.screens.DaggerSplashScreenComponent
 import com.chilly.android.presentation.common.structure.ScreenHolder
 import com.chilly.android.presentation.navigation.Destination
@@ -57,7 +57,7 @@ fun NavGraphBuilder.installSplashComposable() {
         ScreenHolder(
             componentFactory = {
                 DaggerSplashScreenComponent.builder()
-                    .appComponent(applicationComponent)
+                    .appComponent(activityComponent)
                     .build()
             },
             viewModelFactory = { viewModel() }

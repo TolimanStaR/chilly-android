@@ -52,7 +52,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.navigation.NavGraphBuilder
 import com.chilly.android.R
-import com.chilly.android.applicationComponent
+import com.chilly.android.activityComponent
 import com.chilly.android.di.screens.DaggerMainComponent
 import com.chilly.android.di.screens.MainComponent
 import com.chilly.android.presentation.common.components.ChillyButton
@@ -248,7 +248,7 @@ fun NavGraphBuilder.installMainScreen(padding: PaddingValues) {
         ScreenHolder<MainStore, MainComponent>(
             componentFactory = {
                 DaggerMainComponent.builder()
-                    .appComponent(applicationComponent)
+                    .appComponent(activityComponent)
                     .build()
             },
             storeFactory = { store() }

@@ -40,7 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.toRoute
 import com.chilly.android.R
-import com.chilly.android.applicationComponent
+import com.chilly.android.activityComponent
 import com.chilly.android.data.remote.dto.QuizType
 import com.chilly.android.di.screens.DaggerQuizComponent
 import com.chilly.android.di.screens.QuizComponent
@@ -229,7 +229,7 @@ fun NavGraphBuilder.installQuizScreen(padding: PaddingValues) {
         ScreenHolder<QuizStore, QuizComponent>(
             componentFactory = {
                 DaggerQuizComponent.builder()
-                    .appComponent(applicationComponent)
+                    .appComponent(activityComponent)
                     .build()
             },
             storeFactory = { store() }

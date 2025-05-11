@@ -1,13 +1,13 @@
 package com.chilly.android.di.screens
 
-import com.chilly.android.di.application.ApplicationComponent
+import com.chilly.android.di.activity.ActivityComponent
 import com.chilly.android.presentation.screens.forgot_password.ForgotPasswordNewsCollector
 import com.chilly.android.presentation.screens.forgot_password.ForgotPasswordStore
 import dagger.Component
 import javax.inject.Scope
 
 @ForgotPasswordScope
-@Component(dependencies = [ApplicationComponent::class])
+@Component(dependencies = [ActivityComponent::class])
 interface ForgotPasswordComponent {
 
     fun store(): ForgotPasswordStore
@@ -15,7 +15,7 @@ interface ForgotPasswordComponent {
 
     @Component.Builder
     interface Builder {
-        fun appComponent(applicationComponent: ApplicationComponent): Builder
+        fun appComponent(activityComponent: ActivityComponent): Builder
         fun build(): ForgotPasswordComponent
     }
 }

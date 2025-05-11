@@ -68,7 +68,7 @@ import androidx.core.net.toUri
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.toRoute
 import com.chilly.android.R
-import com.chilly.android.applicationComponent
+import com.chilly.android.activityComponent
 import com.chilly.android.di.screens.DaggerPlaceInfoComponent
 import com.chilly.android.di.screens.PlaceInfoComponent
 import com.chilly.android.presentation.common.components.ChillyButton
@@ -456,7 +456,7 @@ fun NavGraphBuilder.installPlaceInfoScreen(padding: PaddingValues) {
         ScreenHolder<PlaceInfoStore, PlaceInfoComponent>(
             componentFactory = {
                 DaggerPlaceInfoComponent.builder()
-                    .appComponent(applicationComponent)
+                    .appComponent(activityComponent)
                     .build()
             },
             storeFactory = { storeFactory.create(route.id) },

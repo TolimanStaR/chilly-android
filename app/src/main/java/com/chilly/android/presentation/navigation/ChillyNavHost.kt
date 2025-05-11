@@ -18,6 +18,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.chilly.android.R
+import com.chilly.android.activityComponent
 import com.chilly.android.applicationComponent
 import com.chilly.android.presentation.screens.favorites.installFavoritesScreen
 import com.chilly.android.presentation.screens.forgot_password.installForgotPasswordScreen
@@ -40,7 +41,7 @@ fun ChillyNavHost(navController: NavHostController = rememberNavController()) {
         ComposeNavigator(navController)
     }
 
-    val component = LocalContext.current.applicationComponent
+    val component = LocalContext.current.activityComponent
 
     LifecycleResumeEffect(navigator) {
         component.navigatorHolder.setNavigator(navigator)
