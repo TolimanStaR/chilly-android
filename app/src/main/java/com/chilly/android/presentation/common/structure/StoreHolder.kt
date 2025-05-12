@@ -1,34 +1,36 @@
 package com.chilly.android.presentation.common.structure
 
-import android.content.Context
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.ViewModelStoreOwner
 import ru.tinkoff.kotea.android.storeViaViewModel
 import ru.tinkoff.kotea.core.Store
+import timber.log.Timber
 import kotlin.reflect.KClass
 
 class StoreHolder<S : Store<*, *, *>> (
+    activity: ComponentActivity,
     factory: () -> S,
     klass: KClass<S>,
     vararg parameters: Any
-) {
-    private val key: String? = if (parameters.isEmpty())
-            klass.simpleName
-        else
-            "${klass.simpleName}[${parameters.joinToString()}]"
+): ViewModelStoreOwner by activity {
 
-    private val ViewModelStoreOwner._store: S by storeViaViewModel(factory = factory, sharedViewModelKey = key)
+    private val key: String? =
+        if (parameters.isNotEmpty()) "${klass.simpleName}[${parameters.joinToString()}]"
+        else klass.simpleName
 
-    fun getStore(context: Context) : S {
-        context as? ComponentActivity ?: throw IllegalStateException()
-        return context._store
-    }
+    val store: S by storeViaViewModel(
+        factory = {
+            Timber.d("creating store: key=$key")
+            factory.invoke()
+        },
+        sharedViewModelKey = key
+    )
 
     companion object {
         inline fun <reified S : Store<*, *, *>> of(
+            activity: ComponentActivity,
             vararg params: Any,
             noinline factory: () -> S
-        ) = StoreHolder(factory, S::class, params)
+        ) = StoreHolder(activity, factory, S::class, *params)
     }
-
 }

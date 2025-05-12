@@ -226,16 +226,18 @@ private fun QuizScreen(
 
 fun NavGraphBuilder.installQuizScreen(padding: PaddingValues) {
     slidingComposable<Destination.Quiz>(Up) { backStackEntry ->
+        val route = backStackEntry.toRoute<Destination.Quiz>()
         ScreenHolder<QuizStore, QuizComponent>(
             componentFactory = {
                 DaggerQuizComponent.builder()
                     .appComponent(activityComponent)
                     .build()
             },
-            storeFactory = { store() }
+            storeFactory = { store() },
+            route.type.name
         ) {
             val state = collectState()
-            val route = backStackEntry.toRoute<Destination.Quiz>()
+
             QuizScreen(state.value, route.type, padding, store::dispatch)
             NewsCollector(component.newsCollector)
         }
