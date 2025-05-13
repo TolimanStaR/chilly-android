@@ -7,6 +7,11 @@ import android.net.Uri
 import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -65,14 +70,18 @@ import com.chilly.android.presentation.common.structure.collectState
 import com.chilly.android.presentation.navigation.Destination
 import com.chilly.android.presentation.navigation.fadingComposable
 import com.chilly.android.presentation.screens.main.MainEvent.UiEvent
+import com.chilly.android.presentation.screens.place.sharedLayoutKey
+import com.chilly.android.presentation.screens.place.sharedPagerKey
 import com.chilly.android.presentation.theme.ChillyTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
 private fun MainScreen(
     state: MainState,
     scaffoldPadding: PaddingValues,
-    onEvent: (UiEvent) -> Unit
+    onEvent: (UiEvent) -> Unit,
+    transitionScope: SharedTransitionScope,
+    visibilityScope: AnimatedVisibilityScope
 ) {
     val context = LocalContext.current as? Activity
     val permissionLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
@@ -167,65 +176,79 @@ private fun MainScreen(
                     onEvent(UiEvent.LastFeedElementIsVisible)
                 }
             }
-            LazyColumn(
-                state = lazyColumnState,
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                item {
-                    if (state.locationAccessGranted) {
-                        Text(stringResource(R.string.nearby_places_title))
-                    } else {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text(stringResource(R.string.location_not_enabled_suggestion))
-                            Spacer(Modifier.weight(1f))
-                            ChillyButton(
-                                text = stringResource(R.string.grant_permission_button),
-                                onClick = {
-                                    if (context == null) return@ChillyButton
-                                    Intent(
-                                        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                                        Uri.fromParts("package", context.packageName, null)
-                                    ).also(context::startActivity)
-                                }
-                            )
-                        }
-                    }
-                }
-                items(state.feed) { place ->
-                    ElevatedCard(
-                        colors = CardDefaults.elevatedCardColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceBright
-                        ),
-                        elevation = CardDefaults.cardElevation(4.dp),
-                        modifier = Modifier.fillMaxWidth(),
-                        onClick = {
-                            onEvent(UiEvent.PlaceClicked(place))
-                        }
-                    ) {
-                        Column(
-                            verticalArrangement = Arrangement.spacedBy(8.dp),
-                            modifier = Modifier.padding(12.dp)
-                        ) {
-                            Text(
-                                text = place.name,
-                                style = MaterialTheme.typography.headlineMedium
-                            )
-                            PlaceImagesPager(place)
-                            Text(
-                                text = place.address
-                            )
-                        }
-                    }
-                }
-                if (state.isLoading) {
+            with(transitionScope) {
+                LazyColumn(
+                    state = lazyColumnState,
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
                     item {
-                        Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxWidth()) {
-                            CircularProgressIndicator()
+                        if (state.locationAccessGranted) {
+                            Text(stringResource(R.string.nearby_places_title))
+                        } else {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text(stringResource(R.string.location_not_enabled_suggestion))
+                                Spacer(Modifier.weight(1f))
+                                ChillyButton(
+                                    text = stringResource(R.string.grant_permission_button),
+                                    onClick = {
+                                        if (context == null) return@ChillyButton
+                                        Intent(
+                                            Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                                            Uri.fromParts("package", context.packageName, null)
+                                        ).also(context::startActivity)
+                                    }
+                                )
+                            }
                         }
                     }
-                }
-                item {
-                    Spacer(modifier = Modifier.height(4.dp))
+                    items(state.feed) { place ->
+                        ElevatedCard(
+                            colors = CardDefaults.elevatedCardColors(
+                                containerColor = MaterialTheme.colorScheme.surfaceBright
+                            ),
+                            elevation = CardDefaults.cardElevation(4.dp),
+                            modifier = Modifier
+                                .sharedBounds(
+                                    rememberSharedContentState(key = place.sharedLayoutKey()),
+                                    visibilityScope
+                                )
+                                .fillMaxWidth(),
+                            onClick = {
+                                onEvent(UiEvent.PlaceClicked(place))
+                            }
+                        ) {
+                            Column(
+                                verticalArrangement = Arrangement.spacedBy(8.dp),
+                                modifier = Modifier.padding(12.dp)
+                            ) {
+                                Text(
+                                    text = place.name,
+                                    style = MaterialTheme.typography.headlineMedium
+                                )
+                                PlaceImagesPager(
+                                    place,
+                                    modifier = Modifier
+                                        .sharedElement(
+                                            rememberSharedContentState(key = place.sharedPagerKey()),
+                                            visibilityScope
+                                        )
+                                )
+                                Text(
+                                    text = place.address
+                                )
+                            }
+                        }
+                    }
+                    if (state.isLoading) {
+                        item {
+                            Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxWidth()) {
+                                CircularProgressIndicator()
+                            }
+                        }
+                    }
+                    item {
+                        Spacer(modifier = Modifier.height(4.dp))
+                    }
                 }
             }
         }
@@ -243,7 +266,8 @@ private fun MainScreen(
     }
 }
 
-fun NavGraphBuilder.installMainScreen(padding: PaddingValues) {
+@OptIn(ExperimentalSharedTransitionApi::class)
+fun NavGraphBuilder.installMainScreen(padding: PaddingValues, transitionScope: SharedTransitionScope) {
     fadingComposable<Destination.Main> {
         ScreenHolder<MainStore, MainComponent>(
             componentFactory = {
@@ -255,7 +279,7 @@ fun NavGraphBuilder.installMainScreen(padding: PaddingValues) {
         ) {
             val state = collectState()
             NewsCollector(component.newsCollector)
-            MainScreen(state.value, padding, store::dispatch)
+            MainScreen(state.value, padding, store::dispatch, transitionScope, this@fadingComposable)
         }
     }
 }
@@ -292,16 +316,23 @@ private fun FeedShimmer() {
     }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 @PreviewLightDark
 @Preview(name = "MainScreen", showSystemUi = true, showBackground = true)
 private fun PreviewMainScreen() {
     ChillyTheme {
-        MainScreen(
-            state = MainState(),
-            PaddingValues(),
-            onEvent = {}
-        )
+        SharedTransitionLayout {
+            AnimatedVisibility(true) {
+                MainScreen(
+                    state = MainState(),
+                    PaddingValues(),
+                    onEvent = {},
+                    transitionScope = this@SharedTransitionLayout,
+                    visibilityScope = this@AnimatedVisibility
+                )
+            }
+        }
     }
 }
 

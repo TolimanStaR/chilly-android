@@ -107,11 +107,14 @@ fun PlaceCard(
 
 @Composable
 fun PlaceImagesPager(
-    place: PlaceDto
+    place: PlaceDto,
+    modifier: Modifier = Modifier
 ) {
     val initialPage = if (place.imageUrls.size > 1) 1 else 0
     val pagerState = rememberPagerState(initialPage = initialPage) { place.imageUrls.size }
-    Column {
+    Column(
+        modifier = modifier
+    ) {
         HorizontalPager(
             state = pagerState,
             pageSpacing = 8.dp,

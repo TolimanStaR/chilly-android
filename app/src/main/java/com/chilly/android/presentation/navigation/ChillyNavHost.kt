@@ -2,6 +2,8 @@ package com.chilly.android.presentation.navigation
 
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -35,6 +37,7 @@ import com.chilly.android.presentation.screens.result.installRecommendationResul
 import com.chilly.android.presentation.screens.sign_up.installSignUpComposable
 import com.chilly.android.presentation.screens.splash.installSplashComposable
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun ChillyNavHost(navController: NavHostController = rememberNavController()) {
     val navigator = remember {
@@ -55,25 +58,28 @@ fun ChillyNavHost(navController: NavHostController = rememberNavController()) {
         navController,
         component.snackbarHostState,
     ) { innerPadding ->
-        NavHost(
-            navController = navController,
-            startDestination = Destination.Splash,
-            enterTransition = { EnterTransition.None },
-            exitTransition = { ExitTransition.None }
-        ) {
-            installSplashComposable()
-            installOnboardingComposable(innerPadding)
-            installMainScreen(innerPadding)
-            installLoginComposable(innerPadding)
-            installSignUpComposable(innerPadding)
-            installForgotPasswordScreen(innerPadding)
-            installProfileScreen(innerPadding)
-            installQuizScreen(innerPadding)
-            installRecommendationResultScreen(innerPadding)
-            installPlaceInfoScreen(innerPadding)
-            installHistoryScreen(innerPadding)
-            installFavoritesScreen(innerPadding)
-            installRatingScreen(innerPadding)
+        SharedTransitionScope { sharedTransitionModifier ->
+            NavHost(
+                navController = navController,
+                startDestination = Destination.Splash,
+                enterTransition = { EnterTransition.None },
+                exitTransition = { ExitTransition.None },
+                modifier = sharedTransitionModifier
+            ) {
+                installSplashComposable()
+                installOnboardingComposable(innerPadding)
+                installMainScreen(innerPadding, this@SharedTransitionScope)
+                installLoginComposable(innerPadding)
+                installSignUpComposable(innerPadding)
+                installForgotPasswordScreen(innerPadding)
+                installProfileScreen(innerPadding)
+                installQuizScreen(innerPadding)
+                installRecommendationResultScreen(innerPadding)
+                installPlaceInfoScreen(innerPadding, this@SharedTransitionScope)
+                installHistoryScreen(innerPadding)
+                installFavoritesScreen(innerPadding)
+                installRatingScreen(innerPadding)
+            }
         }
     }
 }

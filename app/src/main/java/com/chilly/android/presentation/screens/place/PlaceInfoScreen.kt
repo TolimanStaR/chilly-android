@@ -2,6 +2,10 @@ package com.chilly.android.presentation.screens.place
 
 import android.content.Intent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -65,6 +69,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.toRoute
 import com.chilly.android.R
 import com.chilly.android.activityComponent
+import com.chilly.android.data.remote.dto.PlaceDto
 import com.chilly.android.di.screens.DaggerPlaceInfoComponent
 import com.chilly.android.di.screens.PlaceInfoComponent
 import com.chilly.android.presentation.common.components.ChillyButton
@@ -85,11 +90,14 @@ import com.chilly.android.presentation.theme.LinkColor
 import com.chilly.android.presentation.theme.Yellow70
 
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 private fun PlaceInfoScreen(
     state: PlaceUiState,
     padding: PaddingValues,
-    onEvent: (UiEvent) -> Unit
+    onEvent: (UiEvent) -> Unit,
+    transitionScope: SharedTransitionScope,
+    visibilityScope: AnimatedVisibilityScope
 ) {
     // should have top bar with navigate back and place name
     when {
@@ -119,196 +127,210 @@ private fun PlaceInfoScreen(
             onConfirm = { onEvent(UiEvent.SendRatingClicked) }
         )
     }
-    Column(
-        verticalArrangement = Arrangement.spacedBy(12.dp),
-        modifier = Modifier
-            .verticalScroll(rememberScrollState())
-            .padding(padding)
-            .padding(16.dp)
-    ) {
-        // images
-        PlaceImagesPager(
-            place = place
-        )
-        // title & isFavorite
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = place.name,
-                style = MaterialTheme.typography.headlineMedium
-            )
-            Spacer(modifier = Modifier.weight(1f))
-            IconButton(
-                onClick = {
-                    onEvent(UiEvent.ToggleFavoriteClicked)
-                }
-            ) {
-                val icon = if (state.isInFavorites) {
-                    Icons.Filled.Favorite
-                } else {
-                    Icons.Outlined.FavoriteBorder
-                }
-                val color = with(MaterialTheme.colorScheme) {
-                    if (state.isInFavorites)  primary else onSurface
-                }
-                Icon(
-                    imageVector = icon,
-                    contentDescription = null,
-                    tint = color
+    with(transitionScope) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            modifier = Modifier
+                .sharedBounds(
+                    rememberSharedContentState(key = place.sharedLayoutKey()),
+                    visibilityScope,
+                    resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds()
                 )
-            }
-        }
-        HorizontalDivider()
-
-        Column {
-            HeadlineText(stringResource(R.string.place_address_title))
-            Text(place.address)
-        }
-        place.rating?.let { rating ->
-            Row {
-                HeadlineText(stringResource(R.string.place_rating_title))
-                Text(rating.toString())
-            }
-        }
-
-        val uriHandler = LocalUriHandler.current
-        val context = LocalContext.current
-
-        ChillyButton(
-            textRes = R.string.place_maps_button,
-            onClick = {
-                runCatching {
-                    uriHandler.openUri(place.yandexMapsLink)
-                }
-            },
-            modifier = Modifier.fillMaxWidth()
-        )
-        ExpandableSection(
-            expanded = Section.OPEN_HOURS in state.expandedSections,
-            onToggle = {
-                onEvent(UiEvent.ToggleExpansion(Section.OPEN_HOURS))
-            },
-            title = {
-                HeadlineText(stringResource(R.string.place_open_hours_title))
-            }
+                .verticalScroll(rememberScrollState())
+                .padding(padding)
+                .padding(16.dp)
         ) {
-            val dayMapping = stringArrayResource(R.array.week_days)
-            place.openHours.forEachIndexed { index, openRange ->
-                Row {
-                    HeadlineText("${dayMapping[index]} - ")
-                    Text(openRange)
-                }
-            }
-        }
-
-        ExpandableSection(
-            expanded = Section.CONTACTS in state.expandedSections,
-            onToggle = {
-                onEvent(UiEvent.ToggleExpansion(Section.CONTACTS))
-            },
-            title = {
-                HeadlineText(stringResource(R.string.place_contacts_title))
-            }
-        ) {
-            place.phone?.let { phoneNumber ->
-                Row {
-                    HeadlineText(stringResource(R.string.place_phone_title))
-                    Text(
-                        text = clickableText(phoneNumber) {
-                            Intent(Intent.ACTION_DIAL).also {
-                                it.data = "tel:$phoneNumber".toUri()
-                                context.startActivity(it)
-                            }
-                        }
+            // images - shared with large card
+            PlaceImagesPager(
+                place = place,
+                modifier = Modifier.sharedElement(
+                    rememberSharedContentState(key = place.sharedPagerKey()),
+                    visibilityScope
+                )
+            )
+            // title & isFavorite
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = place.name,
+                    style = MaterialTheme.typography.headlineMedium
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                IconButton(
+                    onClick = {
+                        onEvent(UiEvent.ToggleFavoriteClicked)
+                    }
+                ) {
+                    val icon = if (state.isInFavorites) {
+                        Icons.Filled.Favorite
+                    } else {
+                        Icons.Outlined.FavoriteBorder
+                    }
+                    val color = with(MaterialTheme.colorScheme) {
+                        if (state.isInFavorites)  primary else onSurface
+                    }
+                    Icon(
+                        imageVector = icon,
+                        contentDescription = null,
+                        tint = color
                     )
                 }
             }
-            place.socials.forEach { link ->
-                val socialName = link.checkSocial() ?: return@forEach
+            HorizontalDivider()
+
+            Column {
+                HeadlineText(stringResource(R.string.place_address_title))
+                Text(place.address)
+            }
+            place.rating?.let { rating ->
                 Row {
-                    HeadlineText("$socialName: ")
-                    Text(
-                        clickableText(link) {
-                            runCatching {
-                                uriHandler.openUri(link)
-                            }
-                        }
-                    )
+                    HeadlineText(stringResource(R.string.place_rating_title))
+                    Text(rating.toString())
                 }
             }
-        }
 
-        ExpandableSection(
-            expanded = Section.COMMENTS in state.expandedSections,
-            onToggle = {
-                onEvent(UiEvent.ToggleExpansion(Section.COMMENTS))
-            },
-            title = {
-                HeadlineText(stringResource(R.string.reviews_section_title))
-            }
-        ) {
+            val uriHandler = LocalUriHandler.current
+            val context = LocalContext.current
+
             ChillyButton(
-                textRes = R.string.rate_place_button,
-                type = ChillyButtonType.Secondary,
+                textRes = R.string.place_maps_button,
                 onClick = {
-                    showRateDialog = true
+                    runCatching {
+                        uriHandler.openUri(place.yandexMapsLink)
+                    }
                 },
                 modifier = Modifier.fillMaxWidth()
             )
-            LaunchedEffect(Unit) {
-                if (state.comments.isEmpty()) {
-                    onEvent(UiEvent.EmptyReviewsSectionExpanded)
+            ExpandableSection(
+                expanded = Section.OPEN_HOURS in state.expandedSections,
+                onToggle = {
+                    onEvent(UiEvent.ToggleExpansion(Section.OPEN_HOURS))
+                },
+                title = {
+                    HeadlineText(stringResource(R.string.place_open_hours_title))
+                }
+            ) {
+                val dayMapping = stringArrayResource(R.array.week_days)
+                place.openHours.forEachIndexed { index, openRange ->
+                    Row {
+                        HeadlineText("${dayMapping[index]} - ")
+                        Text(openRange)
+                    }
                 }
             }
 
-            if (state.isLoading) {
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    CircularProgressIndicator()
+            ExpandableSection(
+                expanded = Section.CONTACTS in state.expandedSections,
+                onToggle = {
+                    onEvent(UiEvent.ToggleExpansion(Section.CONTACTS))
+                },
+                title = {
+                    HeadlineText(stringResource(R.string.place_contacts_title))
+                }
+            ) {
+                place.phone?.let { phoneNumber ->
+                    Row {
+                        HeadlineText(stringResource(R.string.place_phone_title))
+                        Text(
+                            text = clickableText(phoneNumber) {
+                                Intent(Intent.ACTION_DIAL).also {
+                                    it.data = "tel:$phoneNumber".toUri()
+                                    context.startActivity(it)
+                                }
+                            }
+                        )
+                    }
+                }
+                place.socials.forEach { link ->
+                    val socialName = link.checkSocial() ?: return@forEach
+                    Row {
+                        HeadlineText("$socialName: ")
+                        Text(
+                            clickableText(link) {
+                                runCatching {
+                                    uriHandler.openUri(link)
+                                }
+                            }
+                        )
+                    }
                 }
             }
-            if (state.comments.isEmpty()) {
-                Text(
-                    text = stringResource(R.string.empty_comment_section),
-                    textAlign = TextAlign.Center,
-                    color = MaterialTheme.colorScheme.secondary,
+
+            ExpandableSection(
+                expanded = Section.COMMENTS in state.expandedSections,
+                onToggle = {
+                    onEvent(UiEvent.ToggleExpansion(Section.COMMENTS))
+                },
+                title = {
+                    HeadlineText(stringResource(R.string.reviews_section_title))
+                }
+            ) {
+                ChillyButton(
+                    textRes = R.string.rate_place_button,
+                    type = ChillyButtonType.Secondary,
+                    onClick = {
+                        showRateDialog = true
+                    },
                     modifier = Modifier.fillMaxWidth()
                 )
-            } else {
-                LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.heightIn(max = 400.dp)
-                ) {
-                    item {
-                        Spacer(Modifier.height(4.dp))
+                LaunchedEffect(Unit) {
+                    if (state.comments.isEmpty()) {
+                        onEvent(UiEvent.EmptyReviewsSectionExpanded)
                     }
-                    items(state.comments, key = { it.id }) { comment ->
-                        CommentCard(comment)
+                }
+
+                if (state.isLoading) {
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        CircularProgressIndicator()
                     }
-                    if (!state.allCommentsLoaded) {
+                }
+                if (state.comments.isEmpty()) {
+                    Text(
+                        text = stringResource(R.string.empty_comment_section),
+                        textAlign = TextAlign.Center,
+                        color = MaterialTheme.colorScheme.secondary,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                } else {
+                    LazyColumn(
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier.heightIn(max = 400.dp)
+                    ) {
                         item {
-                            ChillyButton(
-                                textRes = R.string.load_comments_button,
-                                onClick = {
-                                    onEvent(UiEvent.LoadNextCommentsPageClicked)
-                                },
-                                type = ChillyButtonType.Secondary,
-                                color = ChillyButtonColor.Gray,
-                                modifier = Modifier.fillMaxWidth()
-                            )
+                            Spacer(Modifier.height(4.dp))
                         }
-                    }
-                    item {
-                        Spacer(Modifier.height(4.dp))
+                        items(state.comments, key = { it.id }) { comment ->
+                            CommentCard(comment)
+                        }
+                        if (!state.allCommentsLoaded) {
+                            item {
+                                ChillyButton(
+                                    textRes = R.string.load_comments_button,
+                                    onClick = {
+                                        onEvent(UiEvent.LoadNextCommentsPageClicked)
+                                    },
+                                    type = ChillyButtonType.Secondary,
+                                    color = ChillyButtonColor.Gray,
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+                            }
+                        }
+                        item {
+                            Spacer(Modifier.height(4.dp))
+                        }
                     }
                 }
             }
         }
     }
 }
+
+fun PlaceDto.sharedLayoutKey() = "place_${id}_layout_key"
+fun PlaceDto.sharedPagerKey() = "place_${id}_pager_key"
 
 @Composable
 private fun CommentCard(
@@ -420,7 +442,8 @@ private fun String.checkSocial(): String? = when {
     else -> null
 }
 
-fun NavGraphBuilder.installPlaceInfoScreen(padding: PaddingValues) {
+@OptIn(ExperimentalSharedTransitionApi::class)
+fun NavGraphBuilder.installPlaceInfoScreen(padding: PaddingValues, transitionScope: SharedTransitionScope) {
     fadingComposable<Destination.PlaceInfo> { backStackEntry ->
         val route = backStackEntry.toRoute<Destination.PlaceInfo>()
 
@@ -435,21 +458,28 @@ fun NavGraphBuilder.installPlaceInfoScreen(padding: PaddingValues) {
         ) {
             val state = collectState(component.stateUiMapper)
             NewsCollector(component.newsCollector)
-            PlaceInfoScreen(state.value, padding, store::dispatch)
+            PlaceInfoScreen(state.value, padding, store::dispatch, transitionScope, this@fadingComposable)
         }
     }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 @PreviewLightDark
 @Preview(name = "PlaceInfoScreen", showSystemUi = true, showBackground = true)
 private fun PreviewPlaceInfoScreen() {
     ChillyTheme {
-        PlaceInfoScreen(
-            state = PlaceUiState(-1),
-            padding = PaddingValues(),
-            onEvent = {}
-        )
+        SharedTransitionLayout {
+            AnimatedVisibility(true) {
+                PlaceInfoScreen(
+                    state = PlaceUiState(-1),
+                    padding = PaddingValues(),
+                    onEvent = {},
+                    transitionScope = this@SharedTransitionLayout,
+                    visibilityScope = this@AnimatedVisibility
+                )
+            }
+        }
     }
 }
 
