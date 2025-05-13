@@ -1,14 +1,14 @@
 package com.chilly.android.di.screens
 
 
-import com.chilly.android.di.application.ApplicationComponent
+import com.chilly.android.di.activity.ActivityComponent
 import com.chilly.android.presentation.screens.rating.RatingNewsCollector
 import com.chilly.android.presentation.screens.rating.RatingStore
 import dagger.Component
 import javax.inject.Scope
 
 @RatingScope
-@Component(dependencies = [ApplicationComponent::class])
+@Component(dependencies = [ActivityComponent::class])
 interface RatingComponent {
 
     val storeFactory: RatingStore.Factory
@@ -16,7 +16,7 @@ interface RatingComponent {
 
     @Component.Builder
     interface Builder {
-        fun appComponent(applicationComponent: ApplicationComponent): Builder
+        fun appComponent(activityComponent: ActivityComponent): Builder
         fun build(): RatingComponent
     }
 }

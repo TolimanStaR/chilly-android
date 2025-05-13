@@ -15,7 +15,7 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.toRoute
-import com.chilly.android.applicationComponent
+import com.chilly.android.activityComponent
 import com.chilly.android.di.screens.DaggerRatingComponent
 import com.chilly.android.di.screens.RatingComponent
 import com.chilly.android.presentation.common.components.ChillyButton
@@ -89,7 +89,7 @@ fun NavGraphBuilder.installRatingScreen(innerPadding: PaddingValues) {
         ScreenHolder<RatingStore, RatingComponent>(
             componentFactory = {
                 DaggerRatingComponent.builder()
-                    .appComponent(applicationComponent)
+                    .appComponent(activityComponent)
                     .build()
             },
             storeFactory = { storeFactory.create(route.ids) },

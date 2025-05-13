@@ -19,7 +19,7 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraphBuilder
 import com.chilly.android.R
-import com.chilly.android.applicationComponent
+import com.chilly.android.activityComponent
 import com.chilly.android.di.screens.DaggerSignUpComponent
 import com.chilly.android.di.screens.SignUpComponent
 import com.chilly.android.presentation.common.components.CancellableTextField
@@ -125,7 +125,7 @@ fun NavGraphBuilder.installSignUpComposable(padding: PaddingValues) {
         ScreenHolder(
             componentFactory = {
                 DaggerSignUpComponent.builder()
-                    .appComponent(applicationComponent)
+                    .appComponent(activityComponent)
                     .build()
             },
             storeFactory = SignUpComponent::store

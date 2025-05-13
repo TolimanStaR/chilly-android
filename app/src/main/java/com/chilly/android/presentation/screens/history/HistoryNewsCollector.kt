@@ -11,8 +11,7 @@ class HistoryNewsCollector @Inject constructor(
 
     override suspend fun emit(value: HistoryNews) {
         when (value) {
-            is HistoryNews.NavigatePlaceInfo -> router.navigateTo(Destination.PlaceInfo(value.id))
-            HistoryNews.NavigateProfile -> router.navigateTo(Destination.Profile)
+            is HistoryNews.NavigatePlaceInfo -> router.navigateTo(Destination.PlaceInfo(value.place.id, value.place.name))
         }
     }
 }

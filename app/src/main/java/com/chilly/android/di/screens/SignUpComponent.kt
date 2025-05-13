@@ -1,13 +1,13 @@
 package com.chilly.android.di.screens
 
-import com.chilly.android.di.application.ApplicationComponent
+import com.chilly.android.di.activity.ActivityComponent
 import com.chilly.android.presentation.screens.sign_up.SignUpNewsCollector
 import com.chilly.android.presentation.screens.sign_up.SignUpStore
 import dagger.Component
 import javax.inject.Scope
 
 @SignUpScope
-@Component(dependencies = [ApplicationComponent::class])
+@Component(dependencies = [ActivityComponent::class])
 interface SignUpComponent {
 
     fun store(): SignUpStore
@@ -15,7 +15,7 @@ interface SignUpComponent {
 
     @Component.Builder
     interface Builder {
-        fun appComponent(component: ApplicationComponent): Builder
+        fun appComponent(activityComponent: ActivityComponent): Builder
         fun build(): SignUpComponent
     }
 }

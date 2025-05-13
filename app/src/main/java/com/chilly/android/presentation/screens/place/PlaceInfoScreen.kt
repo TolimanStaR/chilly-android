@@ -2,6 +2,10 @@ package com.chilly.android.presentation.screens.place
 
 import android.content.Intent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -23,7 +27,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
@@ -32,14 +35,11 @@ import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -68,7 +68,8 @@ import androidx.core.net.toUri
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.toRoute
 import com.chilly.android.R
-import com.chilly.android.applicationComponent
+import com.chilly.android.activityComponent
+import com.chilly.android.data.remote.dto.PlaceDto
 import com.chilly.android.di.screens.DaggerPlaceInfoComponent
 import com.chilly.android.di.screens.PlaceInfoComponent
 import com.chilly.android.presentation.common.components.ChillyButton
@@ -88,75 +89,64 @@ import com.chilly.android.presentation.theme.ChillyTheme
 import com.chilly.android.presentation.theme.LinkColor
 import com.chilly.android.presentation.theme.Yellow70
 
-@OptIn(ExperimentalMaterial3Api::class)
+
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 private fun PlaceInfoScreen(
     state: PlaceUiState,
     padding: PaddingValues,
-    onEvent: (UiEvent) -> Unit
+    onEvent: (UiEvent) -> Unit,
+    transitionScope: SharedTransitionScope,
+    visibilityScope: AnimatedVisibilityScope
 ) {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    val place = state.place ?: return@TopAppBar
-                    Text(text = place.name)
-                },
-                navigationIcon = {
-                    IconButton(
-                        onClick = {
-                            onEvent(UiEvent.BackClicked)
-                        }
-                    ) {
-                        Icon(imageVector = Icons.AutoMirrored.Default.ArrowBack, contentDescription = null)
-                    }
-                }
-            )
-        }
-    ) { scaffoldPadding ->
-        when {
-            state.place == null && !state.errorOccurred -> {
-                LoadingPlaceholder(null) {
-                    onEvent(UiEvent.ShownLoading)
-                }
-                return@Scaffold
+    // should have top bar with navigate back and place name
+    when {
+        state.place == null && !state.errorOccurred -> {
+            LoadingPlaceholder(null) {
+                onEvent(UiEvent.ShownLoading)
             }
-            state.place == null && state.errorOccurred -> {
-                ErrorReloadPlaceHolder(null) {
-                    onEvent(UiEvent.ReloadPlace)
-                }
-                return@Scaffold
+            return
+        }
+        state.place == null && state.errorOccurred -> {
+            ErrorReloadPlaceHolder(null) {
+                onEvent(UiEvent.ReloadPlace)
             }
+            return
         }
-        val place = state.place ?: return@Scaffold
-        val mergedPadding = remember(padding, scaffoldPadding) {
-            PaddingValues(
-                top = maxOf(padding.calculateTopPadding(), scaffoldPadding.calculateTopPadding()),
-                bottom = maxOf(padding.calculateBottomPadding(), scaffoldPadding.calculateBottomPadding())
-            )
-        }
-        var showRateDialog by remember { mutableStateOf(false) }
-        if (showRateDialog) {
-            PlaceRatingDialog(
-                place = place,
-                onDismiss = { showRateDialog = false },
-                ratingValue = state.ratingValue,
-                onRatingChange = { onEvent(UiEvent.RatingChanged(it)) },
-                commentValue = state.commentText,
-                onCommentChange = { onEvent(UiEvent.CommentTextChanged(it)) },
-                onConfirm = { onEvent(UiEvent.SendRatingClicked) }
-            )
-        }
+    }
+    val place = state.place ?: return
+    var showRateDialog by remember { mutableStateOf(false) }
+    if (showRateDialog) {
+        PlaceRatingDialog(
+            place = place,
+            onDismiss = { showRateDialog = false },
+            ratingValue = state.ratingValue,
+            onRatingChange = { onEvent(UiEvent.RatingChanged(it)) },
+            commentValue = state.commentText,
+            onCommentChange = { onEvent(UiEvent.CommentTextChanged(it)) },
+            onConfirm = { onEvent(UiEvent.SendRatingClicked) }
+        )
+    }
+    with(transitionScope) {
         Column(
             verticalArrangement = Arrangement.spacedBy(12.dp),
             modifier = Modifier
+                .sharedBounds(
+                    rememberSharedContentState(key = place.sharedLayoutKey()),
+                    visibilityScope,
+                    resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds()
+                )
                 .verticalScroll(rememberScrollState())
-                .padding(mergedPadding)
+                .padding(padding)
                 .padding(16.dp)
         ) {
-            // images
+            // images - shared with large card
             PlaceImagesPager(
-                place = place
+                place = place,
+                modifier = Modifier.sharedElement(
+                    rememberSharedContentState(key = place.sharedPagerKey()),
+                    visibilityScope
+                )
             )
             // title & isFavorite
             Row(
@@ -339,6 +329,9 @@ private fun PlaceInfoScreen(
     }
 }
 
+fun PlaceDto.sharedLayoutKey() = "place_${id}_layout_key"
+fun PlaceDto.sharedPagerKey() = "place_${id}_pager_key"
+
 @Composable
 private fun CommentCard(
     comment: CommentUiModel
@@ -449,14 +442,15 @@ private fun String.checkSocial(): String? = when {
     else -> null
 }
 
-fun NavGraphBuilder.installPlaceInfoScreen(padding: PaddingValues) {
+@OptIn(ExperimentalSharedTransitionApi::class)
+fun NavGraphBuilder.installPlaceInfoScreen(padding: PaddingValues, transitionScope: SharedTransitionScope) {
     fadingComposable<Destination.PlaceInfo> { backStackEntry ->
         val route = backStackEntry.toRoute<Destination.PlaceInfo>()
 
         ScreenHolder<PlaceInfoStore, PlaceInfoComponent>(
             componentFactory = {
                 DaggerPlaceInfoComponent.builder()
-                    .appComponent(applicationComponent)
+                    .appComponent(activityComponent)
                     .build()
             },
             storeFactory = { storeFactory.create(route.id) },
@@ -464,21 +458,28 @@ fun NavGraphBuilder.installPlaceInfoScreen(padding: PaddingValues) {
         ) {
             val state = collectState(component.stateUiMapper)
             NewsCollector(component.newsCollector)
-            PlaceInfoScreen(state.value, padding, store::dispatch)
+            PlaceInfoScreen(state.value, padding, store::dispatch, transitionScope, this@fadingComposable)
         }
     }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 @PreviewLightDark
 @Preview(name = "PlaceInfoScreen", showSystemUi = true, showBackground = true)
 private fun PreviewPlaceInfoScreen() {
     ChillyTheme {
-        PlaceInfoScreen(
-            state = PlaceUiState(-1),
-            padding = PaddingValues(),
-            onEvent = {}
-        )
+        SharedTransitionLayout {
+            AnimatedVisibility(true) {
+                PlaceInfoScreen(
+                    state = PlaceUiState(-1),
+                    padding = PaddingValues(),
+                    onEvent = {},
+                    transitionScope = this@SharedTransitionLayout,
+                    visibilityScope = this@AnimatedVisibility
+                )
+            }
+        }
     }
 }
 

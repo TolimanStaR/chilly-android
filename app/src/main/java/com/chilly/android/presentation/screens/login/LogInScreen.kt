@@ -17,7 +17,7 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraphBuilder
 import com.chilly.android.R
-import com.chilly.android.applicationComponent
+import com.chilly.android.activityComponent
 import com.chilly.android.di.screens.DaggerLoginComponent
 import com.chilly.android.di.screens.LoginComponent
 import com.chilly.android.presentation.common.components.CancellableTextField
@@ -100,7 +100,7 @@ fun NavGraphBuilder.installLoginComposable(padding: PaddingValues) {
         ScreenHolder(
             componentFactory = {
                 DaggerLoginComponent.builder()
-                    .appComponent(applicationComponent)
+                    .appComponent(activityComponent)
                     .build()
             },
             storeFactory = LoginComponent::store

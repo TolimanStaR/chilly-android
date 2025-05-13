@@ -15,7 +15,7 @@ sealed interface RecommendationResultEvent {
         data object ScreenShown : UiEvent
         data object LoadAgainClicked : UiEvent
         data object CheckRequest : UiEvent
-        data class PlaceClicked(val id: Int) : UiEvent
+        data class PlaceClicked(val place: PlaceDto) : UiEvent
         data object PermissionGranted : UiEvent
         data class OnPermissionRequestResult(val isGranted: Boolean) : UiEvent
     }
@@ -34,7 +34,7 @@ sealed interface RecommendationResultCommand {
 
 sealed interface RecommendationResultNews {
     data object GeneralFail : RecommendationResultNews
-    data class NavigatePlace(val id: Int) : RecommendationResultNews
+    data class NavigatePlace(val place: PlaceDto) : RecommendationResultNews
     data class SubmitNotificationRequest(val request: WorkRequest) : RecommendationResultNews
 }
 

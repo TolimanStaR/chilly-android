@@ -1,13 +1,13 @@
 package com.chilly.android.di.screens
 
-import com.chilly.android.di.application.ApplicationComponent
+import com.chilly.android.di.activity.ActivityComponent
 import com.chilly.android.presentation.screens.login.LoginNewsCollector
 import com.chilly.android.presentation.screens.login.LoginStore
 import dagger.Component
 import javax.inject.Scope
 
 @LoginScope
-@Component(dependencies = [ApplicationComponent::class])
+@Component(dependencies = [ActivityComponent::class])
 interface LoginComponent {
 
     fun store(): LoginStore
@@ -15,7 +15,7 @@ interface LoginComponent {
 
     @Component.Builder
     interface Builder {
-        fun appComponent(appComponent: ApplicationComponent): Builder
+        fun appComponent(activityComponent: ActivityComponent): Builder
         fun build(): LoginComponent
     }
 }

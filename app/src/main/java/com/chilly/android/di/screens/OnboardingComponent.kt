@@ -1,13 +1,13 @@
 package com.chilly.android.di.screens
 
-import com.chilly.android.di.application.ApplicationComponent
+import com.chilly.android.di.activity.ActivityComponent
 import com.chilly.android.presentation.screens.onboarding.OnboardingEffectCollector
 import com.chilly.android.presentation.screens.onboarding.OnboardingViewModel
 import dagger.Component
 import javax.inject.Scope
 
 @OnboardingScope
-@Component(dependencies = [ApplicationComponent::class])
+@Component(dependencies = [ActivityComponent::class])
 interface OnboardingComponent {
 
     fun viewModel(): OnboardingViewModel
@@ -15,7 +15,7 @@ interface OnboardingComponent {
 
     @Component.Builder
     interface Builder {
-        fun appComponent(appComponent: ApplicationComponent): Builder
+        fun appComponent(activityComponent: ActivityComponent): Builder
         fun build(): OnboardingComponent
     }
 }

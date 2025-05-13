@@ -30,7 +30,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraphBuilder
 import com.chilly.android.R
-import com.chilly.android.applicationComponent
+import com.chilly.android.activityComponent
 import com.chilly.android.di.screens.DaggerForgotPasswordComponent
 import com.chilly.android.presentation.common.components.CancellableTextField
 import com.chilly.android.presentation.common.components.ChillyButton
@@ -180,7 +180,7 @@ fun NavGraphBuilder.installForgotPasswordScreen(padding: PaddingValues) {
         ScreenHolder(
             componentFactory = {
                 DaggerForgotPasswordComponent.builder()
-                    .appComponent(applicationComponent)
+                    .appComponent(activityComponent)
                     .build()
             },
             storeFactory = { store() }

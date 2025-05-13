@@ -35,7 +35,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.view.doOnLayout
 import androidx.navigation.NavGraphBuilder
 import com.chilly.android.R
-import com.chilly.android.applicationComponent
+import com.chilly.android.activityComponent
 import com.chilly.android.di.screens.DaggerRecommendationResultComponent
 import com.chilly.android.di.screens.RecommendationResultComponent
 import com.chilly.android.presentation.common.components.ErrorReloadPlaceHolder
@@ -108,7 +108,7 @@ private fun RecommendationResultScreen(
         Spacer(modifier = Modifier.height(4.dp))
         state.recommendations.forEach { place ->
             PlaceListItem(place) {
-                onEvent(UiEvent.PlaceClicked(place.id))
+                onEvent(UiEvent.PlaceClicked(place))
             }
         }
         Spacer(modifier = Modifier.height(16.dp))
@@ -278,7 +278,7 @@ fun NavGraphBuilder.installRecommendationResultScreen(padding: PaddingValues) {
         ScreenHolder<RecommendationResultStore, RecommendationResultComponent>(
             componentFactory = {
                 DaggerRecommendationResultComponent.builder()
-                    .appComponent(applicationComponent)
+                    .appComponent(activityComponent)
                     .build()
             },
             storeFactory = {

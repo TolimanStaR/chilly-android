@@ -8,7 +8,7 @@ data class FavoritesState(
 
 sealed interface FavoritesEvent {
     sealed interface UiEvent : FavoritesEvent {
-        data class PlaceClicked(val placeId: Int) : UiEvent
+        data class PlaceClicked(val place: PlaceDto) : UiEvent
     }
 
     sealed interface CommandEvent : FavoritesEvent {
@@ -21,5 +21,5 @@ sealed interface FavoritesCommand {
 }
 
 sealed interface FavoritesNews {
-    data class NavigateToPlace(val placeId: Int) : FavoritesNews
+    data class NavigateToPlace(val place: PlaceDto) : FavoritesNews
 }

@@ -32,7 +32,7 @@ class RecommendationResultUpdate @Inject constructor(
                 commands(RecommendationResultCommand.CheckRequested)
             }
             is UiEvent.PlaceClicked -> {
-                news(RecommendationResultNews.NavigatePlace(event.id))
+                news(RecommendationResultNews.NavigatePlace(event.place))
             }
 
             is UiEvent.OnPermissionRequestResult -> {

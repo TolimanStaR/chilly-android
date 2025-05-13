@@ -17,7 +17,7 @@ class RecommendationResultNewsCollector @Inject constructor(
     override suspend fun emit(value: RecommendationResultNews) {
         when (value) {
             RecommendationResultNews.GeneralFail -> snackbarShower.show("fail")
-            is RecommendationResultNews.NavigatePlace -> router.navigateTo(Destination.PlaceInfo(value.id))
+            is RecommendationResultNews.NavigatePlace -> router.navigateTo(Destination.PlaceInfo(value.place.id, value.place.name))
             is RecommendationResultNews.SubmitNotificationRequest -> workManagerProvider.getInstance()
                 .run {
                     Timber.i("Notification Work enqueued")

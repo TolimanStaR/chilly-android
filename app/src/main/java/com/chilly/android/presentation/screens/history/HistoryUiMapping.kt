@@ -11,7 +11,8 @@ import javax.inject.Inject
 @HistoryScope
 class HistoryUiMapper @Inject constructor() : UiStateMapper<HistoryState, HistoryUiState> {
     override suspend fun Resources.mapToUiState(state: HistoryState): HistoryUiState = HistoryUiState(
-        historyItems = mapHistoryList(state.historyItems)
+        historyItems = mapHistoryList(state.historyItems),
+        showDeleteDialog = state.showDeleteDialog
     )
 
 }

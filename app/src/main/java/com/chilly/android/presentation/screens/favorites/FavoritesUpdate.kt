@@ -15,7 +15,7 @@ class FavoritesUpdate @Inject constructor(
     private fun NextBuilder.updateOnUi(event: FavoritesEvent.UiEvent) {
         when (event) {
             is FavoritesEvent.UiEvent.PlaceClicked -> {
-                news(FavoritesNews.NavigateToPlace(event.placeId))
+                news(FavoritesNews.NavigateToPlace(event.place))
             }
         }
     }

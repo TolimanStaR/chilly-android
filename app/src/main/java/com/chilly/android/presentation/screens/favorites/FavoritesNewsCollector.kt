@@ -11,7 +11,7 @@ class FavoritesNewsCollector @Inject constructor(
 
     override suspend fun emit(value: FavoritesNews) {
         when (value) {
-            is FavoritesNews.NavigateToPlace -> router.navigateTo(Destination.PlaceInfo(value.placeId))
+            is FavoritesNews.NavigateToPlace -> router.navigateTo(Destination.PlaceInfo(value.place.id, value.place.name))
         }
     }
 }

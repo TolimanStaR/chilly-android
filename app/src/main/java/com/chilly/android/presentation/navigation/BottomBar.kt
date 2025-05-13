@@ -1,83 +1,23 @@
 package com.chilly.android.presentation.navigation
 
-import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Menu
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination.Companion.hasRoute
 import com.chilly.android.R
-
-data class TopBarState(
-    @StringRes val titleRes: Int,
-    val showBackButton: Boolean = false,
-    val showProfileAction: Boolean = true
-)
-
-sealed interface TopBarEvent {
-    data object BackClicked : TopBarEvent
-    data object ProfileClicked : TopBarEvent
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun ChillyTopBar(
-    state: TopBarState,
-    onEvent: (TopBarEvent) -> Unit
-) {
-   TopAppBar(
-        title = {
-            Text(text = stringResource(state.titleRes))
-        },
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        ),
-        navigationIcon = {
-            if (state.showBackButton) {
-                IconButton(
-                    onClick = { onEvent(TopBarEvent.BackClicked) }
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = null
-                    )
-                }
-            }
-        },
-        actions = {
-            if (state.showProfileAction) {
-                IconButton(
-                    onClick = { onEvent(TopBarEvent.ProfileClicked) }
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.AccountCircle,
-                        contentDescription = null
-                    )
-                }
-            }
-        }
-    )
-}
 
 data class BottomNavigationRoute<T : Destination>(
     val titleRes: Int,

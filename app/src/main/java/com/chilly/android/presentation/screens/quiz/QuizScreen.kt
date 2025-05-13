@@ -40,7 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.toRoute
 import com.chilly.android.R
-import com.chilly.android.applicationComponent
+import com.chilly.android.activityComponent
 import com.chilly.android.data.remote.dto.QuizType
 import com.chilly.android.di.screens.DaggerQuizComponent
 import com.chilly.android.di.screens.QuizComponent
@@ -226,16 +226,18 @@ private fun QuizScreen(
 
 fun NavGraphBuilder.installQuizScreen(padding: PaddingValues) {
     slidingComposable<Destination.Quiz>(Up) { backStackEntry ->
+        val route = backStackEntry.toRoute<Destination.Quiz>()
         ScreenHolder<QuizStore, QuizComponent>(
             componentFactory = {
                 DaggerQuizComponent.builder()
-                    .appComponent(applicationComponent)
+                    .appComponent(activityComponent)
                     .build()
             },
-            storeFactory = { store() }
+            storeFactory = { store() },
+            route.type.name
         ) {
             val state = collectState()
-            val route = backStackEntry.toRoute<Destination.Quiz>()
+
             QuizScreen(state.value, route.type, padding, store::dispatch)
             NewsCollector(component.newsCollector)
         }
