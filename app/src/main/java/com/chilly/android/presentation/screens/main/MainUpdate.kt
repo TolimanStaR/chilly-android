@@ -31,7 +31,7 @@ class MainUpdate @Inject constructor(
                 commands(MainCommand.LoadFeed, MainCommand.LoadNewFeedPage)
             }
             is UiEvent.PlaceClicked -> {
-                news(MainNews.NavigatePlace(event.placeId))
+                news(MainNews.NavigatePlace(event.place))
             }
             is UiEvent.GotPermissionRequestResult -> {
                 Timber.i("PERMISSIONS: result of request: ${event.permissions.entries.map { it.toPair() }}")

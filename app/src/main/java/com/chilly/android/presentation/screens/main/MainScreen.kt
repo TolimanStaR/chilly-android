@@ -199,7 +199,7 @@ private fun MainScreen(
                         elevation = CardDefaults.cardElevation(4.dp),
                         modifier = Modifier.fillMaxWidth(),
                         onClick = {
-                            onEvent(UiEvent.PlaceClicked(place.id))
+                            onEvent(UiEvent.PlaceClicked(place))
                         }
                     ) {
                         Column(

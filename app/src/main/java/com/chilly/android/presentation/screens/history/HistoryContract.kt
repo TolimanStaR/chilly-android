@@ -1,13 +1,16 @@
 package com.chilly.android.presentation.screens.history
 
+import com.chilly.android.data.remote.dto.PlaceDto
 import com.chilly.android.domain.model.HistoryItem
 
 data class HistoryState(
-    val historyItems: List<HistoryItem> = emptyList()
+    val historyItems: List<HistoryItem> = emptyList(),
+    val showDeleteDialog: Boolean = false,
 )
 
 data class HistoryUiState(
-    val historyItems: List<HistoryListItem> = emptyList()
+    val historyItems: List<HistoryListItem> = emptyList(),
+    val showDeleteDialog: Boolean = false,
 )
 
 sealed interface HistoryListItem {
@@ -20,10 +23,11 @@ sealed interface HistoryListItem {
 
 sealed interface HistoryEvent {
     sealed interface UiEvent : HistoryEvent {
-        data class ItemClicked(val placeId: Int): UiEvent
-        data object ProfileClicked : UiEvent
+        data class ItemClicked(val place: PlaceDto): UiEvent
+        data object DeleteIconClicked : UiEvent
         data object ClearAllConfirmed : UiEvent
         data class ItemSwipedToDelete(val historyItem: HistoryItem) : UiEvent
+        data object DeleteDialogDismissed : UiEvent
     }
 
     sealed interface CommandEvent : HistoryEvent {
@@ -38,6 +42,5 @@ sealed interface HistoryCommand {
 }
 
 sealed interface HistoryNews {
-    data class NavigatePlaceInfo(val id: Int) : HistoryNews
-    data object NavigateProfile : HistoryNews
+    data class NavigatePlaceInfo(val place: PlaceDto) : HistoryNews
 }

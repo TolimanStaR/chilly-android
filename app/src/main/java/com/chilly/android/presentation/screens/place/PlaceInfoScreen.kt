@@ -23,7 +23,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
@@ -32,14 +31,11 @@ import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -88,250 +84,225 @@ import com.chilly.android.presentation.theme.ChillyTheme
 import com.chilly.android.presentation.theme.LinkColor
 import com.chilly.android.presentation.theme.Yellow70
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 private fun PlaceInfoScreen(
     state: PlaceUiState,
     padding: PaddingValues,
     onEvent: (UiEvent) -> Unit
 ) {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    val place = state.place ?: return@TopAppBar
-                    Text(text = place.name)
-                },
-                navigationIcon = {
-                    IconButton(
-                        onClick = {
-                            onEvent(UiEvent.BackClicked)
-                        }
-                    ) {
-                        Icon(imageVector = Icons.AutoMirrored.Default.ArrowBack, contentDescription = null)
-                    }
-                }
-            )
-        }
-    ) { scaffoldPadding ->
-        when {
-            state.place == null && !state.errorOccurred -> {
-                LoadingPlaceholder(null) {
-                    onEvent(UiEvent.ShownLoading)
-                }
-                return@Scaffold
+    // should have top bar with navigate back and place name
+    when {
+        state.place == null && !state.errorOccurred -> {
+            LoadingPlaceholder(null) {
+                onEvent(UiEvent.ShownLoading)
             }
-            state.place == null && state.errorOccurred -> {
-                ErrorReloadPlaceHolder(null) {
-                    onEvent(UiEvent.ReloadPlace)
-                }
-                return@Scaffold
+            return
+        }
+        state.place == null && state.errorOccurred -> {
+            ErrorReloadPlaceHolder(null) {
+                onEvent(UiEvent.ReloadPlace)
             }
+            return
         }
-        val place = state.place ?: return@Scaffold
-        val mergedPadding = remember(padding, scaffoldPadding) {
-            PaddingValues(
-                top = maxOf(padding.calculateTopPadding(), scaffoldPadding.calculateTopPadding()),
-                bottom = maxOf(padding.calculateBottomPadding(), scaffoldPadding.calculateBottomPadding())
-            )
-        }
-        var showRateDialog by remember { mutableStateOf(false) }
-        if (showRateDialog) {
-            PlaceRatingDialog(
-                place = place,
-                onDismiss = { showRateDialog = false },
-                ratingValue = state.ratingValue,
-                onRatingChange = { onEvent(UiEvent.RatingChanged(it)) },
-                commentValue = state.commentText,
-                onCommentChange = { onEvent(UiEvent.CommentTextChanged(it)) },
-                onConfirm = { onEvent(UiEvent.SendRatingClicked) }
-            )
-        }
-        Column(
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            modifier = Modifier
-                .verticalScroll(rememberScrollState())
-                .padding(mergedPadding)
-                .padding(16.dp)
+    }
+    val place = state.place ?: return
+    var showRateDialog by remember { mutableStateOf(false) }
+    if (showRateDialog) {
+        PlaceRatingDialog(
+            place = place,
+            onDismiss = { showRateDialog = false },
+            ratingValue = state.ratingValue,
+            onRatingChange = { onEvent(UiEvent.RatingChanged(it)) },
+            commentValue = state.commentText,
+            onCommentChange = { onEvent(UiEvent.CommentTextChanged(it)) },
+            onConfirm = { onEvent(UiEvent.SendRatingClicked) }
+        )
+    }
+    Column(
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        modifier = Modifier
+            .verticalScroll(rememberScrollState())
+            .padding(padding)
+            .padding(16.dp)
+    ) {
+        // images
+        PlaceImagesPager(
+            place = place
+        )
+        // title & isFavorite
+        Row(
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            // images
-            PlaceImagesPager(
-                place = place
+            Text(
+                text = place.name,
+                style = MaterialTheme.typography.headlineMedium
             )
-            // title & isFavorite
-            Row(
-                verticalAlignment = Alignment.CenterVertically
+            Spacer(modifier = Modifier.weight(1f))
+            IconButton(
+                onClick = {
+                    onEvent(UiEvent.ToggleFavoriteClicked)
+                }
             ) {
-                Text(
-                    text = place.name,
-                    style = MaterialTheme.typography.headlineMedium
+                val icon = if (state.isInFavorites) {
+                    Icons.Filled.Favorite
+                } else {
+                    Icons.Outlined.FavoriteBorder
+                }
+                val color = with(MaterialTheme.colorScheme) {
+                    if (state.isInFavorites)  primary else onSurface
+                }
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = color
                 )
-                Spacer(modifier = Modifier.weight(1f))
-                IconButton(
-                    onClick = {
-                        onEvent(UiEvent.ToggleFavoriteClicked)
-                    }
-                ) {
-                    val icon = if (state.isInFavorites) {
-                        Icons.Filled.Favorite
-                    } else {
-                        Icons.Outlined.FavoriteBorder
-                    }
-                    val color = with(MaterialTheme.colorScheme) {
-                        if (state.isInFavorites)  primary else onSurface
-                    }
-                    Icon(
-                        imageVector = icon,
-                        contentDescription = null,
-                        tint = color
+            }
+        }
+        HorizontalDivider()
+
+        Column {
+            HeadlineText(stringResource(R.string.place_address_title))
+            Text(place.address)
+        }
+        place.rating?.let { rating ->
+            Row {
+                HeadlineText(stringResource(R.string.place_rating_title))
+                Text(rating.toString())
+            }
+        }
+
+        val uriHandler = LocalUriHandler.current
+        val context = LocalContext.current
+
+        ChillyButton(
+            textRes = R.string.place_maps_button,
+            onClick = {
+                runCatching {
+                    uriHandler.openUri(place.yandexMapsLink)
+                }
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
+        ExpandableSection(
+            expanded = Section.OPEN_HOURS in state.expandedSections,
+            onToggle = {
+                onEvent(UiEvent.ToggleExpansion(Section.OPEN_HOURS))
+            },
+            title = {
+                HeadlineText(stringResource(R.string.place_open_hours_title))
+            }
+        ) {
+            val dayMapping = stringArrayResource(R.array.week_days)
+            place.openHours.forEachIndexed { index, openRange ->
+                Row {
+                    HeadlineText("${dayMapping[index]} - ")
+                    Text(openRange)
+                }
+            }
+        }
+
+        ExpandableSection(
+            expanded = Section.CONTACTS in state.expandedSections,
+            onToggle = {
+                onEvent(UiEvent.ToggleExpansion(Section.CONTACTS))
+            },
+            title = {
+                HeadlineText(stringResource(R.string.place_contacts_title))
+            }
+        ) {
+            place.phone?.let { phoneNumber ->
+                Row {
+                    HeadlineText(stringResource(R.string.place_phone_title))
+                    Text(
+                        text = clickableText(phoneNumber) {
+                            Intent(Intent.ACTION_DIAL).also {
+                                it.data = "tel:$phoneNumber".toUri()
+                                context.startActivity(it)
+                            }
+                        }
                     )
                 }
             }
-            HorizontalDivider()
-
-            Column {
-                HeadlineText(stringResource(R.string.place_address_title))
-                Text(place.address)
-            }
-            place.rating?.let { rating ->
+            place.socials.forEach { link ->
+                val socialName = link.checkSocial() ?: return@forEach
                 Row {
-                    HeadlineText(stringResource(R.string.place_rating_title))
-                    Text(rating.toString())
+                    HeadlineText("$socialName: ")
+                    Text(
+                        clickableText(link) {
+                            runCatching {
+                                uriHandler.openUri(link)
+                            }
+                        }
+                    )
                 }
             }
+        }
 
-            val uriHandler = LocalUriHandler.current
-            val context = LocalContext.current
-
+        ExpandableSection(
+            expanded = Section.COMMENTS in state.expandedSections,
+            onToggle = {
+                onEvent(UiEvent.ToggleExpansion(Section.COMMENTS))
+            },
+            title = {
+                HeadlineText(stringResource(R.string.reviews_section_title))
+            }
+        ) {
             ChillyButton(
-                textRes = R.string.place_maps_button,
+                textRes = R.string.rate_place_button,
+                type = ChillyButtonType.Secondary,
                 onClick = {
-                    runCatching {
-                        uriHandler.openUri(place.yandexMapsLink)
-                    }
+                    showRateDialog = true
                 },
                 modifier = Modifier.fillMaxWidth()
             )
-            ExpandableSection(
-                expanded = Section.OPEN_HOURS in state.expandedSections,
-                onToggle = {
-                    onEvent(UiEvent.ToggleExpansion(Section.OPEN_HOURS))
-                },
-                title = {
-                    HeadlineText(stringResource(R.string.place_open_hours_title))
-                }
-            ) {
-                val dayMapping = stringArrayResource(R.array.week_days)
-                place.openHours.forEachIndexed { index, openRange ->
-                    Row {
-                        HeadlineText("${dayMapping[index]} - ")
-                        Text(openRange)
-                    }
+            LaunchedEffect(Unit) {
+                if (state.comments.isEmpty()) {
+                    onEvent(UiEvent.EmptyReviewsSectionExpanded)
                 }
             }
 
-            ExpandableSection(
-                expanded = Section.CONTACTS in state.expandedSections,
-                onToggle = {
-                    onEvent(UiEvent.ToggleExpansion(Section.CONTACTS))
-                },
-                title = {
-                    HeadlineText(stringResource(R.string.place_contacts_title))
-                }
-            ) {
-                place.phone?.let { phoneNumber ->
-                    Row {
-                        HeadlineText(stringResource(R.string.place_phone_title))
-                        Text(
-                            text = clickableText(phoneNumber) {
-                                Intent(Intent.ACTION_DIAL).also {
-                                    it.data = "tel:$phoneNumber".toUri()
-                                    context.startActivity(it)
-                                }
-                            }
-                        )
-                    }
-                }
-                place.socials.forEach { link ->
-                    val socialName = link.checkSocial() ?: return@forEach
-                    Row {
-                        HeadlineText("$socialName: ")
-                        Text(
-                            clickableText(link) {
-                                runCatching {
-                                    uriHandler.openUri(link)
-                                }
-                            }
-                        )
-                    }
+            if (state.isLoading) {
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    CircularProgressIndicator()
                 }
             }
-
-            ExpandableSection(
-                expanded = Section.COMMENTS in state.expandedSections,
-                onToggle = {
-                    onEvent(UiEvent.ToggleExpansion(Section.COMMENTS))
-                },
-                title = {
-                    HeadlineText(stringResource(R.string.reviews_section_title))
-                }
-            ) {
-                ChillyButton(
-                    textRes = R.string.rate_place_button,
-                    type = ChillyButtonType.Secondary,
-                    onClick = {
-                        showRateDialog = true
-                    },
+            if (state.comments.isEmpty()) {
+                Text(
+                    text = stringResource(R.string.empty_comment_section),
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.secondary,
                     modifier = Modifier.fillMaxWidth()
                 )
-                LaunchedEffect(Unit) {
-                    if (state.comments.isEmpty()) {
-                        onEvent(UiEvent.EmptyReviewsSectionExpanded)
+            } else {
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.heightIn(max = 400.dp)
+                ) {
+                    item {
+                        Spacer(Modifier.height(4.dp))
                     }
-                }
-
-                if (state.isLoading) {
-                    Row(
-                        horizontalArrangement = Arrangement.Center,
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        CircularProgressIndicator()
+                    items(state.comments, key = { it.id }) { comment ->
+                        CommentCard(comment)
                     }
-                }
-                if (state.comments.isEmpty()) {
-                    Text(
-                        text = stringResource(R.string.empty_comment_section),
-                        textAlign = TextAlign.Center,
-                        color = MaterialTheme.colorScheme.secondary,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                } else {
-                    LazyColumn(
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
-                        modifier = Modifier.heightIn(max = 400.dp)
-                    ) {
+                    if (!state.allCommentsLoaded) {
                         item {
-                            Spacer(Modifier.height(4.dp))
+                            ChillyButton(
+                                textRes = R.string.load_comments_button,
+                                onClick = {
+                                    onEvent(UiEvent.LoadNextCommentsPageClicked)
+                                },
+                                type = ChillyButtonType.Secondary,
+                                color = ChillyButtonColor.Gray,
+                                modifier = Modifier.fillMaxWidth()
+                            )
                         }
-                        items(state.comments, key = { it.id }) { comment ->
-                            CommentCard(comment)
-                        }
-                        if (!state.allCommentsLoaded) {
-                            item {
-                                ChillyButton(
-                                    textRes = R.string.load_comments_button,
-                                    onClick = {
-                                        onEvent(UiEvent.LoadNextCommentsPageClicked)
-                                    },
-                                    type = ChillyButtonType.Secondary,
-                                    color = ChillyButtonColor.Gray,
-                                    modifier = Modifier.fillMaxWidth()
-                                )
-                            }
-                        }
-                        item {
-                            Spacer(Modifier.height(4.dp))
-                        }
+                    }
+                    item {
+                        Spacer(Modifier.height(4.dp))
                     }
                 }
             }

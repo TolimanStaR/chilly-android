@@ -8,6 +8,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
+import com.chilly.android.activityComponent
+import com.chilly.android.presentation.navigation.TopBarEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
@@ -28,6 +30,17 @@ fun <N: Any, S: Store<*, *, N>> ScreenHolderStoreScope<S, *>.NewsCollector(
     collector: FlowCollector<N>
 ) {
     store.NewsCollector(collector)
+}
+
+@Composable
+fun <E: Any> TopBarActionHandler(
+    eventMapper: (TopBarEvent) -> E?,
+    dispatcher: (E) -> Unit
+) {
+    val repository = LocalContext.current.activityComponent.topBarEventsRepository
+    repository.actionsFlow.Collector { topBarEvent ->
+        eventMapper.invoke(topBarEvent)?.let(dispatcher::invoke)
+    }
 }
 
 @Composable

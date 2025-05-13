@@ -26,7 +26,7 @@ sealed interface MainEvent {
         data object LastFeedElementIsVisible : UiEvent
         data object PermissionsGranted : UiEvent
 
-        data class PlaceClicked(val placeId: Int) : UiEvent
+        data class PlaceClicked(val place: PlaceDto) : UiEvent
         data class GotPermissionRequestResult(val permissions: Map<String, Boolean>) : UiEvent
     }
 
@@ -52,6 +52,6 @@ sealed interface MainNews {
     data object NavigateShortQuiz : MainNews
     data object GeneralFail : MainNews
     data object SameLocationWasUsed : MainNews
-    data class NavigatePlace(val placeId: Int) : MainNews
+    data class NavigatePlace(val place: PlaceDto) : MainNews
     data object PermissionsDenied : MainNews
 }

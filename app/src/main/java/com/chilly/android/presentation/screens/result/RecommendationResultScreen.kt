@@ -108,7 +108,7 @@ private fun RecommendationResultScreen(
         Spacer(modifier = Modifier.height(4.dp))
         state.recommendations.forEach { place ->
             PlaceListItem(place) {
-                onEvent(UiEvent.PlaceClicked(place.id))
+                onEvent(UiEvent.PlaceClicked(place))
             }
         }
         Spacer(modifier = Modifier.height(16.dp))

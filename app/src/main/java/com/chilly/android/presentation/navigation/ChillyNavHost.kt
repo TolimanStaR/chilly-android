@@ -17,11 +17,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.chilly.android.R
 import com.chilly.android.activityComponent
-import com.chilly.android.applicationComponent
 import com.chilly.android.presentation.screens.favorites.installFavoritesScreen
 import com.chilly.android.presentation.screens.forgot_password.installForgotPasswordScreen
+import com.chilly.android.presentation.screens.history.HistoryActions
 import com.chilly.android.presentation.screens.history.installHistoryScreen
 import com.chilly.android.presentation.screens.login.installLoginComposable
 import com.chilly.android.presentation.screens.main.installMainScreen
@@ -33,7 +34,6 @@ import com.chilly.android.presentation.screens.rating.installRatingScreen
 import com.chilly.android.presentation.screens.result.installRecommendationResultScreen
 import com.chilly.android.presentation.screens.sign_up.installSignUpComposable
 import com.chilly.android.presentation.screens.splash.installSplashComposable
-import com.github.terrakok.cicerone.Router
 
 @Composable
 fun ChillyNavHost(navController: NavHostController = rememberNavController()) {
@@ -80,12 +80,17 @@ fun ChillyNavHost(navController: NavHostController = rememberNavController()) {
 
 private fun NavBackStackEntry?.topBarState(): TopBarState? {
     return when {
-        matches<Destination.Main>() -> TopBarState(R.string.main_screen_title)
-        matches<Destination.Profile>() -> TopBarState(R.string.profile_screen_title, showBackButton = true, showProfileAction = false)
-        matches<Destination.Favorites>() -> TopBarState(R.string.favorites_screen_title)
-        matches<Destination.Quiz>() -> TopBarState(R.string.quiz_screen_title, showBackButton = true, showProfileAction = false)
-        matches<Destination.RecommendationResult>() -> TopBarState(R.string.recommendation_result_title, showBackButton = true, showProfileAction = false)
-        matches<Destination.Rating>() -> TopBarState(R.string.rating_title, showBackButton = true, showProfileAction = false)
+        matches<Destination.Main>() -> TopBarState(R.string.main_screen_title, actions = listOf(TopBarAction.Profile))
+        matches<Destination.Profile>() -> TopBarState(R.string.profile_screen_title, showBackButton = true)
+        matches<Destination.Favorites>() -> TopBarState(R.string.favorites_screen_title, actions = listOf(TopBarAction.Profile))
+        matches<Destination.Quiz>() -> TopBarState(R.string.quiz_screen_title, showBackButton = true)
+        matches<Destination.RecommendationResult>() -> TopBarState(R.string.recommendation_result_title, showBackButton = true)
+        matches<Destination.Rating>() -> TopBarState(R.string.rating_title, showBackButton = true)
+        matches<Destination.History>() -> TopBarState(R.string.history_screen_title, actions = listOf(HistoryActions.Clear, TopBarAction.Profile))
+        matches<Destination.PlaceInfo>() -> {
+            val route = this?.toRoute<Destination.PlaceInfo>() ?: return null
+            TopBarState(titleText = route.name, showBackButton = true)
+        }
         else -> null
     }
 }
@@ -98,13 +103,12 @@ fun ChillyScaffold(
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
 
-    val component = LocalContext.current.applicationComponent
+    val component = LocalContext.current.activityComponent
 
     Scaffold(
         topBar = {
             val state = backStackEntry.topBarState() ?: return@Scaffold
-            val handler = remember { TopBarNavigationHandler(component.router) }
-            ChillyTopBar(state, handler::onEvent)
+            ChillyTopBar(state, component.topBarEventHandler::onEvent)
         },
         bottomBar = {
             if (backStackEntry.isInBottomDestinations()) {
@@ -118,17 +122,6 @@ fun ChillyScaffold(
         }
     ) {
         content(it)
-    }
-}
-
-private class TopBarNavigationHandler(
-    private val router: Router
-) {
-    fun onEvent(event: TopBarEvent) {
-        when(event) {
-            TopBarEvent.BackClicked -> router.exit()
-            TopBarEvent.ProfileClicked -> router.navigateTo(Destination.Profile)
-        }
     }
 }
 

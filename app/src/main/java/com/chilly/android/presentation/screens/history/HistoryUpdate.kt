@@ -17,7 +17,7 @@ class HistoryUpdate @Inject constructor(
     private fun NextBuilder.updateOnUi(event: UiEvent) {
         when (event) {
             is UiEvent.ItemClicked -> {
-                news(HistoryNews.NavigatePlaceInfo(event.placeId))
+                news(HistoryNews.NavigatePlaceInfo(event.place))
             }
             UiEvent.ClearAllConfirmed -> {
                 commands(HistoryCommand.ClearHistory)
@@ -25,8 +25,11 @@ class HistoryUpdate @Inject constructor(
             is UiEvent.ItemSwipedToDelete -> {
                 commands(HistoryCommand.DeleteItem(event.historyItem))
             }
-            UiEvent.ProfileClicked -> {
-                news(HistoryNews.NavigateProfile)
+            UiEvent.DeleteIconClicked -> {
+                state { copy(showDeleteDialog = true) }
+            }
+            UiEvent.DeleteDialogDismissed -> {
+                state { copy(showDeleteDialog = false) }
             }
         }
     }

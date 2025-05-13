@@ -17,20 +17,15 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxState
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -55,42 +50,46 @@ import com.chilly.android.presentation.common.components.ChillyButtonType
 import com.chilly.android.presentation.common.components.PlaceListItem
 import com.chilly.android.presentation.common.structure.NewsCollector
 import com.chilly.android.presentation.common.structure.ScreenHolder
+import com.chilly.android.presentation.common.structure.TopBarActionHandler
 import com.chilly.android.presentation.common.structure.collectState
 import com.chilly.android.presentation.navigation.Destination
+import com.chilly.android.presentation.navigation.TopBarAction
+import com.chilly.android.presentation.navigation.TopBarEvent
 import com.chilly.android.presentation.navigation.fadingComposable
 import com.chilly.android.presentation.screens.history.HistoryEvent.UiEvent
 import com.chilly.android.presentation.theme.ChillyTheme
 import kotlinx.coroutines.delay
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun HistoryScreen(
     state: HistoryUiState,
     padding: PaddingValues,
     onEvent: (UiEvent) -> Unit
 ) {
-    var clearDialogIsShown by remember { mutableStateOf(false) }
+    var clearDialogIsShown by remember(state.showDeleteDialog) { mutableStateOf(state.showDeleteDialog) }
+    val dismissDialog = remember {
+        {
+            clearDialogIsShown = false
+            onEvent(UiEvent.DeleteDialogDismissed)
+        }
+    }
     // Delete All dialog
     if (clearDialogIsShown) {
         AlertDialog(
-            onDismissRequest = {
-                clearDialogIsShown = false
-            },
+            onDismissRequest = dismissDialog,
             confirmButton = {
                 ChillyButton(
                     textRes = R.string.confirm_button,
                     onClick = {
                         onEvent(UiEvent.ClearAllConfirmed)
-                        clearDialogIsShown = false
+                        dismissDialog()
                     }
                 )
             },
             dismissButton = {
                 ChillyButton(
                     textRes = R.string.cancel_button,
-                    onClick = {
-                        clearDialogIsShown = false
-                    },
+                    onClick = dismissDialog,
                     type = ChillyButtonType.Tertiary
                 )
             },
@@ -106,100 +105,69 @@ private fun HistoryScreen(
         )
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(stringResource(R.string.history_screen_title))
-                },
-                actions = {
-                    IconButton(
-                        enabled = state.historyItems.isNotEmpty(),
-                        onClick = {
-                            clearDialogIsShown = true
-                        }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Delete,
-                            contentDescription = null
-                        )
-                    }
-                    IconButton(
-                        onClick = {
-                            onEvent(UiEvent.ProfileClicked)
-                        }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.AccountCircle,
-                            contentDescription = null
-                        )
-                    }
-                }
-            )
-        }
-    ) { scaffoldPadding ->
-        if (state.historyItems.isEmpty()) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier.fillMaxSize()
-            ) {
-                Text(stringResource(R.string.empty_history_text))
-            }
-            return@Scaffold
-        }
-        val mergedPadding = remember(padding, scaffoldPadding) {
-            PaddingValues(
-                top = maxOf(padding.calculateTopPadding(), scaffoldPadding.calculateTopPadding()),
-                bottom = maxOf(padding.calculateBottomPadding(), scaffoldPadding.calculateBottomPadding())
-            )
-        }
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier
-                .padding(mergedPadding)
-                .padding(16.dp)
+    if (state.historyItems.isEmpty()) {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.fillMaxSize()
         ) {
-            items(
-                state.historyItems,
-                key = {
-                    when(it) {
-                        is HistoryListItem.PlaceItem -> it.item.id
-                        is HistoryListItem.HistoryDateLabel -> it.value
+            Text(stringResource(R.string.empty_history_text))
+        }
+        return
+    }
+    LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = Modifier
+            .padding(padding)
+            .padding(16.dp)
+    ) {
+        items(
+            state.historyItems,
+            key = {
+                when(it) {
+                    is HistoryListItem.PlaceItem -> it.item.id
+                    is HistoryListItem.HistoryDateLabel -> it.value
+                }
+            }
+        ) { historyItem ->
+            when(historyItem) {
+                is HistoryListItem.HistoryDateLabel -> {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        HorizontalDivider(Modifier.weight(1f))
+                        Text(
+                            text = historyItem.value,
+                            modifier = Modifier.padding(8.dp)
+                        )
+                        HorizontalDivider(Modifier.weight(1f))
                     }
                 }
-            ) { historyItem ->
-                when(historyItem) {
-                    is HistoryListItem.HistoryDateLabel -> {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            HorizontalDivider(Modifier.weight(1f))
-                            Text(
-                                text = historyItem.value,
-                                modifier = Modifier.padding(8.dp)
-                            )
-                            HorizontalDivider(Modifier.weight(1f))
+                is HistoryListItem.PlaceItem -> {
+                    SwipeToDismissItem(
+                        item = historyItem.item,
+                        onRemove = {
+                            onEvent(UiEvent.ItemSwipedToDelete(it))
                         }
-                    }
-                    is HistoryListItem.PlaceItem -> {
-                        SwipeToDismissItem(
-                            item = historyItem.item,
-                            onRemove = {
-                                onEvent(UiEvent.ItemSwipedToDelete(it))
-                            }
-                        ) {
-                            PlaceListItem(it.place) {
-                                onEvent(UiEvent.ItemClicked(it.place.id))
-                            }
+                    ) {
+                        PlaceListItem(it.place) {
+                            onEvent(UiEvent.ItemClicked(it.place))
                         }
                     }
                 }
             }
-            item {
-                Spacer(modifier = Modifier.height(4.dp))
-            }
+        }
+        item {
+            Spacer(modifier = Modifier.height(4.dp))
         }
     }
+}
+
+data object ClearHistory : TopBarEvent
+object HistoryActions {
+    val Clear = TopBarAction(
+        icon = Icons.Default.Delete,
+        event = ClearHistory
+    )
 }
 
 fun NavGraphBuilder.installHistoryScreen(padding: PaddingValues) {
@@ -215,8 +183,14 @@ fun NavGraphBuilder.installHistoryScreen(padding: PaddingValues) {
             val state = collectState(component.uiStateMapper)
             NewsCollector(component.newsCollector)
             HistoryScreen(state.value, padding, store::dispatch)
+            TopBarActionHandler(TopBarEvent::asUiEvent, store::dispatch)
         }
     }
+}
+
+private fun TopBarEvent.asUiEvent(): UiEvent? = when(this) {
+    is ClearHistory -> UiEvent.DeleteIconClicked
+    else -> null
 }
 
 @Composable

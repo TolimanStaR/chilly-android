@@ -53,7 +53,7 @@ private fun FavoritesScreen(
     ) {
         items(state.favorites) { place ->
             PlaceListItem(place) {
-                onEvent(UiEvent.PlaceClicked(place.id))
+                onEvent(UiEvent.PlaceClicked(place))
             }
         }
         item {
