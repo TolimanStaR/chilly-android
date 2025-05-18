@@ -24,6 +24,7 @@ room = "2.6.1"
 googleLocationService = "21.3.0"
 work = "2.10.0"
 osmdroid = "6.1.20"
+composeScreenshots = "0.0.1-alpha09"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -73,4 +74,5 @@ kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "ko
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp"}
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin"}
 room = { id = "androidx.room", version.ref = "room" }
+compose-screenshot-testing = { id = "com.android.compose.screenshot", version.ref = "composeScreenshots" }
 

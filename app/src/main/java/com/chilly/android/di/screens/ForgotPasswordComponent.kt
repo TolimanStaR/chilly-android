@@ -1,8 +1,8 @@
 package com.chilly.android.di.screens
 
 import com.chilly.android.di.activity.ActivityComponent
-import com.chilly.android.presentation.screens.forgot_password.ForgotPasswordNewsCollector
-import com.chilly.android.presentation.screens.forgot_password.ForgotPasswordStore
+import com.chilly.android.presentation.screens.forgotPassword.ForgotPasswordNewsCollector
+import com.chilly.android.presentation.screens.forgotPassword.ForgotPasswordStore
 import dagger.Component
 import javax.inject.Scope
 

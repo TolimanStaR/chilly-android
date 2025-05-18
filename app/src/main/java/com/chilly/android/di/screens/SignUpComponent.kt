@@ -1,8 +1,8 @@
 package com.chilly.android.di.screens
 
 import com.chilly.android.di.activity.ActivityComponent
-import com.chilly.android.presentation.screens.sign_up.SignUpNewsCollector
-import com.chilly.android.presentation.screens.sign_up.SignUpStore
+import com.chilly.android.presentation.screens.signUp.SignUpNewsCollector
+import com.chilly.android.presentation.screens.signUp.SignUpStore
 import dagger.Component
 import javax.inject.Scope
 
