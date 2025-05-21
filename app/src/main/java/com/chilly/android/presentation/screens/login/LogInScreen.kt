@@ -35,7 +35,7 @@ import com.chilly.android.presentation.screens.login.LoginEvent.UiEvent
 import com.chilly.android.presentation.theme.ChillyTheme
 
 @Composable
-private fun LogInScreen(
+internal fun LogInScreen(
     state: LoginState,
     scaffoldPadding: PaddingValues,
     onEvent: (UiEvent) -> Unit = {},

@@ -23,7 +23,7 @@ import androidx.navigation.toRoute
 import com.chilly.android.R
 import com.chilly.android.activityComponent
 import com.chilly.android.presentation.screens.favorites.installFavoritesScreen
-import com.chilly.android.presentation.screens.forgot_password.installForgotPasswordScreen
+import com.chilly.android.presentation.screens.forgotPassword.installForgotPasswordScreen
 import com.chilly.android.presentation.screens.history.HistoryActions
 import com.chilly.android.presentation.screens.history.installHistoryScreen
 import com.chilly.android.presentation.screens.login.installLoginComposable
@@ -34,7 +34,7 @@ import com.chilly.android.presentation.screens.profile.installProfileScreen
 import com.chilly.android.presentation.screens.quiz.installQuizScreen
 import com.chilly.android.presentation.screens.rating.installRatingScreen
 import com.chilly.android.presentation.screens.result.installRecommendationResultScreen
-import com.chilly.android.presentation.screens.sign_up.installSignUpComposable
+import com.chilly.android.presentation.screens.signUp.installSignUpComposable
 import com.chilly.android.presentation.screens.splash.installSplashComposable
 
 @OptIn(ExperimentalSharedTransitionApi::class)

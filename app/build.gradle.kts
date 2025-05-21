@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.room)
+    alias(libs.plugins.compose.screenshot.testing)
 }
 
 android {
@@ -51,6 +52,7 @@ android {
         compose = true
         buildConfig = true
     }
+    experimentalProperties["android.experimental.enableScreenshotTest"] = true
 }
 
 room {

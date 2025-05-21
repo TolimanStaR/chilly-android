@@ -153,7 +153,7 @@ private fun PreviewChillyButton(
     }
 }
 
-private class PreviewButtonParamsProvider : PreviewParameterProvider<ButtonParameters> {
+internal class PreviewButtonParamsProvider : PreviewParameterProvider<ButtonParameters> {
     override val values: Sequence<ButtonParameters>
         get() {
             val sizes = listOf(SizeParameter.Small, SizeParameter.Medium)
@@ -174,7 +174,7 @@ private class PreviewButtonParamsProvider : PreviewParameterProvider<ButtonParam
         }
 }
 
-private class ButtonParameters(
+class ButtonParameters(
     val size: SizeParameter,
     val type: ChillyButtonType,
     val color: ChillyButtonColor,
