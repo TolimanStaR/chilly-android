@@ -112,7 +112,7 @@ private fun PreviewTextField(
     }
 }
 
-private class ParamsProvider : PreviewParameterProvider<TextFieldParams> {
+internal class ParamsProvider : PreviewParameterProvider<TextFieldParams> {
     override val values: Sequence<TextFieldParams>
         get() {
             val sizes = listOf(SizeParameter.Small, SizeParameter.Medium)
@@ -129,7 +129,7 @@ private class ParamsProvider : PreviewParameterProvider<TextFieldParams> {
         }
 }
 
-private class TextFieldParams(
+internal class TextFieldParams(
     val size: SizeParameter,
     val text: String,
     val placeholderTextRes: Int?
