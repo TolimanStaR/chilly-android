@@ -104,4 +104,92 @@ class LoginUpdateTest {
             }
         )
     }
+
+    @Test
+    fun `when ForgotPasswordClicked navigation news is sent`() {
+        underTest.testUpdate(
+            initialState = LoginState(),
+            event = LoginEvent.UiEvent.ForgotPasswordClicked,
+            expectedNewsProducer = {
+                listOf(LoginNews.NavigateForgotPassword)
+            }
+        )
+    }
+
+    @Test
+    fun `when loginButtonEnabled is updated based on login and password values - both empty`() {
+        underTest.testUpdate(
+            initialState = LoginState(loginText = "", passwordText = ""),
+            event = LoginEvent.UiEvent.LoginChanged(""),
+            expectedStateProducer = {
+                state.copy(loginButtonEnabled = false)
+            }
+        )
+    }
+
+    @Test
+    fun `when loginButtonEnabled is updated based on login and password values - login empty`() {
+        underTest.testUpdate(
+            initialState = LoginState(loginText = "", passwordText = "password"),
+            event = LoginEvent.UiEvent.LoginChanged(""),
+            expectedStateProducer = {
+                state.copy(loginButtonEnabled = false)
+            }
+        )
+    }
+
+    @Test
+    fun `when loginButtonEnabled is updated based on login and password values - password empty`() {
+        underTest.testUpdate(
+            initialState = LoginState(loginText = "login", passwordText = ""),
+            event = LoginEvent.UiEvent.PasswordChanged(""),
+            expectedStateProducer = {
+                state.copy(loginButtonEnabled = false)
+            }
+        )
+    }
+
+    @Test
+    fun `when loginButtonEnabled is updated based on login and password values - both not empty`() {
+        underTest.testUpdate(
+            initialState = LoginState(loginText = "", passwordText = ""),
+            event = LoginEvent.UiEvent.LoginChanged("login"),
+            expectedStateProducer = {
+                state.copy(loginText = "login", loginButtonEnabled = false)
+            }
+        )
+
+        underTest.testUpdate(
+            initialState = LoginState(loginText = "login", passwordText = ""),
+            event = LoginEvent.UiEvent.PasswordChanged("password"),
+            expectedStateProducer = {
+                state.copy(passwordText = "password", loginButtonEnabled = true)
+            }
+        )
+    }
+
+    @Test
+    fun `when login is successful loading state is reset`() {
+        underTest.testUpdate(
+            initialState = LoginState(isLoading = true),
+            event = LoginEvent.CommandEvent.LoginSuccess("refresh", "access"),
+            expectedStateProducer = {
+                state.copy(isLoading = false)
+            },
+            expectedNewsProducer = {
+                listOf(LoginNews.NavigateMain)
+            }
+        )
+    }
+
+    @Test
+    fun `when clear clicked loginButtonEnabled is set to false`() {
+        underTest.testUpdate(
+            initialState = LoginState(loginText = "something", loginButtonEnabled = true),
+            event = LoginEvent.UiEvent.ClearClicked,
+            expectedStateProducer = {
+                state.copy(loginText = "", loginButtonEnabled = false)
+            }
+        )
+    }
 }

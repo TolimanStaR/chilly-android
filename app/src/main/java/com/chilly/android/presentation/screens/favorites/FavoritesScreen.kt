@@ -30,7 +30,7 @@ import com.chilly.android.presentation.screens.favorites.FavoritesEvent.UiEvent
 import com.chilly.android.presentation.theme.ChillyTheme
 
 @Composable
-private fun FavoritesScreen(
+internal fun FavoritesScreen(
     state: FavoritesState,
     padding: PaddingValues,
     onEvent: (UiEvent) -> Unit

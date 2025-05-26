@@ -61,7 +61,7 @@ import com.chilly.android.presentation.theme.ChillyTheme
 import kotlinx.coroutines.delay
 
 @Composable
-private fun HistoryScreen(
+internal fun HistoryScreen(
     state: HistoryUiState,
     padding: PaddingValues,
     onEvent: (UiEvent) -> Unit
