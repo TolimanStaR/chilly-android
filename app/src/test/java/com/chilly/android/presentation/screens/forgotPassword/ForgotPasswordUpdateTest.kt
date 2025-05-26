@@ -4,7 +4,6 @@ import com.chilly.android.presentation.common.logic.FieldValidator
 import com.chilly.android.presentation.common.logic.ValidationType
 import com.chilly.android.utils.testUpdate
 import io.mockk.clearMocks
-import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
