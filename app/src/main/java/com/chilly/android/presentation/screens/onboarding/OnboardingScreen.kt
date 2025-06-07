@@ -67,12 +67,15 @@ private fun OnboardingScreen(
             Stepper(onboarding.index)
             Image(
                 painterResource(onboardingUi.imageId),
-                contentDescription = null
+                contentDescription = null,
+                modifier = Modifier.size(300.dp)
             )
+            Spacer(modifier = Modifier.weight(1f))
             Text(
                 text = stringResource(onboardingUi.titleId),
                 style = MaterialTheme.typography.headlineMedium
             )
+            Spacer(modifier = Modifier.weight(1f))
             Text(
                 text = stringResource(onboardingUi.mainTextId),
                 style = MaterialTheme.typography.bodyMedium,

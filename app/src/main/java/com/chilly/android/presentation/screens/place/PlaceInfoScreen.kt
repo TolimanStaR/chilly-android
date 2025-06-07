@@ -92,7 +92,7 @@ import com.chilly.android.presentation.theme.Yellow70
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-private fun PlaceInfoScreen(
+internal fun PlaceInfoScreen(
     state: PlaceUiState,
     padding: PaddingValues,
     onEvent: (UiEvent) -> Unit,
