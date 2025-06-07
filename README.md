@@ -4,6 +4,5 @@ APK release: https://github.com/TolimanStaR/chilly-android/releases/download/v0.
 
 # related repos
 
-- recommender: https://github.com/TolimanStaR/chilly-algo
-- mobile (Android): https://github.com/TolimanStaR/chilly-android
+- backend: https://github.com/TolimanStaR/chilly-back
 - web (for business): https://github.com/TolimanStaR/chilly-web
